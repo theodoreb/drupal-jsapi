@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: modules/user/user.js — Drupal JS API</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="pure/pure.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
+    <link type="text/css" rel="stylesheet" href="styles/drupal.css">
+</head>
+
+<body>
+
+<div id="main" class="pure">
+
+  <div class="pure-g">
+
+    <div class="pure-u-4-5">
+      <div class="box">
+        <h1 class="page-title">Source: modules/user/user.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * @file
+ */
+(function ($) {
+
+"use strict";
+
+/**
+ * Attach handlers to evaluate the strength of any password fields and to check
+ * that its confirmation is correct.
+ * @type {Behavior}
+ */
+Drupal.behaviors.password = {
+  attach: function (context, settings) {
+    var translate = settings.password;
+    $(context).find('input.password-field').once('password', function () {
+      var passwordInput = $(this);
+      var innerWrapper = $(this).parent();
+      var outerWrapper = $(this).parent().parent();
+
+      // Add identifying class to password element parent.
+      innerWrapper.addClass('password-parent');
+
+      // Add the password confirmation layer.
+      outerWrapper.find('input.password-confirm').parent().append('&lt;div class="password-confirm">' + translate.confirmTitle + ' &lt;span>&lt;/span>&lt;/div>').addClass('confirm-parent');
+      var confirmInput = outerWrapper.find('input.password-confirm');
+      var confirmResult = outerWrapper.find('div.password-confirm');
+      var confirmChild = confirmResult.find('span');
+
+      // If the password strength indicator is enabled, add its markup.
+      if (settings.password.showStrengthIndicator) {
+        var passwordMeter = '&lt;div class="password-strength">&lt;div class="password-strength-text" aria-live="assertive">&lt;/div>&lt;div class="password-strength-title">' + translate.strengthTitle + '&lt;/div>&lt;div class="password-indicator">&lt;div class="indicator">&lt;/div>&lt;/div>&lt;/div>';
+        confirmInput.parent().after('&lt;div class="password-suggestions description">&lt;/div>');
+        innerWrapper.append(passwordMeter);
+        var passwordDescription = outerWrapper.find('div.password-suggestions').hide();
+      }
+
+      // Check that password and confirmation inputs match.
+      var passwordCheckMatch = function (confirmInputVal) {
+        var success = passwordInput.val() === confirmInputVal;
+        var confirmClass = success ? 'ok' : 'error';
+
+        // Fill in the success message and set the class accordingly.
+        confirmChild.html(translate['confirm' + (success ? 'Success' : 'Failure')])
+          .removeClass('ok error').addClass(confirmClass);
+      };
+
+      // Check the password strength.
+      var passwordCheck = function () {
+        if (settings.password.showStrengthIndicator) {
+          // Evaluate the password strength.
+          var result = Drupal.evaluatePasswordStrength(passwordInput.val(), settings.password);
+
+          // Update the suggestions for how to improve the password.
+          if (passwordDescription.html() !== result.message) {
+            passwordDescription.html(result.message);
+          }
+
+          // Only show the description box if a weakness exists in the password.
+          passwordDescription.toggle(result.strength !== 100);
+
+          // Adjust the length of the strength indicator.
+          innerWrapper.find('.indicator')
+            .css('width', result.strength + '%')
+            .css('background-color', result.indicatorColor);
+
+          // Update the strength indication text.
+          innerWrapper.find('.password-strength-text').html(result.indicatorText);
+        }
+
+        // Check the value in the confirm input and show results.
+        if (confirmInput.val()) {
+          passwordCheckMatch(confirmInput.val());
+          confirmResult.css({ visibility: 'visible' });
+        }
+        else {
+          confirmResult.css({ visibility: 'hidden' });
+        }
+      };
+
+      // Monitor input events.
+      passwordInput.on('input', passwordCheck);
+      confirmInput.on('input', passwordCheck);
+    });
+  }
+};
+
+/**
+ * Evaluate the strength of a user's password.
+ *
+ * Returns the estimated strength and the relevant output message.
+ * @param {String} password
+ * @param {Object} translate
+ * @param {String} translate.username
+ * @param {String} translate.tooShort
+ * @param {String} translate.addLowerCase
+ * @param {String} translate.addUpperCase
+ * @param {String} translate.addNumbers
+ * @param {String} translate.addPunctuation
+ * @param {String} translate.sameAsUsername
+ * @param {String} translate.weak
+ * @param {String} translate.fair
+ * @param {String} translate.good
+ * @param {String} translate.strong
+ * @param {String} translate.hasWeaknesses
+ * @return {Object}
+ */
+Drupal.evaluatePasswordStrength = function (password, translate) {
+  var indicatorText, indicatorColor, weaknesses = 0, strength = 100, msg = [];
+
+  var hasLowercase = /[a-z]+/.test(password);
+  var hasUppercase = /[A-Z]+/.test(password);
+  var hasNumbers = /[0-9]+/.test(password);
+  var hasPunctuation = /[^a-zA-Z0-9]+/.test(password);
+
+  // If there is a username edit box on the page, compare password to that, otherwise
+  // use value from the database.
+  var usernameBox = $('input.username');
+  var username = (usernameBox.length > 0) ? usernameBox.val() : translate.username;
+
+  // Lose 5 points for every character less than 6, plus a 30 point penalty.
+  if (password.length &lt; 6) {
+    msg.push(translate.tooShort);
+    strength -= ((6 - password.length) * 5) + 30;
+  }
+
+  // Count weaknesses.
+  if (!hasLowercase) {
+    msg.push(translate.addLowerCase);
+    weaknesses++;
+  }
+  if (!hasUppercase) {
+    msg.push(translate.addUpperCase);
+    weaknesses++;
+  }
+  if (!hasNumbers) {
+    msg.push(translate.addNumbers);
+    weaknesses++;
+  }
+  if (!hasPunctuation) {
+    msg.push(translate.addPunctuation);
+    weaknesses++;
+  }
+
+  // Apply penalty for each weakness (balanced against length penalty).
+  switch (weaknesses) {
+    case 1:
+      strength -= 12.5;
+      break;
+
+    case 2:
+      strength -= 25;
+      break;
+
+    case 3:
+      strength -= 40;
+      break;
+
+    case 4:
+      strength -= 40;
+      break;
+  }
+
+  // Check if password is the same as the username.
+  if (password !== '' &amp;&amp; password.toLowerCase() === username.toLowerCase()) {
+    msg.push(translate.sameAsUsername);
+    // Passwords the same as username are always very weak.
+    strength = 5;
+  }
+
+  // Based on the strength, work out what text should be shown by the password strength meter.
+  if (strength &lt; 60) {
+    indicatorText = translate.weak;
+    indicatorColor = '#bb5555';
+  } else if (strength &lt; 70) {
+    indicatorText = translate.fair;
+    indicatorColor = '#bbbb55';
+  } else if (strength &lt; 80) {
+    indicatorText = translate.good;
+    indicatorColor = '#4863a0';
+  } else if (strength &lt;= 100) {
+    indicatorText = translate.strong;
+    indicatorColor = '#47c965';
+  }
+
+  // Assemble the final message.
+  msg = translate.hasWeaknesses + '&lt;ul>&lt;li>' + msg.join('&lt;/li>&lt;li>') + '&lt;/li>&lt;/ul>';
+  return { strength: strength, message: msg, indicatorText: indicatorText, indicatorColor: indicatorColor };
+
+};
+
+/**
+ * Field instance settings screen: force the 'Display on registration form'
+ * checkbox checked whenever 'Required' is checked.
+ * @type {Behavior}
+ */
+Drupal.behaviors.fieldUserRegistration = {
+  attach: function (context, settings) {
+    var $checkbox = $('form#field-ui-field-edit-form input#edit-instance-settings-user-register-form');
+
+    if ($checkbox.length) {
+      $(context).find('input#edit-instance-required').once('user-register-form-checkbox', function () {
+        $(this).on('change', function (e) {
+          if ($(this).prop('checked')) {
+            $checkbox.prop('checked', true);
+          }
+        });
+      });
+
+    }
+  }
+};
+
+})(jQuery);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </div>
+
+    <nav class="pure-u-1-5">
+      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
+    </nav>
+  </div>
+
+</div>
+
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

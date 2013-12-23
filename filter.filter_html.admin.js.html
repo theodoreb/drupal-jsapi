@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: modules/filter/filter.filter_html.admin.js — Drupal JS API</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="pure/pure.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
+    <link type="text/css" rel="stylesheet" href="styles/drupal.css">
+</head>
+
+<body>
+
+<div id="main" class="pure">
+
+  <div class="pure-g">
+
+    <div class="pure-u-4-5">
+      <div class="box">
+        <h1 class="page-title">Source: modules/filter/filter.filter_html.admin.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * @file
+ * Attaches behavior for updating filter_html's settings automatically.
+ */
+
+(function ($, _, document, window) {
+
+"use strict";
+
+/**
+ * Implement a live setting parser to prevent text editors from automatically
+ * enabling buttons that are not allowed by this filter's configuration.
+ */
+if (Drupal.filterConfiguration) {
+  /**
+   * @type {Object}
+   */
+  Drupal.filterConfiguration.liveSettingParsers.filter_html = {
+    /**
+     * @return {Array.&lt;Drupal.FilterHTMLRule>}
+     */
+    getRules: function () {
+      var currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
+      var rules = [], rule;
+
+      // Build a FilterHTMLRule that reflects the hard-coded behavior that
+      // strips all "style" attribute and all "on*" attributes.
+      rule = new Drupal.FilterHTMLRule();
+      rule.restrictedTags.tags = ['*'];
+      rule.restrictedTags.forbidden.attributes = ['style', 'on*'];
+      rules.push(rule);
+
+      // Build a FilterHTMLRule that reflects the current settings.
+      rule = new Drupal.FilterHTMLRule();
+      var behavior = Drupal.behaviors.filterFilterHtmlUpdating;
+      rule.allow = true;
+      rule.tags = behavior._parseSetting(currentValue);
+      rules.push(rule);
+
+      return rules;
+    }
+  };
+}
+/**
+ *
+ * @todo remove everything from the behavior object.
+ * @type {Behavior}
+ */
+Drupal.behaviors.filterFilterHtmlUpdating = {
+
+  // The form item containg the "Allowed HTML tags" setting.
+  $allowedHTMLFormItem: null,
+
+  // The description for the "Allowed HTML tags" field.
+  $allowedHTMLDescription: null,
+
+  // The user-entered tag list of $allowedHTMLFormItem.
+  userTags: null,
+
+  // The auto-created tag list thus far added.
+  autoTags: null,
+
+  // Track which new features have been added to the text editor.
+  newFeatures: {},
+
+  attach: function (context, settings) {
+    var that = this;
+    $(context).find('[name="filters[filter_html][settings][allowed_html]"]').once('filter-filter_html-updating', function () {
+      that.$allowedHTMLFormItem = $(this);
+      that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.form-item').find('.description');
+      that.userTags = that._parseSetting(this.value);
+
+      // Update the new allowed tags based on added text editor features.
+      $(document)
+        .on('drupalEditorFeatureAdded', function (e, feature) {
+          that.newFeatures[feature.name] = feature.rules;
+          that._updateAllowedTags();
+        })
+        .on('drupalEditorFeatureModified', function (e, feature) {
+          if (that.newFeatures.hasOwnProperty(feature.name)) {
+            that.newFeatures[feature.name] = feature.rules;
+            that._updateAllowedTags();
+          }
+        })
+        .on('drupalEditorFeatureRemoved', function (e, feature) {
+          if (that.newFeatures.hasOwnProperty(feature.name)) {
+            delete that.newFeatures[feature.name];
+            that._updateAllowedTags();
+          }
+        });
+
+      // When the allowed tags list is manually changed, update userTags.
+      that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
+        that.userTags = _.difference(that._parseSetting(this.value), that.autoTags);
+      });
+    });
+  },
+
+  /**
+   * Updates the "Allowed HTML tags" setting and shows an informative message.
+   */
+  _updateAllowedTags: function () {
+    // Update the list of auto-created tags.
+    this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
+
+    // Remove any previous auto-created tag message.
+    this.$allowedHTMLDescription.find('.editor-update-message').remove();
+
+    // If any auto-created tags: insert message and update form item.
+    if (this.autoTags.length > 0) {
+      this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
+      this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags) + ' ' + this._generateSetting(this.autoTags));
+    }
+    // Restore to original state.
+    else {
+      this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
+    }
+  },
+
+  /**
+   * Calculates which HTML tags the added text editor buttons need to work.
+   *
+   * The filter_html filter is only concerned with the required tags, not with
+   * any properties, nor with each feature's "allowed" tags.
+   *
+   * @param {Array} userAllowedTags
+   *   The list of user-defined allowed tags.
+   * @param {Object} newFeatures
+   *   A list of Drupal.EditorFeature objects' rules, keyed by their name.
+   *
+   * @return Array
+   *   A list of new allowed tags.
+   */
+  _calculateAutoAllowedTags: function (userAllowedTags, newFeatures) {
+    return _
+      .chain(newFeatures)
+      // Reduce multiple features' rules.
+      .reduce(function (memo, featureRules) {
+        // Reduce a single features' rules' required tags.
+        return _.union(memo, _.reduce(featureRules, function (memo, featureRule) {
+          return _.union(memo, featureRule.required.tags);
+        }, []));
+      }, [])
+      // All new features' required tags are "new allowed tags", except
+      // for those that are already allowed in the original allowed tags.
+      .difference(userAllowedTags)
+      .value();
+  },
+
+  /**
+   * Parses the value of this.$allowedHTMLFormItem.
+   *
+   * @param {String} setting
+   *   The string representation of the setting. e.g. "&lt;p> &lt;br> &lt;a>"
+   *
+   * @return Array
+   *   The array representation of the setting. e.g. ['p', 'br', 'a']
+   */
+  _parseSetting: function (setting) {
+    return setting.length ? setting.substring(1, setting.length - 1).split('> &lt;') : [];
+  },
+
+  /**
+   * Generates the value of this.$allowedHTMLFormItem.
+   *
+   * @param {Array} setting
+   *   The array representation of the setting. e.g. ['p', 'br', 'a']
+   *
+   * @return Array
+   *   The string representation of the setting. e.g. "&lt;p> &lt;br> &lt;a>"
+   */
+  _generateSetting: function (tags) {
+    return tags.length ? '&lt;' + tags.join('> &lt;') + '>' : '';
+  }
+
+};
+
+/**
+ * Theme function for the filter_html update message.
+ *
+ * @param {Array} tags
+ *   An array of the new tags that are to be allowed.
+ * @return {String}
+ *   The corresponding HTML.
+ */
+Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {
+  var html = '';
+  var tagList = '&lt;' + tags.join('> &lt;') + '>';
+  html += '&lt;p class="editor-update-message">';
+  html += Drupal.t('Based on the text editor configuration, these tags have automatically been added: &lt;strong>@tag-list&lt;/strong>.', { '@tag-list' : tagList });
+  html += '&lt;/p>';
+  return html;
+};
+
+})(jQuery, _, document, window);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </div>
+
+    <nav class="pure-u-1-5">
+      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
+    </nav>
+  </div>
+
+</div>
+
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

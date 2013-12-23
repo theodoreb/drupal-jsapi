@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: modules/contextual/js/contextual.js — Drupal JS API</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="pure/pure.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
+    <link type="text/css" rel="stylesheet" href="styles/drupal.css">
+</head>
+
+<body>
+
+<div id="main" class="pure">
+
+  <div class="pure-g">
+
+    <div class="pure-u-4-5">
+      <div class="box">
+        <h1 class="page-title">Source: modules/contextual/js/contextual.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * @file
+ * Attaches behaviors for the Contextual module.
+ */
+
+(function ($, Drupal, drupalSettings, Backbone, Modernizr) {
+
+"use strict";
+
+var options = $.extend(drupalSettings.contextual,
+  // Merge strings on top of drupalSettings so that they are not mutable.
+  {
+    strings: {
+      open: Drupal.t('Open'),
+      close: Drupal.t('Close')
+    }
+  }
+);
+
+/**
+ * Initializes a contextual link: updates its DOM, sets up model and views
+ *
+ * @param {jQueryObject} $contextual
+ *   A contextual links placeholder DOM element, containing the actual
+ *   contextual links as rendered by the server.
+ */
+function initContextual ($contextual) {
+  var $region = $contextual.closest('.contextual-region');
+  var contextual = Drupal.contextual;
+
+  $contextual
+    // Use the placeholder as a wrapper with a specific class to provide
+    // positioning and behavior attachment context.
+    .addClass('contextual')
+    // Ensure a trigger element exists before the actual contextual links.
+    .prepend(Drupal.theme('contextualTrigger'));
+
+  // Create a model and the appropriate views.
+  var model = new contextual.Model({
+    title: $region.find('h2:first').text().trim()
+  });
+  var viewOptions = $.extend({ el: $contextual, model: model }, options);
+  contextual.views.push({
+    visual: new contextual.VisualView(viewOptions),
+    aural: new contextual.AuralView(viewOptions),
+    keyboard: new contextual.KeyboardView(viewOptions)
+  });
+  contextual.regionViews.push(new contextual.RegionView(
+    $.extend({ el: $region, model: model }, options))
+  );
+
+  // Add the model to the collection. This must happen after the views have been
+  // associated with it, otherwise collection change event handlers can't
+  // trigger the model change event handler in its views.
+  contextual.collection.add(model);
+
+  // Let other JavaScript react to the adding of a new contextual link.
+  $(document).trigger('drupalContextualLinkAdded', {
+    $el: $contextual,
+    $region: $region,
+    model: model
+  });
+
+  // Fix visual collisions between contextual link triggers.
+  adjustIfNestedAndOverlapping($contextual);
+}
+
+/**
+ * Determines if a contextual link is nested &amp; overlapping, if so: adjusts it.
+ *
+ * This only deals with two levels of nesting; deeper levels are not touched.
+ *
+ * @param {jQueryObject} $contextual
+ *   A contextual links placeholder DOM element, containing the actual
+ *   contextual links as rendered by the server.
+ */
+function adjustIfNestedAndOverlapping ($contextual) {
+  var $contextuals = $contextual
+    // @todo confirm that .closest() is not sufficient
+    .parents('.contextual-region').eq(-1)
+    .find('.contextual');
+
+  // Early-return when there's no nesting.
+  if ($contextuals.length === 1) {
+    return;
+  }
+
+  // If the two contextual links overlap, then we move the second one.
+  var firstTop = $contextuals.eq(0).offset().top;
+  var secondTop = $contextuals.eq(1).offset().top;
+  if (firstTop === secondTop) {
+    var $nestedContextual = $contextuals.eq(1);
+
+    // Retrieve height of nested contextual link.
+    var height = 0;
+    var $trigger = $nestedContextual.find('.trigger');
+    // Elements with the .visually-hidden class have no dimensions, so this
+    // class must be temporarily removed to the calculate the height.
+    $trigger.removeClass('visually-hidden');
+    height = $nestedContextual.height();
+    $trigger.addClass('visually-hidden');
+
+    // Adjust nested contextual link's position.
+    $nestedContextual.css({ top: $nestedContextual.position().top + height });
+  }
+}
+
+/**
+ * Attaches outline behavior for regions associated with contextual links.
+ *
+ * Events
+ *   Contextual triggers an event that can be used by other scripts.
+ *
+ *   - drupalContextualLinkAdded: Triggered when a contextual link is added.
+ * @type {Behavior}
+ */
+Drupal.behaviors.contextual = {
+  attach: function (context) {
+    var $context = $(context);
+
+    // Find all contextual links placeholders, if any.
+    var $placeholders = $context.find('[data-contextual-id]').once('contextual-render');
+    if ($placeholders.length === 0) {
+      return;
+    }
+
+    // Collect the IDs for all contextual links placeholders.
+    var ids = [];
+    $placeholders.each(function () {
+      ids.push($(this).attr('data-contextual-id'));
+    });
+
+    // Perform an AJAX request to let the server render the contextual links for
+    // each of the placeholders.
+    $.ajax({
+      url: Drupal.url('contextual/render') + '?destination=' + Drupal.encodePath(drupalSettings.currentPath),
+      type: 'POST',
+      data: { 'ids[]' : ids },
+      dataType: 'json',
+      success: function (results) {
+        for (var id in results) {
+          // If the rendered contextual links are empty, then the current user
+          // does not have permission to access the associated links: don't
+          // render anything.
+          if (results.hasOwnProperty(id) &amp;&amp; results[id].length > 0) {
+            // Update the placeholders to contain its rendered contextual links.
+            // Usually there will only be one placeholder, but it's possible for
+            // multiple identical placeholders exist on the page (probably
+            // because the same content appears more than once).
+            var $placeholders = $context
+              .find('[data-contextual-id="' + id + '"]')
+              .html(results[id]);
+
+            // Initialize the contextual links.
+            for (var i = 0; i &lt; $placeholders.length; i++) {
+              initContextual($placeholders.eq(i));
+            }
+          }
+        }
+      }
+     });
+  }
+};
+
+/**
+ * Model and View definitions.
+ * @namespace
+ */
+Drupal.contextual = {
+  /**
+   * The Drupal.contextual.View instances associated with each list element of
+   * contextual links.
+   * @type {Array}
+   */
+  views: [],
+
+  /**
+   * The Drupal.contextual.RegionView instances associated with each contextual
+   * region element.
+   * @type {Array.&lt;Drupal.contextual.RegionView>}
+   */
+  regionViews: [],
+
+  /**
+   * Models the state of a contextual link's trigger and list.
+   * @class
+   */
+  Model: Backbone.Model.extend(/** @lends Drupal.contextual.Model# */ {
+    defaults: {
+      // The title of the entity to which these contextual links apply.
+      title: '',
+      // Represents if the contextual region is being hovered.
+      regionIsHovered: false,
+      // Represents if the contextual trigger or options have focus.
+      hasFocus: false,
+      // Represents if the contextual options for an entity are available to
+      // be selected.
+      isOpen: false,
+      // When the model is locked, the trigger remains active.
+      isLocked: false
+    },
+
+    /**
+     * Opens or closes the contextual link.
+     *
+     * If it is opened, then also give focus.
+     */
+    toggleOpen: function () {
+      var newIsOpen = !this.get('isOpen');
+      this.set('isOpen', newIsOpen);
+      if (newIsOpen) {
+        this.focus();
+      }
+      return this;
+    },
+
+    /**
+     * Closes this contextual link.
+     *
+     * Does not call blur() because we want to allow a contextual link to have
+     * focus, yet be closed for example when hovering.
+     */
+    close: function () {
+      this.set('isOpen', false);
+      return this;
+    },
+
+    /**
+     * Gives focus to this contextual link.
+     *
+     * Also closes + removes focus from every other contextual link.
+     */
+    focus: function () {
+      this.set('hasFocus', true);
+      var cid = this.cid;
+      this.collection.each(function (model) {
+        if (model.cid !== cid) {
+          model.close().blur();
+        }
+      });
+      return this;
+    },
+
+    /**
+     * Removes focus from this contextual link, unless it is open.
+     */
+    blur: function () {
+      if (!this.get('isOpen')) {
+        this.set('hasFocus', false);
+      }
+      return this;
+    }
+  }),
+
+  VisualView: Backbone.View.extend(/** @lends Drupal.contextual.VisualView# */ {
+    /**
+     * @return {Object}
+     */
+    events: function () {
+      // Prevents delay and simulated mouse events.
+      var touchEndToClick = function (event) {
+        event.preventDefault();
+        event.target.click();
+      };
+      var mapping = {
+        'click .trigger': function () { this.model.toggleOpen(); },
+        'touchend .trigger': touchEndToClick,
+        'click .contextual-links a': function () { this.model.close().blur(); },
+        'touchend .contextual-links a': touchEndToClick
+      };
+      // We only want mouse hover events on non-touch.
+      if (!Modernizr.touch) {
+        mapping.mouseenter =  function () { this.model.focus(); };
+      }
+      return mapping;
+    },
+
+    /**
+     * Renders the visual view of a contextual link. Listens to mouse &amp; touch.
+     * @constructs Drupal.contextual.VisualView
+     * @augments Backbone.View
+     */
+    initialize: function () {
+      this.model.on('change', this.render, this);
+    },
+
+    /**
+     * @method
+     */
+    render: function () {
+      var isOpen = this.model.get('isOpen');
+      // The trigger should be visible when:
+      //  - the mouse hovered over the region,
+      //  - the trigger is locked,
+      //  - and for as long as the contextual menu is open.
+      var isVisible = this.model.get('isLocked') || this.model.get('regionIsHovered') || isOpen;
+
+      this.$el
+        // The open state determines if the links are visible.
+        .toggleClass('open', isOpen)
+        // Update the visibility of the trigger.
+        .find('.trigger').toggleClass('visually-hidden', !isVisible);
+
+      // Nested contextual region handling: hide any nested contextual triggers.
+      if ('isOpen' in this.model.changed) {
+        this.$el.closest('.contextual-region')
+          .find('.contextual .trigger:not(:first)')
+          .toggle(!isOpen);
+      }
+
+      return this;
+    }
+  }),
+
+  AuralView: Backbone.View.extend(/** @lends Drupal.contextual.AuralView# */ {
+    /**
+     * Renders the aural view of a contextual link (i.e. screen reader support).
+     * @constructs Drupal.contextual.AuralView
+     * @augments Backbone.View
+     */
+    initialize: function (options) {
+      this.model.on('change', this.render, this);
+
+      // Use aria-role form so that the number of items in the list is spoken.
+      this.$el.attr('role', 'form');
+
+      // Initial render.
+      this.render();
+    },
+
+    /**
+     * @method
+     */
+    render: function () {
+      var isOpen = this.model.get('isOpen');
+
+      // Set the hidden property of the links.
+      this.$el.find('.contextual-links')
+        .prop('hidden', !isOpen);
+
+      // Update the view of the trigger.
+      this.$el.find('.trigger')
+        .text(Drupal.t('@action @title configuration options', {
+          '@action': (!isOpen) ? this.options.strings.open : this.options.strings.close,
+          '@title': this.model.get('title')
+        }))
+        .attr('aria-pressed', isOpen);
+    }
+  }),
+
+  KeyboardView: Backbone.View.extend(/** @lends Drupal.contextual.KeyboardView */ {
+    events: {
+      'focus .trigger': 'focus',
+      'focus .contextual-links a': 'focus',
+      'blur .trigger': function () { this.model.blur(); },
+      'blur .contextual-links a': function () {
+        // Set up a timeout to allow a user to tab between the trigger and the
+        // contextual links without the menu dismissing.
+        var that = this;
+        this.timer = window.setTimeout(function () {
+          that.model.close().blur();
+        }, 150);
+      }
+    },
+
+    /**
+     * Listens to keyboard.
+     * @constructs Drupal.contextual.KeyboardView
+     * @augments Backbone.View
+     */
+    initialize: function () {
+      // The timer is used to create a delay before dismissing the contextual
+      // links on blur. This is only necessary when keyboard users tab into
+      // contextual links without edit mode (i.e. without TabbingManager).
+      // That means that if we decide to disable tabbing of contextual links
+      // without edit mode, all this timer logic can go away.
+      this.timer = NaN;
+    },
+
+    /**
+     * Sets focus on the model; Clears the timer that dismisses the links.
+     */
+    focus: function () {
+      // Clear the timeout that might have been set by blurring a link.
+      window.clearTimeout(this.timer);
+      this.model.focus();
+    }
+  }),
+
+  RegionView: Backbone.View.extend(/** @lends Drupal.contextual.RegionView */{
+    events: function () {
+      var mapping = {
+        mouseenter: function () { this.model.set('regionIsHovered', true); },
+        mouseleave: function () {
+          this.model.close().blur().set('regionIsHovered', false);
+        }
+      };
+      // We don't want mouse hover events on touch.
+      if (Modernizr.touch) {
+        mapping = {};
+      }
+      return mapping;
+    },
+
+    /**
+     * Renders the visual view of a contextual region element.
+     * @constructs Drupal.contextual.RegionView
+     * @augments Backbone.View
+     */
+    initialize: function () {
+      this.model.on('change:hasFocus', this.render, this);
+    },
+
+    /**
+     * @method
+     */
+    render: function () {
+      this.$el.toggleClass('focus', this.model.get('hasFocus'));
+
+      return this;
+    }
+  })
+};
+
+/**
+ * A Backbone.Collection of Drupal.contextual.Model instances.
+ * @type {Backbone.Collection}
+ */
+Drupal.contextual.collection = new Backbone.Collection([], { model: Drupal.contextual.Model });
+
+/**
+ * A trigger is an interactive element often bound to a click handler.
+ *
+ * @return {String}
+ *   A string representing a DOM fragment.
+ */
+Drupal.theme.contextualTrigger = function () {
+  return '&lt;button class="trigger visually-hidden focusable" type="button">&lt;/button>';
+};
+
+})(jQuery, Drupal, drupalSettings, Backbone, Modernizr);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </div>
+
+    <nav class="pure-u-1-5">
+      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
+    </nav>
+  </div>
+
+</div>
+
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

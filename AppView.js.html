@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: modules/edit/js/views/AppView.js — Drupal JS API</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="pure/pure.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
+    <link type="text/css" rel="stylesheet" href="styles/drupal.css">
+</head>
+
+<body>
+
+<div id="main" class="pure">
+
+  <div class="pure-g">
+
+    <div class="pure-u-4-5">
+      <div class="box">
+        <h1 class="page-title">Source: modules/edit/js/views/AppView.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * @file
+ * A Backbone View that controls the overall "in-place editing application".
+ *
+ * @see Drupal.edit.AppModel
+ */
+
+(function ($, _, Backbone, Drupal) {
+
+"use strict";
+
+// Indicates whether the page should be reloaded after in-place editing has
+// shut down. A page reload is necessary to re-instate the original HTML of the
+// edited fields if in-place editing has been canceled and one or more of the
+// entity's fields were saved to TempStore: one of them may have been changed to
+// the empty value and hence may have been rerendered as the empty string, which
+// makes it impossible for Edit to know where to restore the original HTML.
+var reload = false;
+
+Drupal.edit.AppView = Backbone.View.extend(/** @lends Drupal.edit.AppView# */{
+
+  /**
+   * @constructs Drupal.edit.AppView
+   * @augments Backbone.View
+   * @param {Object} options
+   * @param {Drupal.edit.AppModel} options.model the application state model
+   * @param {Drupal.edit.EntityCollection} options.entitiesCollection all on-page entities
+   * @param {Drupal.edit.FieldCollection} options.fieldsCollection all on-page fields
+   */
+  initialize: function (options) {
+    // AppView's configuration for handling states.
+    // @see Drupal.edit.FieldModel.states
+    this.activeFieldStates = ['activating', 'active'];
+    this.singleFieldStates = ['highlighted', 'activating', 'active'];
+    this.changedFieldStates = ['changed', 'saving', 'saved', 'invalid'];
+    this.readyFieldStates = ['candidate', 'highlighted'];
+
+    options.entitiesCollection
+      // Track app state.
+      .on('change:state', this.appStateChange, this)
+      .on('change:isActive', this.enforceSingleActiveEntity, this);
+
+    options.fieldsCollection
+      // Track app state.
+      .on('change:state', this.editorStateChange, this)
+      // Respond to field model HTML representation change events.
+      .on('change:html', this.propagateUpdatedField, this)
+      .on('change:html', this.renderUpdatedField, this)
+      // Respond to addition.
+      .on('add', this.rerenderedFieldToCandidate, this)
+      // Respond to destruction.
+      .on('destroy', this.teardownEditor, this);
+  },
+
+  /**
+   * Handles setup/teardown and state changes when the active entity changes.
+   *
+   * @param {Drupal.edit.EntityModel} entityModel
+   *   An instance of the EntityModel class.
+   * @param {String} state
+   *   The state of the associated field. One of Drupal.edit.EntityModel.states.
+   */
+  appStateChange: function (entityModel, state) {
+    var app = this;
+    var entityToolbarView;
+    switch (state) {
+      case 'launching':
+        reload = false;
+        // First, create an entity toolbar view.
+        entityToolbarView = new Drupal.edit.EntityToolbarView({
+          model: entityModel,
+          appModel: this.model
+        });
+        entityModel.toolbarView = entityToolbarView;
+        // Second, set up in-place editors.
+        // They must be notified of state changes, hence this must happen while
+        // the associated fields are still in the 'inactive' state.
+        entityModel.get('fields').each(function (fieldModel) {
+          app.setupEditor(fieldModel);
+        });
+        // Third, transition the entity to the 'opening' state, which will
+        // transition all fields from 'inactive' to 'candidate'.
+        _.defer(function () {
+          entityModel.set('state', 'opening');
+        });
+        break;
+      case 'closed':
+        entityToolbarView = entityModel.toolbarView;
+        // First, tear down the in-place editors.
+        entityModel.get('fields').each(function (fieldModel) {
+          app.teardownEditor(fieldModel);
+        });
+        // Second, tear down the entity toolbar view.
+        if (entityToolbarView) {
+          entityToolbarView.remove();
+          delete entityModel.toolbarView;
+        }
+        // A page reload may be necessary to re-instate the original HTML of the
+        // edited fields.
+        if (reload) {
+          reload = false;
+          location.reload();
+        }
+        break;
+    }
+  },
+
+  /**
+   * Accepts or reject editor (Editor) state changes.
+   *
+   * This is what ensures that the app is in control of what happens.
+   *
+   * @param {String} from
+   *   The previous state.
+   * @param {String} to
+   *   The new state.
+   * @param {null|Object} context
+   *   The context that is trying to trigger the state change.
+   * @param {Drupal.edit.FieldModel} fieldModel
+   *   The fieldModel to which this change applies.
+   */
+  acceptEditorStateChange: function (from, to, context, fieldModel) {
+    var accept = true;
+
+    // If the app is in view mode, then reject all state changes except for
+    // those to 'inactive'.
+    if (context &amp;&amp; (context.reason === 'stop' || context.reason === 'rerender')) {
+      if (from === 'candidate' &amp;&amp; to === 'inactive') {
+        accept = true;
+      }
+    }
+    // Handling of edit mode state changes is more granular.
+    else {
+      // In general, enforce the states sequence. Disallow going back from a
+      // "later" state to an "earlier" state, except in explicitly allowed
+      // cases.
+      if (!Drupal.edit.FieldModel.followsStateSequence(from, to)) {
+        accept = false;
+        // Allow: activating/active -> candidate.
+        // Necessary to stop editing a field.
+        if (_.indexOf(this.activeFieldStates, from) !== -1 &amp;&amp; to === 'candidate') {
+          accept = true;
+        }
+        // Allow: changed/invalid -> candidate.
+        // Necessary to stop editing a field when it is changed or invalid.
+        else if ((from === 'changed' || from === 'invalid') &amp;&amp; to === 'candidate') {
+          accept = true;
+        }
+        // Allow: highlighted -> candidate.
+        // Necessary to stop highlighting a field.
+        else if (from === 'highlighted' &amp;&amp; to === 'candidate') {
+          accept = true;
+        }
+        // Allow: saved -> candidate.
+        // Necessary when successfully saved a field.
+        else if (from === 'saved' &amp;&amp; to === 'candidate') {
+          accept = true;
+        }
+        // Allow: invalid -> saving.
+        // Necessary to be able to save a corrected, invalid field.
+        else if (from === 'invalid' &amp;&amp; to === 'saving') {
+          accept = true;
+        }
+        // Allow: invalid -> activating.
+        // Necessary to be able to correct a field that turned out to be invalid
+        // after the user already had moved on to the next field (which we
+        // explicitly allow to have a fluent UX).
+        else if (from === 'invalid' &amp;&amp; to === 'activating') {
+          accept = true;
+        }
+      }
+
+      // If it's not against the general principle, then here are more
+      // disallowed cases to check.
+      if (accept) {
+        var activeField, activeFieldState;
+        // Ensure only one field (editor) at a time is active … but allow a user
+        // to hop from one field to the next, even if we still have to start
+        // saving the field that is currently active: assume it will be valid,
+        // to allow for a fluent UX. (If it turns out to be invalid, this block
+        // of code also handles that.)
+        if ((this.readyFieldStates.indexOf(from) !== -1 || from === 'invalid') &amp;&amp; this.activeFieldStates.indexOf(to) !== -1) {
+          activeField = this.model.get('activeField');
+          if (activeField &amp;&amp; activeField !== fieldModel) {
+            activeFieldState = activeField.get('state');
+            // Allow the state change. If the state of the active field is:
+            // - 'activating' or 'active': change it to 'candidate'
+            // - 'changed' or 'invalid': change it to 'saving'
+            // - 'saving'or 'saved': don't do anything.
+            if (this.activeFieldStates.indexOf(activeFieldState) !== -1) {
+              activeField.set('state', 'candidate');
+            }
+            else if (activeFieldState === 'changed' || activeFieldState === 'invalid') {
+              activeField.set('state', 'saving');
+            }
+
+            // If the field that's being activated is in fact already in the
+            // invalid state (which can only happen because above we allowed the
+            // user to move on to another field to allow for a fluent UX; we
+            // assumed it would be saved successfully), then we shouldn't allow
+            // the field to enter the 'activating' state, instead, we simply
+            // change the active editor. All guarantees and assumptions for this
+            // field still hold!
+            if (from === 'invalid') {
+              this.model.set('activeField', fieldModel);
+              accept = false;
+            }
+            else {
+              // Do not reject: the field is either in the 'candidate' or
+              // 'highlighted' state and we allow it to enter the 'activating'
+              // state!
+            }
+          }
+        }
+        // Reject going from activating/active to candidate because of a
+        // mouseleave.
+        else if (_.indexOf(this.activeFieldStates, from) !== -1 &amp;&amp; to === 'candidate') {
+          if (context &amp;&amp; context.reason === 'mouseleave') {
+            accept = false;
+          }
+        }
+        // When attempting to stop editing a changed/invalid property, ask for
+        // confirmation.
+        else if ((from === 'changed' || from === 'invalid') &amp;&amp; to === 'candidate') {
+          if (context &amp;&amp; context.reason === 'mouseleave') {
+            accept = false;
+          }
+          else {
+            // Check whether the transition has been confirmed?
+            if (context &amp;&amp; context.confirmed) {
+              accept = true;
+            }
+          }
+        }
+      }
+    }
+
+    return accept;
+  },
+
+  /**
+   * Sets up the in-place editor for the given field.
+   *
+   * Must happen before the fieldModel's state is changed to 'candidate'.
+   *
+   * @param {Drupal.edit.FieldModel} fieldModel
+   *   The field for which an in-place editor must be set up.
+   */
+  setupEditor: function (fieldModel) {
+    // Get the corresponding entity toolbar.
+    var entityModel = fieldModel.get('entity');
+    var entityToolbarView = entityModel.toolbarView;
+    // Get the field toolbar DOM root from the entity toolbar.
+    var fieldToolbarRoot = entityToolbarView.getToolbarRoot();
+    // Create in-place editor.
+    var editorName = fieldModel.get('metadata').editor;
+    var editorModel = new Drupal.edit.EditorModel();
+    var editorView = new Drupal.edit.editors[editorName]({
+      el: $(fieldModel.get('el')),
+      model: editorModel,
+      fieldModel: fieldModel
+    });
+
+    // Create in-place editor's toolbar for this field — stored inside the
+    // entity toolbar, the entity toolbar will position itself appropriately
+    // above (or below) the edited element.
+    var toolbarView = new Drupal.edit.FieldToolbarView({
+      el: fieldToolbarRoot,
+      model: fieldModel,
+      $editedElement: $(editorView.getEditedElement()),
+      editorView: editorView,
+      entityModel: entityModel
+    });
+
+    // Create decoration for edited element: padding if necessary, sets classes
+    // on the element to style it according to the current state.
+    var decorationView = new Drupal.edit.FieldDecorationView({
+      el: $(editorView.getEditedElement()),
+      model: fieldModel,
+      editorView: editorView
+    });
+
+    // Track these three views in FieldModel so that we can tear them down
+    // correctly.
+    fieldModel.editorView = editorView;
+    fieldModel.toolbarView = toolbarView;
+    fieldModel.decorationView = decorationView;
+  },
+
+  /**
+   * Tears down the in-place editor for the given field.
+   *
+   * Must happen after the fieldModel's state is changed to 'inactive'.
+   *
+   * @param {Drupal.edit.FieldModel} fieldModel
+   *   The field for which an in-place editor must be torn down.
+   */
+  teardownEditor: function (fieldModel) {
+    // Early-return if this field was not yet decorated.
+    if (fieldModel.editorView === undefined) {
+      return;
+    }
+
+    // Unbind event handlers; remove toolbar element; delete toolbar view.
+    fieldModel.toolbarView.remove();
+    delete fieldModel.toolbarView;
+
+    // Unbind event handlers; delete decoration view. Don't remove the element
+    // because that would remove the field itself.
+    fieldModel.decorationView.remove();
+    delete fieldModel.decorationView;
+
+    // Unbind event handlers; delete editor view. Don't remove the element
+    // because that would remove the field itself.
+    fieldModel.editorView.remove();
+    delete fieldModel.editorView;
+  },
+
+  /**
+   * Asks the user to confirm whether he wants to stop editing via a modal.
+   *
+   * @see Drupal.edit.AppView#acceptEditorStateChange
+   */
+  confirmEntityDeactivation: function (entityModel) {
+    var that = this;
+    var discardDialog;
+
+    function closeDiscardDialog (action) {
+      discardDialog.close(action);
+      // The active modal has been removed.
+      that.model.set('activeModal', null);
+
+      // If the targetState is saving, the field must be saved, then the
+      // entity must be saved.
+      if (action === 'save') {
+        entityModel.set('state', 'committing', {confirmed : true});
+      }
+      else {
+        entityModel.set('state', 'deactivating', {confirmed : true});
+        // Editing has been canceled and the changes will not be saved. Mark
+        // the page for reload if the entityModel declares that it requires
+        // a reload.
+        if (entityModel.get('reload')) {
+          reload = true;
+          entityModel.set('reload', false);
+        }
+      }
+    }
+
+    // Only instantiate if there isn't a modal instance visible yet.
+    if (!this.model.get('activeModal')) {
+      discardDialog = Drupal.dialog('&lt;div>' + Drupal.t('You have unsaved changes') + '&lt;/div>', {
+        title: Drupal.t('Discard changes?'),
+        dialogClass: 'edit-discard-modal',
+        resizable: false,
+        buttons: [
+          {
+            text: Drupal.t('Save'),
+            click: function() {
+              closeDiscardDialog('save');
+            }
+          },
+          {
+            text: Drupal.t('Discard changes'),
+            click: function() {
+              closeDiscardDialog('discard');
+            }
+          }
+        ],
+        // Prevent this modal from being closed without the user making a choice
+        // as per http://stackoverflow.com/a/5438771.
+        closeOnEscape: false,
+        create: function () {
+          $(this).parent().find('.ui-dialog-titlebar-close').remove();
+        },
+        beforeClose: false,
+        close: function (event) {
+          // Automatically destroy the DOM element that was used for the dialog.
+          $(event.target).remove();
+        }
+      });
+      this.model.set('activeModal', discardDialog);
+
+      discardDialog.showModal();
+    }
+  },
+
+  /**
+   * Reacts to field state changes; tracks global state.
+   *
+   * @param {Drupal.edit.FieldModel} fieldModel
+   * @param {String} state
+   *   The state of the associated field. One of Drupal.edit.FieldModel.states.
+   */
+  editorStateChange: function (fieldModel, state) {
+    var from = fieldModel.previous('state');
+    var to = state;
+
+    // Keep track of the highlighted field in the global state.
+    if (_.indexOf(this.singleFieldStates, to) !== -1 &amp;&amp; this.model.get('highlightedField') !== fieldModel) {
+      this.model.set('highlightedField', fieldModel);
+    }
+    else if (this.model.get('highlightedField') === fieldModel &amp;&amp; to === 'candidate') {
+      this.model.set('highlightedField', null);
+    }
+
+    // Keep track of the active field in the global state.
+    if (_.indexOf(this.activeFieldStates, to) !== -1 &amp;&amp; this.model.get('activeField') !== fieldModel) {
+      this.model.set('activeField', fieldModel);
+    }
+    else if (this.model.get('activeField') === fieldModel &amp;&amp; to === 'candidate') {
+      // Discarded if it transitions from a changed state to 'candidate'.
+      if (from === 'changed' || from === 'invalid') {
+        fieldModel.editorView.revert();
+      }
+      this.model.set('activeField', null);
+    }
+  },
+
+  /**
+   * Render an updated field (a field whose 'html' attribute changed).
+   *
+   * @param {Drupal.edit.FieldModel} fieldModel
+   *   The FieldModel whose 'html' attribute changed.
+   * @param {String} html
+   *   The updated 'html' attribute.
+   * @param {Object} options
+   * @param {Boolean} options.propagation
+   *  Whether this change to the 'html' attribute
+   *  occurred because of the propagation of changes to another instance of
+   *  this field.
+   */
+  renderUpdatedField: function (fieldModel, html, options) {
+    // Get data necessary to rerender property before it is unavailable.
+    var $fieldWrapper = $(fieldModel.get('el'));
+    var $context = $fieldWrapper.parent();
+
+    // When propagating the changes of another instance of this field, this
+    // field is not being actively edited and hence no state changes are
+    // necessary. So: only update the state of this field when the rerendering
+    // of this field happens not because of propagation, but because it is being
+    // edited itself.
+    if (!options.propagation) {
+      // First set the state to 'candidate', to allow all attached views to
+      // clean up all their "active state"-related changes.
+      fieldModel.set('state', 'candidate');
+
+      // Set the field's state to 'inactive', to enable the updating of its DOM
+      // value.
+      fieldModel.set('state', 'inactive', { reason: 'rerender' });
+    }
+
+    // Destroy the field model; this will cause all attached views to be
+    // destroyed too, and removal from all collections in which it exists.
+    fieldModel.destroy();
+
+    // Replace the old content with the new content.
+    $fieldWrapper.replaceWith(html);
+
+    // Attach behaviors again to the modified piece of HTML; this will create
+    // a new field model and call rerenderedFieldToCandidate() with it.
+    Drupal.attachBehaviors($context);
+  },
+
+  /**
+   * Propagates the changes to an updated field to all instances of that field.
+   *
+   * @param {Drupal.edit.FieldModel} updatedField
+   *   The FieldModel whose 'html' attribute changed.
+   * @param {String} html
+   *   The updated 'html' attribute.
+   * @param {Object} options
+   * @param {Boolean} options.propagation
+   *  Whether this change to the 'html' attribute
+   *  occurred because of the propagation of changes to another instance of
+   *  this field.
+   *
+   * @see Drupal.edit.AppView#renderUpdatedField
+   */
+  propagateUpdatedField: function (updatedField, html, options) {
+    // Don't propagate field updates that themselves were caused by propagation.
+    if (options.propagation) {
+      return;
+    }
+
+    var htmlForOtherViewModes = updatedField.get('htmlForOtherViewModes');
+    Drupal.edit.collections.fields
+      // Find all instances of fields that display the same logical field (same
+      // entity, same field, just a different instance and maybe a different
+      // view mode).
+      .where({ logicalFieldID: updatedField.get('logicalFieldID') })
+      .forEach(function (field) {
+        // Ignore the field that was already updated.
+        if (field === updatedField) {
+          return;
+        }
+        // If this other instance of the field has the same view mode, we can
+        // update it easily.
+        else if (field.getViewMode() === updatedField.getViewMode()) {
+          field.set('html', updatedField.get('html'));
+        }
+        // If this other instance of the field has a different view mode, and
+        // that is one of the view modes for which a re-rendered version is
+        // available (and that should be the case unless this field was only
+        // added to the page after editing of the updated field began), then use
+        // that view mode's re-rendered version.
+        else {
+          if (field.getViewMode() in htmlForOtherViewModes) {
+            field.set('html', htmlForOtherViewModes[field.getViewMode()], { propagation: true });
+          }
+        }
+      });
+  },
+
+  /**
+   * If the new in-place editable field is for the entity that's currently
+   * being edited, then transition it to the 'candidate' state.
+   *
+   * This happens when a field was modified, saved and hence rerendered.
+   *
+   * @param {Drupal.edit.FieldModel} fieldModel
+   *   A field that was just added to the collection of fields.
+   */
+  rerenderedFieldToCandidate: function (fieldModel) {
+    var activeEntity = Drupal.edit.collections.entities.where({isActive: true})[0];
+
+    // Early-return if there is no active entity.
+    if (activeEntity === null) {
+      return;
+    }
+
+    // If the field's entity is the active entity, make it a candidate.
+    if (fieldModel.get('entity') === activeEntity) {
+      this.setupEditor(fieldModel);
+      fieldModel.set('state', 'candidate');
+    }
+  },
+
+  /**
+   * EntityModel Collection change handler, called on change:isActive, enforces
+   * a single active entity.
+   *
+   * @param {Drupal.edit.EntityModel} changedEntityModel
+   *   The entityModel instance whose active state has changed.
+   */
+  enforceSingleActiveEntity: function (changedEntityModel) {
+    // When an entity is deactivated, we don't need to enforce anything.
+    if (changedEntityModel.get('isActive') === false) {
+      return;
+    }
+
+    // This entity was activated; deactivate all other entities.
+    changedEntityModel.collection.chain()
+      .filter(function (entityModel) {
+        return entityModel.get('isActive') === true &amp;&amp; entityModel !== changedEntityModel;
+      })
+      .each(function (entityModel) {
+        entityModel.set('state', 'deactivating');
+      });
+  }
+
+});
+
+}(jQuery, _, Backbone, Drupal));
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </div>
+
+    <nav class="pure-u-1-5">
+      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
+    </nav>
+  </div>
+
+</div>
+
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

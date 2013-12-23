@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: modules/color/color.js — Drupal JS API</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="pure/pure.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
+    <link type="text/css" rel="stylesheet" href="styles/drupal.css">
+</head>
+
+<body>
+
+<div id="main" class="pure">
+
+  <div class="pure-g">
+
+    <div class="pure-u-4-5">
+      <div class="box">
+        <h1 class="page-title">Source: modules/color/color.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * @file
+ * Attaches the behaviors for the Color module.
+ */
+(function ($) {
+
+"use strict";
+
+/**
+ * @type {Behavior}
+ */
+Drupal.behaviors.color = {
+  attach: function (context, settings) {
+    var i, j, colors;
+    // This behavior attaches by ID, so is only valid once on a page.
+    var form = $(context).find('#system-theme-settings .color-form').once('color');
+    if (form.length === 0) {
+      return;
+    }
+    var inputs = [];
+    var hooks = [];
+    var locks = [];
+    var focused = null;
+
+    // Add Farbtastic.
+    $('&lt;div id="placeholder">&lt;/div>').once('color').prependTo(form);
+    var farb = $.farbtastic('#placeholder');
+
+    // Decode reference colors to HSL.
+    var reference = settings.color.reference;
+    for (i in reference) {
+      if (reference.hasOwnProperty(i)) {
+        reference[i] = farb.RGBToHSL(farb.unpack(reference[i]));
+      }
+    }
+
+    // Build a preview.
+    var height = [];
+    var width = [];
+    // Loop through all defined gradients.
+    for (i in settings.gradients) {
+      if (settings.gradients.hasOwnProperty(i)) {
+        // Add element to display the gradient.
+        $('#preview').once('color').append('&lt;div id="gradient-' + i + '">&lt;/div>');
+        var gradient = $('#preview #gradient-' + i);
+        // Add height of current gradient to the list (divided by 10).
+        height.push(parseInt(gradient.css('height'), 10) / 10);
+        // Add width of current gradient to the list (divided by 10).
+        width.push(parseInt(gradient.css('width'), 10) / 10);
+        // Add rows (or columns for horizontal gradients).
+        // Each gradient line should have a height (or width for horizontal
+        // gradients) of 10px (because we divided the height/width by 10 above).
+        for (j = 0; j &lt; (settings.gradients[i].direction === 'vertical' ? height[i] : width[i]); ++j) {
+          gradient.append('&lt;div class="gradient-line">&lt;/div>');
+        }
+      }
+    }
+
+    // Set up colorScheme selector.
+    form.find('#edit-scheme').on('change', function () {
+      var schemes = settings.color.schemes, colorScheme = this.options[this.selectedIndex].value;
+      if (colorScheme !== '' &amp;&amp; schemes[colorScheme]) {
+        // Get colors of active scheme.
+        colors = schemes[colorScheme];
+        for (var fieldName in colors) {
+          if (colors.hasOwnProperty(fieldName)) {
+            callback($('#edit-palette-' + fieldName), colors[fieldName], false, true);
+          }
+        }
+        preview();
+      }
+    });
+
+    /**
+     * Renders the preview.
+     */
+    function preview() {
+      Drupal.color.callback(context, settings, form, farb, height, width);
+    }
+
+    /**
+     * Shifts a given color, using a reference pair (ref in HSL).
+     *
+     * This algorithm ensures relative ordering on the saturation and luminance
+     * axes is preserved, and performs a simple hue shift.
+     *
+     * It is also symmetrical. If: shift_color(c, a, b) === d, then
+     * shift_color(d, b, a) === c.
+     */
+    function shift_color(given, ref1, ref2) {
+      var d;
+      // Convert to HSL.
+      given = farb.RGBToHSL(farb.unpack(given));
+
+      // Hue: apply delta.
+      given[0] += ref2[0] - ref1[0];
+
+      // Saturation: interpolate.
+      if (ref1[1] === 0 || ref2[1] === 0) {
+        given[1] = ref2[1];
+      }
+      else {
+        d = ref1[1] / ref2[1];
+        if (d > 1) {
+          given[1] /= d;
+        }
+        else {
+          given[1] = 1 - (1 - given[1]) * d;
+        }
+      }
+
+      // Luminance: interpolate.
+      if (ref1[2] === 0 || ref2[2] === 0) {
+        given[2] = ref2[2];
+      }
+      else {
+        d = ref1[2] / ref2[2];
+        if (d > 1) {
+          given[2] /= d;
+        }
+        else {
+          given[2] = 1 - (1 - given[2]) * d;
+        }
+      }
+
+      return farb.pack(farb.HSLToRGB(given));
+    }
+
+    /**
+     * Callback for Farbtastic when a new color is chosen.
+     */
+    function callback(input, color, propagate, colorScheme) {
+      var matched;
+      // Set background/foreground colors.
+      $(input).css({
+        backgroundColor: color,
+        'color': farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
+      });
+
+      // Change input value.
+      if ($(input).val() &amp;&amp; $(input).val() !== color) {
+        $(input).val(color);
+
+        // Update locked values.
+        if (propagate) {
+          i = input.i;
+          for (j = i + 1; ; ++j) {
+            if (!locks[j - 1] || $(locks[j - 1]).is('.unlocked')) {
+              break;
+            }
+            matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
+            callback(inputs[j], matched, false);
+          }
+          for (j = i - 1; ; --j) {
+            if (!locks[j] || $(locks[j]).is('.unlocked')) {
+              break;
+            }
+            matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
+            callback(inputs[j], matched, false);
+          }
+
+          // Update preview.
+          preview();
+        }
+
+        // Reset colorScheme selector.
+        if (!colorScheme) {
+          resetScheme();
+        }
+      }
+    }
+
+    /**
+     * Resets the color scheme selector.
+     */
+    function resetScheme() {
+      form.find('#edit-scheme').each(function () {
+        this.selectedIndex = this.options.length - 1;
+      });
+    }
+
+    /**
+     * Focuses Farbtastic on a particular field.
+     */
+    function focus(e) {
+      var input = e.target;
+      // Remove old bindings.
+      if (focused) {
+        $(focused).off('keyup', farb.updateValue)
+          .off('keyup', preview).off('keyup', resetScheme)
+          .parent().removeClass('item-selected');
+      }
+
+      // Add new bindings.
+      focused = input;
+      farb.linkTo(function (color) { callback(input, color, true, false); });
+      farb.setColor(input.value);
+      $(focused).on('keyup', farb.updateValue).on('keyup', preview).on('keyup', resetScheme)
+        .parent().addClass('item-selected');
+    }
+
+    // Initialize color fields.
+    form.find('#palette input.form-text')
+    .each(function () {
+      // Extract palette field name
+      this.key = this.id.substring(13);
+
+      // Link to color picker temporarily to initialize.
+      farb.linkTo(function () {}).setColor('#000').linkTo(this);
+
+      // Add lock.
+      var i = inputs.length;
+      if (inputs.length) {
+        var toggleClick = true;
+        var lock = $('&lt;div class="lock">&lt;/div>').on('click', function () {
+          if (toggleClick) {
+            $(this).addClass('unlocked');
+            $(hooks[i - 1]).attr('class',
+              locks[i - 2] &amp;&amp; $(locks[i - 2]).is(':not(.unlocked)') ? 'hook up' : 'hook'
+            );
+            $(hooks[i]).attr('class',
+              locks[i] &amp;&amp; $(locks[i]).is(':not(.unlocked)') ? 'hook down' : 'hook'
+            );
+          }
+          else {
+            $(this).removeClass('unlocked');
+            $(hooks[i - 1]).attr('class',
+              locks[i - 2] &amp;&amp; $(locks[i - 2]).is(':not(.unlocked)') ? 'hook both' : 'hook down'
+            );
+            $(hooks[i]).attr('class',
+              locks[i] &amp;&amp; $(locks[i]).is(':not(.unlocked)') ? 'hook both' : 'hook up'
+            );
+          }
+          toggleClick = !toggleClick;
+        });
+        $(this).after(lock);
+        locks.push(lock);
+      }
+
+      // Add hook.
+      var hook = $('&lt;div class="hook">&lt;/div>');
+      $(this).after(hook);
+      hooks.push(hook);
+
+      $(this).parent().find('.lock').trigger('click');
+      this.i = i;
+      inputs.push(this);
+    })
+    .on('focus', focus);
+
+    form.find('#palette label');
+
+    // Focus first color.
+    inputs[0].focus();
+
+    // Render preview.
+    preview();
+  }
+};
+
+})(jQuery);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </div>
+
+    <nav class="pure-u-1-5">
+      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
+    </nav>
+  </div>
+
+</div>
+
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

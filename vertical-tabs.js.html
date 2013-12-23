@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: misc/vertical-tabs.js — Drupal JS API</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="pure/pure.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
+    <link type="text/css" rel="stylesheet" href="styles/drupal.css">
+</head>
+
+<body>
+
+<div id="main" class="pure">
+
+  <div class="pure-g">
+
+    <div class="pure-u-4-5">
+      <div class="box">
+        <h1 class="page-title">Source: misc/vertical-tabs.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>(function ($) {
+
+"use strict";
+
+/**
+ * This script transforms a set of details into a stack of vertical
+ * tabs. Another tab pane can be selected by clicking on the respective
+ * tab.
+ *
+ * Each tab may have a summary which can be updated by another
+ * script. For that to work, each details element has an associated
+ * 'verticalTabCallback' (with jQuery.data() attached to the details),
+ * which is called every time the user performs an update to a form
+ * element inside the tab pane.
+ *
+ * @type {Behavior}
+ */
+Drupal.behaviors.verticalTabs = {
+  attach: function (context) {
+
+    if (!Drupal.checkWidthBreakpoint()) {
+      return;
+    }
+
+    $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs', function () {
+      var $this = $(this).addClass('vertical-tabs-panes');
+      var focusID = $this.find(':hidden.vertical-tabs-active-tab').val();
+      var tab_focus;
+
+      // Check if there are some details that can be converted to vertical-tabs
+      var $details = $this.find('> details');
+      if ($details.length === 0) {
+        return;
+      }
+
+      // Create the tab column.
+      var tab_list = $('&lt;ul class="vertical-tabs-list">&lt;/ul>');
+      $this.wrap('&lt;div class="vertical-tabs clearfix">&lt;/div>').before(tab_list);
+
+      // Transform each details into a tab.
+      $details.each(function () {
+        var $this = $(this);
+        var vertical_tab = new Drupal.verticalTab({
+          title: $this.find('> summary').text(),
+          details: $this
+        });
+        tab_list.append(vertical_tab.item);
+        $this
+          .removeClass('collapsed')
+          // prop() can't be used on browsers not supporting details element,
+          // the style won't apply to them if prop() is used.
+          .attr('open', true)
+          .addClass('vertical-tabs-pane')
+          .data('verticalTab', vertical_tab);
+        if (this.id === focusID) {
+          tab_focus = $this;
+        }
+      });
+
+      $(tab_list).find('> li:first').addClass('first');
+      $(tab_list).find('> li:last').addClass('last');
+
+      if (!tab_focus) {
+        // If the current URL has a fragment and one of the tabs contains an
+        // element that matches the URL fragment, activate that tab.
+        var $locationHash = $this.find(window.location.hash);
+        if (window.location.hash &amp;&amp; $locationHash.length) {
+          tab_focus = $locationHash.closest('.vertical-tabs-pane');
+        }
+        else {
+          tab_focus = $this.find('> .vertical-tabs-pane:first');
+        }
+      }
+      if (tab_focus.length) {
+        tab_focus.data('verticalTab').focus();
+      }
+    });
+  }
+};
+
+/**
+ * The vertical tab object represents a single tab within a tab group.
+ *
+ * @constructor
+ * @param {Object} settings
+ * @param {String} settings.title
+ *   The name of the tab.
+ * @param {jQueryObject} details
+ *   The jQuery object of the details element that is the tab pane.
+ */
+Drupal.verticalTab = function (settings) {
+  var self = this;
+  /**
+   * @member {String} Drupal.verticalTab#title
+   */
+  /**
+   * @member {jQueryObject} Drupal.verticalTab#details
+   */
+  /**
+   * @member {jQueryObject} Drupal.verticalTab#item
+   */
+  /**
+   * @member {jQueryObject} Drupal.verticalTab#link
+   */
+  /**
+   * @member {jQueryObject} Drupal.verticalTab#summary
+   */
+  $.extend(this, settings, Drupal.theme('verticalTab', settings));
+
+  this.link.attr('href', '#' + settings.details.attr('id'));
+
+  this.link.on('click', function (e) {
+    e.preventDefault();
+    self.focus();
+  });
+
+  // Keyboard events added:
+  // Pressing the Enter key will open the tab pane.
+  this.link.on('keydown', function (event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+      self.focus();
+      // Set focus on the first input field of the visible details/tab pane.
+      $(".vertical-tabs-pane :input:visible:enabled:first").trigger('focus');
+    }
+  });
+
+  this.details
+    .on('summaryUpdated', function () {
+      self.updateSummary();
+    })
+    .trigger('summaryUpdated');
+};
+
+Drupal.verticalTab.prototype = {
+  /**
+   * Displays the tab's content pane.
+   */
+  focus: function () {
+    this.details
+      .siblings('.vertical-tabs-pane')
+        .each(function () {
+          var tab = $(this).data('verticalTab');
+          tab.details.hide();
+          tab.item.removeClass('selected');
+        })
+        .end()
+      .show()
+      .siblings(':hidden.vertical-tabs-active-tab')
+        .val(this.details.attr('id'));
+    this.item.addClass('selected');
+    // Mark the active tab for screen readers.
+    $('#active-vertical-tab').remove();
+    this.link.append('&lt;span id="active-vertical-tab" class="visually-hidden">' + Drupal.t('(active tab)') + '&lt;/span>');
+  },
+
+  /**
+   * Updates the tab's summary.
+   */
+  updateSummary: function () {
+    this.summary.html(this.details.drupalGetSummary());
+  },
+
+  /**
+   * Shows a vertical tab pane.
+   */
+  tabShow: function () {
+    // Display the tab.
+    this.item.show();
+    // Show the vertical tabs.
+    this.item.closest('.form-type-vertical-tabs').show();
+    // Update .first marker for items. We need recurse from parent to retain the
+    // actual DOM element order as jQuery implements sortOrder, but not as public
+    // method.
+    this.item.parent().children('.vertical-tab-button').removeClass('first')
+      .filter(':visible:first').addClass('first');
+    // Display the details element.
+    this.details.removeClass('vertical-tab-hidden').show();
+    // Focus this tab.
+    this.focus();
+    return this;
+  },
+
+  /**
+   * Hides a vertical tab pane.
+   */
+  tabHide: function () {
+    // Hide this tab.
+    this.item.hide();
+    // Update .first marker for items. We need recurse from parent to retain the
+    // actual DOM element order as jQuery implements sortOrder, but not as public
+    // method.
+    this.item.parent().children('.vertical-tab-button').removeClass('first')
+      .filter(':visible:first').addClass('first');
+    // Hide the details element.
+    this.details.addClass('vertical-tab-hidden').hide();
+    // Focus the first visible tab (if there is one).
+    var $firstTab = this.details.siblings('.vertical-tabs-pane:not(.vertical-tab-hidden):first');
+    if ($firstTab.length) {
+      $firstTab.data('verticalTab').focus();
+    }
+    // Hide the vertical tabs (if no tabs remain).
+    else {
+      this.item.closest('.form-type-vertical-tabs').hide();
+    }
+    return this;
+  }
+};
+
+/**
+ * Theme function for a vertical tab.
+ *
+ * @param {Object} settings
+ * @param {String} settings.title The name of the tab.
+ * @return {Object}
+ *   This function has to return an object with at least these keys:
+ *
+ *   - item: The root tab jQuery element
+ *   - link: The anchor tag that acts as the clickable area of the tab
+ *     (jQuery version)
+ *   - summary: The jQuery element that contains the tab summary
+ */
+Drupal.theme.verticalTab = function (settings) {
+  var tab = {};
+  tab.item = $('&lt;li class="vertical-tab-button" tabindex="-1">&lt;/li>')
+    .append(tab.link = $('&lt;a href="#">&lt;/a>')
+      .append(tab.title = $('&lt;strong>&lt;/strong>').text(settings.title))
+      .append(tab.summary = $('&lt;span class="summary">&lt;/span>')
+    )
+  );
+  return tab;
+};
+
+})(jQuery);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+      </div>
+    </div>
+
+    <nav class="pure-u-1-5">
+      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
+    </nav>
+  </div>
+
+</div>
+
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
