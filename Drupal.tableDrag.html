@@ -1,2716 +1,1237 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
     <meta charset="utf-8">
-    <title>Class: Drupal.tableDrag — Drupal JS API</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <title>
+      Class: Drupal.tableDrag &#226;&#8364;&#8221;&#226;&#8364;&#175;Drupal JS API
+    </title>
+    <script src="scripts/prettify/prettify.js" type="text/javascript">
+</script>
+    <script src="scripts/prettify/lang-css.js" type="text/javascript">
+</script>
     <link type="text/css" rel="stylesheet" href="pure/pure.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
     <link type="text/css" rel="stylesheet" href="styles/drupal.css">
-</head>
-
-<body>
-
-<div id="main" class="pure">
-
-  <div class="pure-g">
-
-    <div class="pure-u-4-5">
-      <div class="box">
-        <h1 class="page-title">Class: Drupal.tableDrag</h1>
-        
-
-
-
-<section>
-
-<header>
-    <h2>
-        <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span>
-    
-    tableDrag
-    </h2>
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-
-    
-        
-<dt>
-    <h3 class="name" id="Drupal.tableDrag"><span class="type-signature"></span>new Drupal.tableDrag<span class="signature">(table, tableSettings)</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Constructor for the tableDrag object. Provides table and field manipulation.</p>
-    </div>
-    
-
-    
-
-    
-        <h4>Parameters:</h4>
-        
-
-<table class="params pure-table">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>table</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">HTMLElement</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>DOM object for the table to be made draggable.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>tableSettings</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Settings for the table added via drupal_add_dragtable().</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line51" class="source">tabledrag.js:51</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<dt>
-    <h3 class="name" id="$table"><span class="type-signature"></span>$table<span class="type-signature"> :<a href="global.html#jQueryObject">jQueryObject</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line58" class="source">tabledrag.js:58</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="changed"><span class="type-signature"></span>changed<span class="type-signature"> :Boolean</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line86" class="source">tabledrag.js:86</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="dragObject"><span class="type-signature"></span>dragObject<span class="type-signature"> :HTMLElement</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line70" class="source">tabledrag.js:70</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="indentAmount"><span class="type-signature"></span>indentAmount<span class="type-signature"> :number</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line152" class="source">tabledrag.js:152</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="indentCount"><span class="type-signature"></span>indentCount<span class="type-signature"> :number</span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Total width of indents, set in makeDraggable.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line140" class="source">tabledrag.js:140</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="indentEnabled"><span class="type-signature"></span>indentEnabled<span class="type-signature"> :Boolean</span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Check this table's settings to see if there are parent relationships in
-this table. For efficiency, large sections of code can be skipped if we
-don't need to track horizontal movement and indentations.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line120" class="source">tabledrag.js:120</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="maxDepth"><span class="type-signature"></span>maxDepth<span class="type-signature"> :Number</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line90" class="source">tabledrag.js:90</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="oldRowElement"><span class="type-signature"></span>oldRowElement<span class="type-signature"> :HTMLElement</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line78" class="source">tabledrag.js:78</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="oldY"><span class="type-signature"></span>oldY<span class="type-signature"> :Number</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line82" class="source">tabledrag.js:82</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="rowObject"><span class="type-signature"></span>rowObject<span class="type-signature"> :HTMLElement</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line74" class="source">tabledrag.js:74</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="rtl"><span class="type-signature"></span>rtl<span class="type-signature"> :Number</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line94" class="source">tabledrag.js:94</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="scrollInterval"><span class="type-signature"></span>scrollInterval<span class="type-signature"> :Number</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line104" class="source">tabledrag.js:104</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="scrollSettings"><span class="type-signature"></span>scrollSettings<span class="type-signature"> :Object</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line100" class="source">tabledrag.js:100</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="scrollY"><span class="type-signature"></span>scrollY<span class="type-signature"> :Number</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line108" class="source">tabledrag.js:108</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="table"><span class="type-signature"></span>table<span class="type-signature"> :HTMLElement</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line62" class="source">tabledrag.js:62</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="tableSettings"><span class="type-signature"></span>tableSettings<span class="type-signature"> :Object</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line66" class="source">tabledrag.js:66</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="windowHeight"><span class="type-signature"></span>windowHeight<span class="type-signature"> :Number</span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line112" class="source">tabledrag.js:112</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h3 class="name" id="addColspanClass"><span class="type-signature"></span>addColspanClass<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Mark cells that have colspan so we can adjust the colspan
-instead of hiding them altogether.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line239" class="source">tabledrag.js:239</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="copyDragClasses"><span class="type-signature"></span>copyDragClasses<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Copy all special tableDrag classes from one row's form elements to a
-different one, removing any special classes that the destination row
-may have had.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line934" class="source">tabledrag.js:934</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="displayColumns"><span class="type-signature"></span>displayColumns<span class="signature">(bool)</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Hide or display weight columns. Triggers an event on change.</p>
-    </div>
-    
-
-    
-
-    
-        <h4>Parameters:</h4>
-        
-
-<table class="params pure-table">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>bool</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>displayWeight
-  'true' will show weight columns.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line271" class="source">tabledrag.js:271</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="dragRow"><span class="type-signature"></span>dragRow<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Pointer movement handler, bound to document.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line584" class="source">tabledrag.js:584</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="dragStart"><span class="type-signature"></span>dragStart<span class="signature">(item)</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Pointer event initiator, creates drag object and information.</p>
-    </div>
-    
-
-    
-
-    
-        <h4>Parameters:</h4>
-        
-
-<table class="params pure-table">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>jQuery.Event</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>event
-  The event object that trigger the drag.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>Drupal.tableDrag</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>self
-  The drag handle.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>item</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">DOM</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The item that that is being dragged.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line550" class="source">tabledrag.js:550</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="dropRow"><span class="type-signature"></span>dropRow<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Pointerup behaviour.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line637" class="source">tabledrag.js:637</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="findDropTargetRow"><span class="type-signature"></span>findDropTargetRow<span class="signature">(x, y)</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Find the row the mouse is currently over. This row is then taken and swapped
-with the one being dragged.</p>
-    </div>
-    
-
-    
-
-    
-        <h4>Parameters:</h4>
-        
-
-<table class="params pure-table">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x coordinate of the mouse on the page (not the screen).</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y coordinate of the mouse on the page (not the screen).</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line723" class="source">tabledrag.js:723</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="getPointerOffset"><span class="type-signature"></span>getPointerOffset<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Given a target element and a pointer event, get the event offset from that
-element. To do this we need the element's position and the target position.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line708" class="source">tabledrag.js:708</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="hideColumns"><span class="type-signature"></span>hideColumns<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Hide the columns containing weight/parent form elements.
-Undo showColumns().</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line305" class="source">tabledrag.js:305</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="initColumns"><span class="type-signature"></span>initColumns<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Initialize columns containing form elements to be hidden by default,
-according to the settings for this tableDrag instance.</p>
-<p>Identify and mark each cell with a CSS class so we can easily toggle
-show/hide it. Finally, hide columns if user does not have a
-'Drupal.tableDrag.showWeight' localStorage value.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line207" class="source">tabledrag.js:207</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="makeDraggable"><span class="type-signature"></span>makeDraggable<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Take an item and add event handlers to make it become draggable.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line363" class="source">tabledrag.js:363</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="onDrag"><span class="type-signature"></span>onDrag<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Stub function. Allows a custom handler when a row begins dragging.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line991" class="source">tabledrag.js:991</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="onDrop"><span class="type-signature"></span>onDrop<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Stub function. Allows a custom handler when a row is dropped.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line998" class="source">tabledrag.js:998</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="pointerCoords"><span class="type-signature"></span>pointerCoords<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Get the coordinates from the event (allowing for browser differences).</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line694" class="source">tabledrag.js:694</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="row"><span class="type-signature"></span>row<span class="signature">(tableRow, method, indentEnabled, maxDepth, addClasses)</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Constructor to make a new object to manipulate a table row.</p>
-    </div>
-    
-
-    
-
-    
-        <h4>Parameters:</h4>
-        
-
-<table class="params pure-table">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tableRow</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The DOM element for the table row we will be manipulating.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>method</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The method in which this row is being moved. Either 'keyboard' or 'mouse'.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>indentEnabled</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Whether the containing table uses indentations. Used for optimizations.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>maxDepth</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The maximum amount of indentations this row may contain.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>addClasses</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Whether we want to add classes to this row to indicate child relationships.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line1016" class="source">tabledrag.js:1016</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="rowSettings"><span class="type-signature"></span>rowSettings<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Find the target used within a particular row and group.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line340" class="source">tabledrag.js:340</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="showColumns"><span class="type-signature"></span>showColumns<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Show the columns containing weight/parent form elements
-Undo hideColumns().</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line323" class="source">tabledrag.js:323</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="toggleColumns"><span class="type-signature"></span>toggleColumns<span class="signature">()</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Toggle the weight column depending on 'showWeight' value.
-Store only default override.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line288" class="source">tabledrag.js:288</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="updateField"><span class="type-signature"></span>updateField<span class="signature">(changedRow, group)</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>After the row is dropped, update a single table field according to specific
-settings.</p>
-    </div>
-    
-
-    
-
-    
-        <h4>Parameters:</h4>
-        
-
-<table class="params pure-table">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>changedRow</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>DOM object for the row that was just dropped.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>group</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The settings group on which field updates will occur.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line802" class="source">tabledrag.js:802</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="updateFields"><span class="type-signature"></span>updateFields<span class="signature">(changedRow)</span><span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>After the row is dropped, update the table fields according to the settings
-set for this table.</p>
-    </div>
-    
-
-    
-
-    
-        <h4>Parameters:</h4>
-        
-
-<table class="params pure-table">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>changedRow</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>DOM object for the row that was just dropped.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line783" class="source">tabledrag.js:783</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
+  </head>
+  <body>
+    <div id="main" class="pure">
+      <div class="pure-g">
+        <div class="pure-u-4-5">
+          <div class="box">
+            <h1 class="page-title">
+              Class: Drupal.tableDrag
+            </h1>
+            <section>
+              <header>
+                <h2>
+                  <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span> tableDrag
+                </h2>
+              </header>
+              <article>
+                <div class="container-overview">
+                  <dl>
+                    <dd>
+                      <h3 class="name" id="Drupal.tableDrag">
+                        new Drupal.tableDrag<span class="signature">(table, tableSettings)</span>
+                      </h3>
+                    </dd>
+                    <dd>
+                      <div class="description">
+                        <p>
+                          Constructor for the tableDrag object. Provides table and field manipulation.
+                        </p>
+                      </div>
+                      <h4>
+                        Parameters:
+                      </h4>
+                      <table class="params pure-table">
+                        <thead>
+                          <tr>
+                            <th>
+                              Name
+                            </th>
+                            <th>
+                              Type
+                            </th>
+                            <th class="last">
+                              Description
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="name">
+                              <code>table</code>
+                            </td>
+                            <td class="type">
+                              <span class="param-type">HTMLElement</span>
+                            </td>
+                            <td class="description last">
+                              <p>
+                                DOM object for the table to be made draggable.
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="name">
+                              <code>tableSettings</code>
+                            </td>
+                            <td class="type">
+                              <span class="param-type">Object</span>
+                            </td>
+                            <td class="description last">
+                              <p>
+                                Settings for the table added via drupal_add_dragtable().
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <dl class="details">
+                        <dt class="source">
+                          <a href="tabledrag.js.html#line51" class="source">tabledrag.js:51</a>
+                        </dt>
+                      </dl>
+                    </dd>
+                  </dl>
+                </div>
+                <h3 class="subsection-title">
+                  Members
+                </h3>
+                <dl>
+                  <dd>
+                    <h3 class="name" id="$table">
+                      $table <span class="type-signature">:<a href="global.html#jQueryObject">jQueryObject</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line58" class="source">tabledrag.js:58</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="changed">
+                      changed <span class="type-signature">:Boolean</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line86" class="source">tabledrag.js:86</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="dragObject">
+                      dragObject <span class="type-signature">:HTMLElement</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line70" class="source">tabledrag.js:70</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="indentAmount">
+                      indentAmount <span class="type-signature">:number</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line152" class="source">tabledrag.js:152</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="indentCount">
+                      indentCount <span class="type-signature">:number</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Total width of indents, set in makeDraggable.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line140" class="source">tabledrag.js:140</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="indentEnabled">
+                      indentEnabled <span class="type-signature">:Boolean</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Check this table's settings to see if there are parent relationships in this table. For efficiency, large sections of code can be skipped if we don't need to track horizontal movement and indentations.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line120" class="source">tabledrag.js:120</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="maxDepth">
+                      maxDepth <span class="type-signature">:Number</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line90" class="source">tabledrag.js:90</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="oldRowElement">
+                      oldRowElement <span class="type-signature">:HTMLElement</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line78" class="source">tabledrag.js:78</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="oldY">
+                      oldY <span class="type-signature">:Number</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line82" class="source">tabledrag.js:82</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="rowObject">
+                      rowObject <span class="type-signature">:HTMLElement</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line74" class="source">tabledrag.js:74</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="rtl">
+                      rtl <span class="type-signature">:Number</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line94" class="source">tabledrag.js:94</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="scrollInterval">
+                      scrollInterval <span class="type-signature">:Number</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line104" class="source">tabledrag.js:104</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="scrollSettings">
+                      scrollSettings <span class="type-signature">:Object</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line100" class="source">tabledrag.js:100</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="scrollY">
+                      scrollY <span class="type-signature">:Number</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line108" class="source">tabledrag.js:108</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="table">
+                      table <span class="type-signature">:HTMLElement</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line62" class="source">tabledrag.js:62</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="tableSettings">
+                      tableSettings <span class="type-signature">:Object</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line66" class="source">tabledrag.js:66</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="windowHeight">
+                      windowHeight <span class="type-signature">:Number</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line112" class="source">tabledrag.js:112</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                </dl>
+                <h3 class="subsection-title">
+                  Methods
+                </h3>
+                <dl>
+                  <dd>
+                    <h3 class="name" id="addColspanClass">
+                      addColspanClass<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Mark cells that have colspan so we can adjust the colspan instead of hiding them altogether.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line239" class="source">tabledrag.js:239</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="copyDragClasses">
+                      copyDragClasses<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Copy all special tableDrag classes from one row's form elements to a different one, removing any special classes that the destination row may have had.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line934" class="source">tabledrag.js:934</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="displayColumns">
+                      displayColumns<span class="signature">(bool)</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Hide or display weight columns. Triggers an event on change.
+                      </p>
+                    </div>
+                    <h4>
+                      Parameters:
+                    </h4>
+                    <table class="params pure-table">
+                      <thead>
+                        <tr>
+                          <th>
+                            Name
+                          </th>
+                          <th>
+                            Type
+                          </th>
+                          <th class="last">
+                            Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="name">
+                            <code>bool</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              displayWeight 'true' will show weight columns.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line271" class="source">tabledrag.js:271</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="dragRow">
+                      dragRow<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Pointer movement handler, bound to document.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line584" class="source">tabledrag.js:584</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="dragStart">
+                      dragStart<span class="signature">(item)</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Pointer event initiator, creates drag object and information.
+                      </p>
+                    </div>
+                    <h4>
+                      Parameters:
+                    </h4>
+                    <table class="params pure-table">
+                      <thead>
+                        <tr>
+                          <th>
+                            Name
+                          </th>
+                          <th>
+                            Type
+                          </th>
+                          <th class="last">
+                            Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="name">
+                            <code>jQuery.Event</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              event The event object that trigger the drag.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>Drupal.tableDrag</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              self The drag handle.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>item</code>
+                          </td>
+                          <td class="type">
+                            <span class="param-type">DOM</span>
+                          </td>
+                          <td class="description last">
+                            <p>
+                              The item that that is being dragged.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line550" class="source">tabledrag.js:550</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="dropRow">
+                      dropRow<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Pointerup behaviour.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line637" class="source">tabledrag.js:637</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="findDropTargetRow">
+                      findDropTargetRow<span class="signature">(x, y)</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Find the row the mouse is currently over. This row is then taken and swapped with the one being dragged.
+                      </p>
+                    </div>
+                    <h4>
+                      Parameters:
+                    </h4>
+                    <table class="params pure-table">
+                      <thead>
+                        <tr>
+                          <th>
+                            Name
+                          </th>
+                          <th>
+                            Type
+                          </th>
+                          <th class="last">
+                            Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="name">
+                            <code>x</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              The x coordinate of the mouse on the page (not the screen).
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>y</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              The y coordinate of the mouse on the page (not the screen).
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line723" class="source">tabledrag.js:723</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="getPointerOffset">
+                      getPointerOffset<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Given a target element and a pointer event, get the event offset from that element. To do this we need the element's position and the target position.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line708" class="source">tabledrag.js:708</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="hideColumns">
+                      hideColumns<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Hide the columns containing weight/parent form elements. Undo showColumns().
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line305" class="source">tabledrag.js:305</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="initColumns">
+                      initColumns<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Initialize columns containing form elements to be hidden by default, according to the settings for this tableDrag instance.
+                      </p>
+                      <p>
+                        Identify and mark each cell with a CSS class so we can easily toggle show/hide it. Finally, hide columns if user does not have a 'Drupal.tableDrag.showWeight' localStorage value.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line207" class="source">tabledrag.js:207</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="makeDraggable">
+                      makeDraggable<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Take an item and add event handlers to make it become draggable.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line363" class="source">tabledrag.js:363</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="onDrag">
+                      onDrag<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Stub function. Allows a custom handler when a row begins dragging.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line991" class="source">tabledrag.js:991</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="onDrop">
+                      onDrop<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Stub function. Allows a custom handler when a row is dropped.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line998" class="source">tabledrag.js:998</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="pointerCoords">
+                      pointerCoords<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Get the coordinates from the event (allowing for browser differences).
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line694" class="source">tabledrag.js:694</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="row">
+                      row<span class="signature">(tableRow, method, indentEnabled, maxDepth, addClasses)</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Constructor to make a new object to manipulate a table row.
+                      </p>
+                    </div>
+                    <h4>
+                      Parameters:
+                    </h4>
+                    <table class="params pure-table">
+                      <thead>
+                        <tr>
+                          <th>
+                            Name
+                          </th>
+                          <th>
+                            Type
+                          </th>
+                          <th class="last">
+                            Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="name">
+                            <code>tableRow</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              The DOM element for the table row we will be manipulating.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>method</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              The method in which this row is being moved. Either 'keyboard' or 'mouse'.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>indentEnabled</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              Whether the containing table uses indentations. Used for optimizations.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>maxDepth</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              The maximum amount of indentations this row may contain.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>addClasses</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              Whether we want to add classes to this row to indicate child relationships.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line1016" class="source">tabledrag.js:1016</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="rowSettings">
+                      rowSettings<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Find the target used within a particular row and group.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line340" class="source">tabledrag.js:340</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="showColumns">
+                      showColumns<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Show the columns containing weight/parent form elements Undo hideColumns().
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line323" class="source">tabledrag.js:323</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="toggleColumns">
+                      toggleColumns<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Toggle the weight column depending on 'showWeight' value. Store only default override.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line288" class="source">tabledrag.js:288</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="updateField">
+                      updateField<span class="signature">(changedRow, group)</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        After the row is dropped, update a single table field according to specific settings.
+                      </p>
+                    </div>
+                    <h4>
+                      Parameters:
+                    </h4>
+                    <table class="params pure-table">
+                      <thead>
+                        <tr>
+                          <th>
+                            Name
+                          </th>
+                          <th>
+                            Type
+                          </th>
+                          <th class="last">
+                            Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="name">
+                            <code>changedRow</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              DOM object for the row that was just dropped.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>group</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              The settings group on which field updates will occur.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line802" class="source">tabledrag.js:802</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="updateFields">
+                      updateFields<span class="signature">(changedRow)</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        After the row is dropped, update the table fields according to the settings set for this table.
+                      </p>
+                    </div>
+                    <h4>
+                      Parameters:
+                    </h4>
+                    <table class="params pure-table">
+                      <thead>
+                        <tr>
+                          <th>
+                            Name
+                          </th>
+                          <th>
+                            Type
+                          </th>
+                          <th class="last">
+                            Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="name">
+                            <code>changedRow</code>
+                          </td>
+                          <td class="type"></td>
+                          <td class="description last">
+                            <p>
+                              DOM object for the row that was just dropped.
+                            </p>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line783" class="source">tabledrag.js:783</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                </dl>
+              </article>
+            </section>
+          </div>
+        </div>
+        <nav class="pure-u-1-5">
+          <div class="box">
+            <h2>
+              <a href="index.html">Index</a>
+            </h2>
+            <h3>
+              Classes
+            </h3>
+            <ul>
+              <li>
+                <a href="Drupal.ajax.html">Drupal.ajax</a>
+              </li>
+              <li>
+                <a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a>
+              </li>
+              <li>
+                <a href="Drupal.AjaxError.html">Drupal.AjaxError</a>
+              </li>
+              <li>
+                <a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.DropButton.html">Drupal.DropButton</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a>
+              </li>
+              <li>
+                <a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a>
+              </li>
+              <li>
+                <a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a>
+              </li>
+              <li>
+                <a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a>
+              </li>
+              <li>
+                <a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a>
+              </li>
+              <li>
+                <a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a>
+              </li>
+              <li>
+                <a href="Drupal.states.State.html">Drupal.states.State</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a>
+              </li>
+              <li>
+                <a href="Drupal.tableDrag.html">Drupal.tableDrag</a>
+              </li>
+              <li>
+                <a href="Drupal.TableHeader.html">Drupal.TableHeader</a>
+              </li>
+              <li>
+                <a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a>
+              </li>
+              <li>
+                <a href="Drupal.verticalTab.html">Drupal.verticalTab</a>
+              </li>
+              <li>
+                <a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a>
+              </li>
+            </ul>
+            <h3>
+              Events
+            </h3>
+            <ul>
+              <li>
+                <a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a>
+              </li>
+            </ul>
+            <h3>
+              Namespaces
+            </h3>
+            <ul>
+              <li>
+                <a href="Drupal.html" class="root">Drupal</a>
+              </li>
+              <li>
+                <a href="Drupal.behaviors.html">Drupal.behaviors</a>
+              </li>
+              <li>
+                <a href="Drupal.color.html">Drupal.color</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.html">Drupal.contextual</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.html">Drupal.edit</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.html">Drupal.edit.util</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a>
+              </li>
+              <li>
+                <a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a>
+              </li>
+              <li>
+                <a href="Drupal.editors.html">Drupal.editors</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a>
+              </li>
+              <li>
+                <a href="Drupal.file.html">Drupal.file</a>
+              </li>
+              <li>
+                <a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a>
+              </li>
+              <li>
+                <a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a>
+              </li>
+              <li>
+                <a href="Drupal.history.html">Drupal.history</a>
+              </li>
+              <li>
+                <a href="Drupal.states.html">Drupal.states</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a>
+              </li>
+              <li>
+                <a href="Drupal.theme.html">Drupal.theme</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.html">Drupal.toolbar</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.html">Drupal.tour</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.models.html">Drupal.tour.models</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.views.html">Drupal.tour.views</a>
+              </li>
+              <li>
+                <a href="Drupal.Views.html">Drupal.Views</a>
+              </li>
+              <li>
+                <a href="Drupal.views_.html">Drupal.views</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.html">Drupal.viewsUi</a>
+              </li>
+            </ul>
+            <h3>
+              Global
+            </h3>
+            <ul>
+              <li>
+                <a href="global.html#drupalSettings" class="root">drupalSettings</a>
+              </li>
+              <li>
+                <a href="global.html#matchMedia" class="root">matchMedia</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
       </div>
-    </div>
-
-    <nav class="pure-u-1-5">
-      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
-    </nav>
-  </div>
-
-</div>
-
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
+    </div><script type="text/javascript">
+prettyPrint();
+    </script><script src="scripts/linenumber.js" type="text/javascript">
+</script>
+  </body>
 </html>

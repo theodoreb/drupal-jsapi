@@ -1,4470 +1,1821 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
     <meta charset="utf-8">
-    <title>Namespace: Drupal.behaviors — Drupal JS API</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <title>
+      Namespace: Drupal.behaviors &#226;&#8364;&#8221;&#226;&#8364;&#175;Drupal JS API
+    </title>
+    <script src="scripts/prettify/prettify.js" type="text/javascript">
+</script>
+    <script src="scripts/prettify/lang-css.js" type="text/javascript">
+</script>
     <link type="text/css" rel="stylesheet" href="pure/pure.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
     <link type="text/css" rel="stylesheet" href="styles/drupal.css">
-</head>
-
-<body>
-
-<div id="main" class="pure">
-
-  <div class="pure-g">
-
-    <div class="pure-u-4-5">
-      <div class="box">
-        <h1 class="page-title">Namespace: Drupal.behaviors</h1>
-        
-
-
-
-<section>
-
-<header>
-    <h2>
-        <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span>
-    
-    behaviors
-    </h2>
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-
-    
-        
-            <div class="description"><p>Holds all initialization methods.</p></div>
-        
-
-        
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="drupal.js.html#line91" class="source">drupal.js:91</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<dt>
-    <h3 class="name" id="addItemForm"><span class="type-signature">&lt;static> </span>addItemForm<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line177" class="source">views-admin.js:177</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="AJAX"><span class="type-signature">&lt;static> </span>AJAX<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches the Ajax behavior to each Ajax form element.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="ajax.js.html#line23" class="source">ajax.js:23</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="autocomplete"><span class="type-signature">&lt;static> </span>autocomplete<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches the autocomplete behavior to all required fields.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="autocomplete.js.html#line165" class="source">autocomplete.js:165</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="batch"><span class="type-signature">&lt;static> </span>batch<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches the batch behavior to progress bars.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="batch.js.html#line12" class="source">batch.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="blockDrag"><span class="type-signature">&lt;static> </span>blockDrag<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Move a block in the blocks table from one region to another via select list.</p>
-<p>This behavior is dependent on the tableDrag behavior, since it uses the
-objects initialized in that behavior to update the row.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="block.js.html#line56" class="source">block.js:56</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="blockFilterByText"><span class="type-signature">&lt;static> </span>blockFilterByText<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Filters the block list by a text input search string.</p>
-<p>Text search input: input.block-filter-text
-Target element:    input.block-filter-text[data-element]
-Source text:       .block-filter-text-source</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="block.admin.js.html#line16" class="source">block.admin.js:16</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="blockHighlightPlacement"><span class="type-signature">&lt;static> </span>blockHighlightPlacement<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Highlights the block that was just placed into the block listing.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="block.admin.js.html#line79" class="source">block.admin.js:79</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="blockSettingsSummary"><span class="type-signature">&lt;static> </span>blockSettingsSummary<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Provide the summary information for the block settings vertical tabs.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="block.js.html#line12" class="source">block.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="bookDetailsSummaries"><span class="type-signature">&lt;static> </span>bookDetailsSummaries<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="book.js.html#line12" class="source">book.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="collapse"><span class="type-signature">&lt;static> </span>collapse<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="collapse.js.html#line102" class="source">collapse.js:102</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="color"><span class="type-signature">&lt;static> </span>color<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="color.js.html#line12" class="source">color.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="commentByViewer"><span class="type-signature">&lt;static> </span>commentByViewer<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Add 'by-viewer' class to comments written by the current user.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="comment-by-viewer.js.html#line13" class="source">comment-by-viewer.js:13</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="commentFieldsetSummaries"><span class="type-signature">&lt;static> </span>commentFieldsetSummaries<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="comment-entity-form.js.html#line13" class="source">comment-entity-form.js:13</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="commentNewIndicator"><span class="type-signature">&lt;static> </span>commentNewIndicator<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Render &quot;new&quot; comment indicators wherever necessary.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="comment-new-indicator.js.html#line15" class="source">comment-new-indicator.js:15</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="contentTranslation"><span class="type-signature">&lt;static> </span>contentTranslation<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Makes field translatability inherit bundle translatability.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="content_translation.admin.js.html#line80" class="source">content_translation.admin.js:80</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="contentTranslationDependentOptions"><span class="type-signature">&lt;static> </span>contentTranslationDependentOptions<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Forces applicable options to be checked as translatable.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="content_translation.admin.js.html#line12" class="source">content_translation.admin.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="contentTypes"><span class="type-signature">&lt;static> </span>contentTypes<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="content_types.js.html#line12" class="source">content_types.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="contextual"><span class="type-signature">&lt;static> </span>contextual<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches outline behavior for regions associated with contextual links.</p>
-<p>Events
-  Contextual triggers an event that can be used by other scripts.</p>
-<ul>
-<li>drupalContextualLinkAdded: Triggered when a contextual link is added.</li>
-</ul>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="contextual.js.html#line117" class="source">contextual.js:117</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="contextualToolbar"><span class="type-signature">&lt;static> </span>contextualToolbar<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches contextual's edit toolbar tab behavior.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="contextual.toolbar.js.html#line69" class="source">contextual.toolbar.js:69</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="copyFieldValue"><span class="type-signature">&lt;static> </span>copyFieldValue<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>When a field is filled out, apply its value to other fields that will likely
-use the same value. In the installer this is used to populate the
-administrator e-mail address with the same value as the site e-mail address.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="system.js.html#line17" class="source">system.js:17</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="customBlockDetailsSummaries"><span class="type-signature">&lt;static> </span>customBlockDetailsSummaries<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="custom_block.js.html#line12" class="source">custom_block.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="dialog"><span class="type-signature">&lt;static> </span>dialog<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="dialog.ajax.js.html#line13" class="source">dialog.ajax.js:13</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="dropButton"><span class="type-signature">&lt;static> </span>dropButton<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Process elements with the .dropbutton class on page load.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="dropbutton.js.html#line12" class="source">dropbutton.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="drupalAnnounce"><span class="type-signature">&lt;static> </span>drupalAnnounce<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Builds a div element with the aria-live attribute and attaches it
-to the DOM.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="announce.js.html#line21" class="source">announce.js:21</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="drupalDisplace"><span class="type-signature">&lt;static> </span>drupalDisplace<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Registers a resize handler on the window.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="displace.js.html#line22" class="source">displace.js:22</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="edit"><span class="type-signature">&lt;static> </span>edit<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="edit.js.html#line71" class="source">edit.js:71</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="editor"><span class="type-signature">&lt;static> </span>editor<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Enables editors on text_format elements.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="editor.js.html#line20" class="source">editor.js:20</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="escapeAdmin"><span class="type-signature">&lt;static> </span>escapeAdmin<span class="type-signature"></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Replaces the &quot;Home&quot; link with &quot;Back to site&quot; link.</p>
-<p>Back to site link points to the last non-administrative page the user visited
-within the same browser tab.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="escapeAdmin.js.html#line26" class="source">escapeAdmin.js:26</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="fieldUIDisplayOverview"><span class="type-signature">&lt;static> </span>fieldUIDisplayOverview<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="field_ui.js.html#line13" class="source">field_ui.js:13</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="fieldUserRegistration"><span class="type-signature">&lt;static> </span>fieldUserRegistration<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Field instance settings screen: force the 'Display on registration form'
-checkbox checked whenever 'Required' is checked.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="user.js.html#line197" class="source">user.js:197</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="fileAutoUpload"><span class="type-signature">&lt;static> </span>fileAutoUpload<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attach behaviors to managed file element upload fields.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="file.js.html#line51" class="source">file.js:51</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="fileButtons"><span class="type-signature">&lt;static> </span>fileButtons<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attach behaviors to the file upload and remove buttons.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="file.js.html#line66" class="source">file.js:66</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="filePreviewLinks"><span class="type-signature">&lt;static> </span>filePreviewLinks<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attach behaviors to links within managed file elements.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="file.js.html#line83" class="source">file.js:83</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="fileValidateAutoAttach"><span class="type-signature">&lt;static> </span>fileValidateAutoAttach<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attach behaviors to managed file element upload fields.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="file.js.html#line18" class="source">file.js:18</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="fillUserInfoFromCookie"><span class="type-signature">&lt;static> </span>fillUserInfoFromCookie<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Prepopulate form fields with information from the visitor cookie.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="form.js.html#line69" class="source">form.js:69</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="filterFilterHtmlUpdating"><span class="type-signature">&lt;static> </span>filterFilterHtmlUpdating<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="filter.filter_html.admin.js.html#line49" class="source">filter.filter_html.admin.js:49</a></dt>
-    
-
-    
-
-    
-
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>remove everything from the behavior object.</li>
-        </ul>
-    </dd>
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="filterGuidelines"><span class="type-signature">&lt;static> </span>filterGuidelines<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Displays the guidelines of the selected text format automatically.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="filter.js.html#line14" class="source">filter.js:14</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="filterStatus"><span class="type-signature">&lt;static> </span>filterStatus<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="filter.admin.js.html#line13" class="source">filter.admin.js:13</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="formUpdated"><span class="type-signature">&lt;static> </span>formUpdated<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Sends a 'formUpdated' event each time a form element is modified.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="form.js.html#line48" class="source">form.js:48</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="hideUpdateInformation"><span class="type-signature">&lt;static> </span>hideUpdateInformation<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Show/hide the description details on Available translation updates page.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="locale.admin.js.html#line51" class="source">locale.admin.js:51</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="importLanguageCodeSelector"><span class="type-signature">&lt;static> </span>importLanguageCodeSelector<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Select the language code of an imported file based on its filename.</p>
-<p>This only works if the file name ends with &quot;LANGCODE.po&quot;.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="locale.bulk.js.html#line14" class="source">locale.bulk.js:14</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="initializeFilterConfiguration"><span class="type-signature">&lt;static> </span>initializeFilterConfiguration<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Initializes Drupal.filterConfiguration.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="editor.admin.js.html#line734" class="source">editor.admin.js:734</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="livePreview"><span class="type-signature">&lt;static> </span>livePreview<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Trigger preview when the &quot;live preview&quot; checkbox is checked.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="ajax.js_.html#line64" class="source">ajax.js:64</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="localeDatepicker"><span class="type-signature">&lt;static> </span>localeDatepicker<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches language support to the jQuery UI datepicker component.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="locale.datepicker.js.html#line14" class="source">locale.datepicker.js:14</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="localeTranslateDirty"><span class="type-signature">&lt;static> </span>localeTranslateDirty<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Marks changes of translations</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="locale.admin.js.html#line12" class="source">locale.admin.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="machineName"><span class="type-signature">&lt;static> </span>machineName<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attach the machine-readable name form element behavior.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="machine-name.js.html#line9" class="source">machine-name.js:9</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="menuChangeParentItems"><span class="type-signature">&lt;static> </span>menuChangeParentItems<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="menu.admin.js.html#line11" class="source">menu.admin.js:11</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="menuDetailsSummaries"><span class="type-signature">&lt;static> </span>menuDetailsSummaries<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="menu.js.html#line11" class="source">menu.js:11</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="menuLinkAutomaticTitle"><span class="type-signature">&lt;static> </span>menuLinkAutomaticTitle<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Automatically fill in a menu link title, if possible.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="menu.js.html#line29" class="source">menu.js:29</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="negotiationLanguage"><span class="type-signature">&lt;static> </span>negotiationLanguage<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Makes language negotiation inherit user interface negotiation.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="language.admin.js.html#line9" class="source">language.admin.js:9</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="newSet"><span class="type-signature">&lt;static> </span>newSet<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Make it so when you enter text into the &quot;New set&quot; textfield, the
-corresponding radio button gets selected.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="shortcut.admin.js.html#line10" class="source">shortcut.admin.js:10</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="nodeDetailsSummaries"><span class="type-signature">&lt;static> </span>nodeDetailsSummaries<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="node.js.html#line13" class="source">node.js:13</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="nodeNewCommentsLink"><span class="type-signature">&lt;static> </span>nodeNewCommentsLink<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Render &quot;X new comments&quot; links wherever necessary.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="node-new-comments-link.js.html#line15" class="source">node-new-comments-link.js:15</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="nodePreviewDestroyLinks"><span class="type-signature">&lt;static> </span>nodePreviewDestroyLinks<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Disabling all links (except local fragment identifiers such as href=&quot;#frag&quot;)
-in node previews to prevent users from leaving the page.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="node.preview.js.html#line10" class="source">node.preview.js:10</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="password"><span class="type-signature">&lt;static> </span>password<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attach handlers to evaluate the strength of any password fields and to check
-that its confirmation is correct.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="user.js.html#line13" class="source">user.js:13</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="pathDetailsSummaries"><span class="type-signature">&lt;static> </span>pathDetailsSummaries<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="path.js.html#line12" class="source">path.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="permissions"><span class="type-signature">&lt;static> </span>permissions<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Shows checked and disabled checkboxes for inherited permissions.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="user.permissions.js.html#line12" class="source">user.permissions.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="setTimezone"><span class="type-signature">&lt;static> </span>setTimezone<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Set the client's system time zone as default values of form fields.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="timezone.js.html#line9" class="source">timezone.js:9</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="simpleTestMenuCollapse"><span class="type-signature">&lt;static> </span>simpleTestMenuCollapse<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Add the cool table collapsing on the testing overview page.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="simpletest.js.html#line9" class="source">simpletest.js:9</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="simpleTestSelectAll"><span class="type-signature">&lt;static> </span>simpleTestSelectAll<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Select/deselect all the inner checkboxes when the outer checkboxes are
-selected/deselected.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="simpletest.js.html#line66" class="source">simpletest.js:66</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="simpletestTableFilterByText"><span class="type-signature">&lt;static> </span>simpletestTableFilterByText<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Filters the test list table by a text input search string.</p>
-<p>Additionally accounts for multiple tables being wrapped in &quot;package&quot; details
-elements.</p>
-<p>Text search input: input.table-filter-text
-Target table:      input.table-filter-text[data-table]
-Source text:       .table-filter-text-source</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="simpletest.js.html#line115" class="source">simpletest.js:115</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="states"><span class="type-signature">&lt;static> </span>states<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches the states.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="states.js.html#line24" class="source">states.js:24</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="syncPreviewDisplay"><span class="type-signature">&lt;static> </span>syncPreviewDisplay<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Sync preview display.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="ajax.js_.html#line78" class="source">ajax.js:78</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="tableDrag"><span class="type-signature">&lt;static> </span>tableDrag<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Drag and drop table rows with field manipulation.</p>
-<p>Using the drupal_attach_tabledrag() function, any table with weights or
-parent relationships may be made into draggable tables. Columns containing a
-field may optionally be hidden, providing a better user experience.</p>
-<p>Created tableDrag instances may be modified with custom behaviors by
-overriding the .onDrag, .onDrop, .row.onSwap, and .row.onIndent methods.
-See blocks.js for an example of adding additional functionality to tableDrag.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tabledrag.js.html#line24" class="source">tabledrag.js:24</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="tableFilterByText"><span class="type-signature">&lt;static> </span>tableFilterByText<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Filters the module list table by a text input search string.</p>
-<p>Additionally accounts for multiple tables being wrapped in &quot;package&quot; details
-elements.</p>
-<p>Text search input: input.table-filter-text
-Target table:      input.table-filter-text[data-table]
-Source text:       .table-filter-text-source</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="system.modules.js.html#line16" class="source">system.modules.js:16</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="tableHeader"><span class="type-signature">&lt;static> </span>tableHeader<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches sticky table headers.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tableheader.js.html#line10" class="source">tableheader.js:10</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="tableResponsive"><span class="type-signature">&lt;static> </span>tableResponsive<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attach the tableResponsive function to Drupal.behaviors.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tableresponsive.js.html#line9" class="source">tableresponsive.js:9</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="termDrag"><span class="type-signature">&lt;static> </span>termDrag<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Move a block in the blocks table from one region to another via select list.</p>
-<p>This behavior is dependent on the tableDrag behavior, since it uses the
-objects initialized in that behavior to update the row.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="taxonomy.js.html#line15" class="source">taxonomy.js:15</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="textSummary"><span class="type-signature">&lt;static> </span>textSummary<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Auto-hide summary textarea if empty and show hide and unhide links.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="text.js.html#line12" class="source">text.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="toolbar"><span class="type-signature">&lt;static> </span>toolbar<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Registers tabs with the toolbar.</p>
-<p>The Drupal toolbar allows modules to register top-level tabs. These may point
-directly to a resource or toggle the visibility of a tray.</p>
-<p>Modules register tabs with hook_toolbar().</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="toolbar.js.html#line38" class="source">toolbar.js:38</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="tour"><span class="type-signature">&lt;static> </span>tour<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches the tour's toolbar tab behavior.</p>
-<p>It uses the query string for:</p>
-<ul>
-<li>tour: When ?tour=1 is present, the tour will start automatically<pre><code>  after the page has loaded.</code></pre>
-</li>
-<li>tips: Pass ?tips=class in the url to filter the available tips to<pre><code>  the subset which match the given class.</code></pre>
-</li>
-</ul>
-<p>Example:
-  http://example.com/foo?tour=1&amp;tips=bar</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="tour.js.html#line26" class="source">tour.js:26</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="verticalTabs"><span class="type-signature">&lt;static> </span>verticalTabs<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>This script transforms a set of details into a stack of vertical
-tabs. Another tab pane can be selected by clicking on the respective
-tab.</p>
-<p>Each tab may have a summary which can be updated by another
-script. For that to work, each details element has an associated
-'verticalTabCallback' (with jQuery.data() attached to the details),
-which is called every time the user performs an update to a form
-element inside the tab pane.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="vertical-tabs.js.html#line18" class="source">vertical-tabs.js:18</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsAjax"><span class="type-signature">&lt;static> </span>viewsAjax<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="ajax.js_.html#line93" class="source">ajax.js:93</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="ViewsAjaxView"><span class="type-signature">&lt;static> </span>ViewsAjaxView<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Attaches the AJAX behavior to Views exposed filter forms and key View links.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="ajax_view.js.html#line13" class="source">ajax_view.js:13</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsContextualLinks"><span class="type-signature">&lt;static> </span>viewsContextualLinks<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-contextual.js.html#line12" class="source">views-contextual.js:12</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsFilterConfigSelectAll"><span class="type-signature">&lt;static> </span>viewsFilterConfigSelectAll<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Add a select all checkbox, which checks each checkbox at once.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line831" class="source">views-admin.js:831</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsModalContent"><span class="type-signature">&lt;static> </span>viewsModalContent<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="dialog.views.js.html#line34" class="source">dialog.views.js:34</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsRemoveIconClass"><span class="type-signature">&lt;static> </span>viewsRemoveIconClass<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Remove icon class from elements that are themed as buttons or dropbuttons.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line859" class="source">views-admin.js:859</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiAddView"><span class="type-signature">&lt;static> </span>viewsUiAddView<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>In the add view wizard, use the view name to prepopulate form fields such as
-page title and menu link.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line33" class="source">views-admin.js:33</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiChangeDefaultWidget"><span class="type-signature">&lt;static> </span>viewsUiChangeDefaultWidget<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Change the default widget to select the default group according to the
-selected widget for the exposed group.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line887" class="source">views-admin.js:887</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiCheckboxify"><span class="type-signature">&lt;static> </span>viewsUiCheckboxify<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Change &quot;Expose filter&quot; buttons into checkboxes.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line871" class="source">views-admin.js:871</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiEditView"><span class="type-signature">&lt;static> </span>viewsUiEditView<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Improve the user experience of the views edit interface.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line18" class="source">views-admin.js:18</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiHandlerRemoveLink"><span class="type-signature">&lt;static> </span>viewsUiHandlerRemoveLink<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line987" class="source">views-admin.js:987</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiOverrideSelect"><span class="type-signature">&lt;static> </span>viewsUiOverrideSelect<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Change the Apply button text based upon the override select state.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line951" class="source">views-admin.js:951</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiPreview"><span class="type-signature">&lt;static> </span>viewsUiPreview<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line428" class="source">views-admin.js:428</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiRearrangeFilter"><span class="type-signature">&lt;static> </span>viewsUiRearrangeFilter<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line456" class="source">views-admin.js:456</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiRenderAddViewButton"><span class="type-signature">&lt;static> </span>viewsUiRenderAddViewButton<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The input field items that add displays must be rendered as <code>&lt;input&gt;</code> elements.
-The following behavior detaches the <code>&lt;input&gt;</code> elements from the DOM, wraps them
-in an unordered list, then appends them to the list of tabs.</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line250" class="source">views-admin.js:250</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewsUiSearchOptions"><span class="type-signature">&lt;static> </span>viewsUiSearchOptions<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views-admin.js.html#line309" class="source">views-admin.js:309</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h3 class="name" id="viewTableFilterByText"><span class="type-signature">&lt;static> </span>viewTableFilterByText<span class="type-signature"> :<a href="global.html#Behavior">Behavior</a></span></h3>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Filters the view listing tables by a text input search string.</p>
-<p>Text search input: input.views-filter-text
-Target table:      input.views-filter-text[data-table]
-Source text:       .views-table-filter-text-source</p>
-    </div>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-      <dt class="source"><a href="views_ui.listing.js.html#line16" class="source">views_ui.listing.js:16</a></dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
+  </head>
+  <body>
+    <div id="main" class="pure">
+      <div class="pure-g">
+        <div class="pure-u-4-5">
+          <div class="box">
+            <h1 class="page-title">
+              Namespace: Drupal.behaviors
+            </h1>
+            <section>
+              <header>
+                <h2>
+                  <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span> behaviors
+                </h2>
+              </header>
+              <article>
+                <div class="container-overview">
+                  <div class="description">
+                    <p>
+                      Holds all initialization methods.
+                    </p>
+                  </div>
+                  <dl class="details">
+                    <dt class="source">
+                      <a href="drupal.js.html#line91" class="source">drupal.js:91</a>
+                    </dt>
+                  </dl>
+                </div>
+                <h3 class="subsection-title">
+                  Members
+                </h3>
+                <dl>
+                  <dd>
+                    <h3 class="name" id="addItemForm">
+                      <span class="type-signature">&lt;static&gt;</span> addItemForm <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line177" class="source">views-admin.js:177</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="AJAX">
+                      <span class="type-signature">&lt;static&gt;</span> AJAX <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches the Ajax behavior to each Ajax form element.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="ajax.js.html#line23" class="source">ajax.js:23</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="autocomplete">
+                      <span class="type-signature">&lt;static&gt;</span> autocomplete <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches the autocomplete behavior to all required fields.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="autocomplete.js.html#line165" class="source">autocomplete.js:165</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="batch">
+                      <span class="type-signature">&lt;static&gt;</span> batch <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches the batch behavior to progress bars.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="batch.js.html#line12" class="source">batch.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="blockDrag">
+                      <span class="type-signature">&lt;static&gt;</span> blockDrag <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Move a block in the blocks table from one region to another via select list.
+                      </p>
+                      <p>
+                        This behavior is dependent on the tableDrag behavior, since it uses the objects initialized in that behavior to update the row.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="block.js.html#line56" class="source">block.js:56</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="blockFilterByText">
+                      <span class="type-signature">&lt;static&gt;</span> blockFilterByText <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Filters the block list by a text input search string.
+                      </p>
+                      <p>
+                        Text search input: input.block-filter-text Target element: input.block-filter-text[data-element] Source text: .block-filter-text-source
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="block.admin.js.html#line16" class="source">block.admin.js:16</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="blockHighlightPlacement">
+                      <span class="type-signature">&lt;static&gt;</span> blockHighlightPlacement <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Highlights the block that was just placed into the block listing.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="block.admin.js.html#line79" class="source">block.admin.js:79</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="blockSettingsSummary">
+                      <span class="type-signature">&lt;static&gt;</span> blockSettingsSummary <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Provide the summary information for the block settings vertical tabs.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="block.js.html#line12" class="source">block.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="bookDetailsSummaries">
+                      <span class="type-signature">&lt;static&gt;</span> bookDetailsSummaries <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="book.js.html#line12" class="source">book.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="collapse">
+                      <span class="type-signature">&lt;static&gt;</span> collapse <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="collapse.js.html#line102" class="source">collapse.js:102</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="color">
+                      <span class="type-signature">&lt;static&gt;</span> color <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="color.js.html#line12" class="source">color.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="commentByViewer">
+                      <span class="type-signature">&lt;static&gt;</span> commentByViewer <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Add 'by-viewer' class to comments written by the current user.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="comment-by-viewer.js.html#line13" class="source">comment-by-viewer.js:13</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="commentFieldsetSummaries">
+                      <span class="type-signature">&lt;static&gt;</span> commentFieldsetSummaries <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="comment-entity-form.js.html#line13" class="source">comment-entity-form.js:13</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="commentNewIndicator">
+                      <span class="type-signature">&lt;static&gt;</span> commentNewIndicator <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Render "new" comment indicators wherever necessary.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="comment-new-indicator.js.html#line15" class="source">comment-new-indicator.js:15</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="contentTranslation">
+                      <span class="type-signature">&lt;static&gt;</span> contentTranslation <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Makes field translatability inherit bundle translatability.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="content_translation.admin.js.html#line80" class="source">content_translation.admin.js:80</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="contentTranslationDependentOptions">
+                      <span class="type-signature">&lt;static&gt;</span> contentTranslationDependentOptions <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Forces applicable options to be checked as translatable.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="content_translation.admin.js.html#line12" class="source">content_translation.admin.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="contentTypes">
+                      <span class="type-signature">&lt;static&gt;</span> contentTypes <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="content_types.js.html#line12" class="source">content_types.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="contextual">
+                      <span class="type-signature">&lt;static&gt;</span> contextual <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches outline behavior for regions associated with contextual links.
+                      </p>
+                      <p>
+                        Events Contextual triggers an event that can be used by other scripts.
+                      </p>
+                      <ul>
+                        <li>drupalContextualLinkAdded: Triggered when a contextual link is added.
+                        </li>
+                      </ul>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="contextual.js.html#line117" class="source">contextual.js:117</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="contextualToolbar">
+                      <span class="type-signature">&lt;static&gt;</span> contextualToolbar <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches contextual's edit toolbar tab behavior.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="contextual.toolbar.js.html#line69" class="source">contextual.toolbar.js:69</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="copyFieldValue">
+                      <span class="type-signature">&lt;static&gt;</span> copyFieldValue <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        When a field is filled out, apply its value to other fields that will likely use the same value. In the installer this is used to populate the administrator e-mail address with the same value as the site e-mail address.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="system.js.html#line17" class="source">system.js:17</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="customBlockDetailsSummaries">
+                      <span class="type-signature">&lt;static&gt;</span> customBlockDetailsSummaries <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="custom_block.js.html#line12" class="source">custom_block.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="dialog">
+                      <span class="type-signature">&lt;static&gt;</span> dialog <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="dialog.ajax.js.html#line13" class="source">dialog.ajax.js:13</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="dropButton">
+                      <span class="type-signature">&lt;static&gt;</span> dropButton <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Process elements with the .dropbutton class on page load.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="dropbutton.js.html#line12" class="source">dropbutton.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="drupalAnnounce">
+                      <span class="type-signature">&lt;static&gt;</span> drupalAnnounce <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Builds a div element with the aria-live attribute and attaches it to the DOM.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="announce.js.html#line21" class="source">announce.js:21</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="drupalDisplace">
+                      <span class="type-signature">&lt;static&gt;</span> drupalDisplace <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Registers a resize handler on the window.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="displace.js.html#line22" class="source">displace.js:22</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="edit">
+                      <span class="type-signature">&lt;static&gt;</span> edit <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="edit.js.html#line71" class="source">edit.js:71</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="editor">
+                      <span class="type-signature">&lt;static&gt;</span> editor <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Enables editors on text_format elements.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="editor.js.html#line20" class="source">editor.js:20</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="escapeAdmin">
+                      <span class="type-signature">&lt;static&gt;</span> escapeAdmin
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Replaces the "Home" link with "Back to site" link.
+                      </p>
+                      <p>
+                        Back to site link points to the last non-administrative page the user visited within the same browser tab.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="escapeAdmin.js.html#line26" class="source">escapeAdmin.js:26</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="fieldUIDisplayOverview">
+                      <span class="type-signature">&lt;static&gt;</span> fieldUIDisplayOverview <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="field_ui.js.html#line13" class="source">field_ui.js:13</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="fieldUserRegistration">
+                      <span class="type-signature">&lt;static&gt;</span> fieldUserRegistration <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Field instance settings screen: force the 'Display on registration form' checkbox checked whenever 'Required' is checked.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="user.js.html#line197" class="source">user.js:197</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="fileAutoUpload">
+                      <span class="type-signature">&lt;static&gt;</span> fileAutoUpload <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attach behaviors to managed file element upload fields.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="file.js.html#line51" class="source">file.js:51</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="fileButtons">
+                      <span class="type-signature">&lt;static&gt;</span> fileButtons <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attach behaviors to the file upload and remove buttons.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="file.js.html#line66" class="source">file.js:66</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="filePreviewLinks">
+                      <span class="type-signature">&lt;static&gt;</span> filePreviewLinks <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attach behaviors to links within managed file elements.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="file.js.html#line83" class="source">file.js:83</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="fileValidateAutoAttach">
+                      <span class="type-signature">&lt;static&gt;</span> fileValidateAutoAttach <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attach behaviors to managed file element upload fields.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="file.js.html#line18" class="source">file.js:18</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="fillUserInfoFromCookie">
+                      <span class="type-signature">&lt;static&gt;</span> fillUserInfoFromCookie <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Prepopulate form fields with information from the visitor cookie.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="form.js.html#line69" class="source">form.js:69</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="filterFilterHtmlUpdating">
+                      <span class="type-signature">&lt;static&gt;</span> filterFilterHtmlUpdating <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="filter.filter_html.admin.js.html#line49" class="source">filter.filter_html.admin.js:49</a>
+                      </dt>
+                      <dt class="tag-todo">
+                        To Do:
+                      </dt>
+                      <dd class="tag-todo">
+                        <ul>
+                          <li>remove everything from the behavior object.
+                          </li>
+                        </ul>
+                      </dd>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="filterGuidelines">
+                      <span class="type-signature">&lt;static&gt;</span> filterGuidelines <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Displays the guidelines of the selected text format automatically.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="filter.js.html#line14" class="source">filter.js:14</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="filterStatus">
+                      <span class="type-signature">&lt;static&gt;</span> filterStatus <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="filter.admin.js.html#line13" class="source">filter.admin.js:13</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="formUpdated">
+                      <span class="type-signature">&lt;static&gt;</span> formUpdated <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Sends a 'formUpdated' event each time a form element is modified.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="form.js.html#line48" class="source">form.js:48</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="hideUpdateInformation">
+                      <span class="type-signature">&lt;static&gt;</span> hideUpdateInformation <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Show/hide the description details on Available translation updates page.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="locale.admin.js.html#line51" class="source">locale.admin.js:51</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="importLanguageCodeSelector">
+                      <span class="type-signature">&lt;static&gt;</span> importLanguageCodeSelector <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Select the language code of an imported file based on its filename.
+                      </p>
+                      <p>
+                        This only works if the file name ends with "LANGCODE.po".
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="locale.bulk.js.html#line14" class="source">locale.bulk.js:14</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="initializeFilterConfiguration">
+                      <span class="type-signature">&lt;static&gt;</span> initializeFilterConfiguration <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Initializes Drupal.filterConfiguration.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="editor.admin.js.html#line734" class="source">editor.admin.js:734</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="livePreview">
+                      <span class="type-signature">&lt;static&gt;</span> livePreview <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Trigger preview when the "live preview" checkbox is checked.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="ajax.js_.html#line64" class="source">ajax.js:64</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="localeDatepicker">
+                      <span class="type-signature">&lt;static&gt;</span> localeDatepicker <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches language support to the jQuery UI datepicker component.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="locale.datepicker.js.html#line14" class="source">locale.datepicker.js:14</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="localeTranslateDirty">
+                      <span class="type-signature">&lt;static&gt;</span> localeTranslateDirty <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Marks changes of translations
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="locale.admin.js.html#line12" class="source">locale.admin.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="machineName">
+                      <span class="type-signature">&lt;static&gt;</span> machineName <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attach the machine-readable name form element behavior.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="machine-name.js.html#line9" class="source">machine-name.js:9</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="menuChangeParentItems">
+                      <span class="type-signature">&lt;static&gt;</span> menuChangeParentItems <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="menu.admin.js.html#line11" class="source">menu.admin.js:11</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="menuDetailsSummaries">
+                      <span class="type-signature">&lt;static&gt;</span> menuDetailsSummaries <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="menu.js.html#line11" class="source">menu.js:11</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="menuLinkAutomaticTitle">
+                      <span class="type-signature">&lt;static&gt;</span> menuLinkAutomaticTitle <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Automatically fill in a menu link title, if possible.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="menu.js.html#line29" class="source">menu.js:29</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="negotiationLanguage">
+                      <span class="type-signature">&lt;static&gt;</span> negotiationLanguage <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Makes language negotiation inherit user interface negotiation.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="language.admin.js.html#line9" class="source">language.admin.js:9</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="newSet">
+                      <span class="type-signature">&lt;static&gt;</span> newSet <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Make it so when you enter text into the "New set" textfield, the corresponding radio button gets selected.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="shortcut.admin.js.html#line10" class="source">shortcut.admin.js:10</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="nodeDetailsSummaries">
+                      <span class="type-signature">&lt;static&gt;</span> nodeDetailsSummaries <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="node.js.html#line13" class="source">node.js:13</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="nodeNewCommentsLink">
+                      <span class="type-signature">&lt;static&gt;</span> nodeNewCommentsLink <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Render "X new comments" links wherever necessary.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="node-new-comments-link.js.html#line15" class="source">node-new-comments-link.js:15</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="nodePreviewDestroyLinks">
+                      <span class="type-signature">&lt;static&gt;</span> nodePreviewDestroyLinks <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Disabling all links (except local fragment identifiers such as href="#frag") in node previews to prevent users from leaving the page.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="node.preview.js.html#line10" class="source">node.preview.js:10</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="password">
+                      <span class="type-signature">&lt;static&gt;</span> password <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attach handlers to evaluate the strength of any password fields and to check that its confirmation is correct.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="user.js.html#line13" class="source">user.js:13</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="pathDetailsSummaries">
+                      <span class="type-signature">&lt;static&gt;</span> pathDetailsSummaries <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="path.js.html#line12" class="source">path.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="permissions">
+                      <span class="type-signature">&lt;static&gt;</span> permissions <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Shows checked and disabled checkboxes for inherited permissions.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="user.permissions.js.html#line12" class="source">user.permissions.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="setTimezone">
+                      <span class="type-signature">&lt;static&gt;</span> setTimezone <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Set the client's system time zone as default values of form fields.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="timezone.js.html#line9" class="source">timezone.js:9</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="simpleTestMenuCollapse">
+                      <span class="type-signature">&lt;static&gt;</span> simpleTestMenuCollapse <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Add the cool table collapsing on the testing overview page.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="simpletest.js.html#line9" class="source">simpletest.js:9</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="simpleTestSelectAll">
+                      <span class="type-signature">&lt;static&gt;</span> simpleTestSelectAll <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Select/deselect all the inner checkboxes when the outer checkboxes are selected/deselected.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="simpletest.js.html#line66" class="source">simpletest.js:66</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="simpletestTableFilterByText">
+                      <span class="type-signature">&lt;static&gt;</span> simpletestTableFilterByText <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Filters the test list table by a text input search string.
+                      </p>
+                      <p>
+                        Additionally accounts for multiple tables being wrapped in "package" details elements.
+                      </p>
+                      <p>
+                        Text search input: input.table-filter-text Target table: input.table-filter-text[data-table] Source text: .table-filter-text-source
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="simpletest.js.html#line115" class="source">simpletest.js:115</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="states">
+                      <span class="type-signature">&lt;static&gt;</span> states <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches the states.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="states.js.html#line24" class="source">states.js:24</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="syncPreviewDisplay">
+                      <span class="type-signature">&lt;static&gt;</span> syncPreviewDisplay <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Sync preview display.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="ajax.js_.html#line78" class="source">ajax.js:78</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="tableDrag">
+                      <span class="type-signature">&lt;static&gt;</span> tableDrag <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Drag and drop table rows with field manipulation.
+                      </p>
+                      <p>
+                        Using the drupal_attach_tabledrag() function, any table with weights or parent relationships may be made into draggable tables. Columns containing a field may optionally be hidden, providing a better user experience.
+                      </p>
+                      <p>
+                        Created tableDrag instances may be modified with custom behaviors by overriding the .onDrag, .onDrop, .row.onSwap, and .row.onIndent methods. See blocks.js for an example of adding additional functionality to tableDrag.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tabledrag.js.html#line24" class="source">tabledrag.js:24</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="tableFilterByText">
+                      <span class="type-signature">&lt;static&gt;</span> tableFilterByText <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Filters the module list table by a text input search string.
+                      </p>
+                      <p>
+                        Additionally accounts for multiple tables being wrapped in "package" details elements.
+                      </p>
+                      <p>
+                        Text search input: input.table-filter-text Target table: input.table-filter-text[data-table] Source text: .table-filter-text-source
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="system.modules.js.html#line16" class="source">system.modules.js:16</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="tableHeader">
+                      <span class="type-signature">&lt;static&gt;</span> tableHeader <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches sticky table headers.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tableheader.js.html#line10" class="source">tableheader.js:10</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="tableResponsive">
+                      <span class="type-signature">&lt;static&gt;</span> tableResponsive <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attach the tableResponsive function to Drupal.behaviors.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tableresponsive.js.html#line9" class="source">tableresponsive.js:9</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="termDrag">
+                      <span class="type-signature">&lt;static&gt;</span> termDrag <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Move a block in the blocks table from one region to another via select list.
+                      </p>
+                      <p>
+                        This behavior is dependent on the tableDrag behavior, since it uses the objects initialized in that behavior to update the row.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="taxonomy.js.html#line15" class="source">taxonomy.js:15</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="textSummary">
+                      <span class="type-signature">&lt;static&gt;</span> textSummary <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Auto-hide summary textarea if empty and show hide and unhide links.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="text.js.html#line12" class="source">text.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="toolbar">
+                      <span class="type-signature">&lt;static&gt;</span> toolbar <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Registers tabs with the toolbar.
+                      </p>
+                      <p>
+                        The Drupal toolbar allows modules to register top-level tabs. These may point directly to a resource or toggle the visibility of a tray.
+                      </p>
+                      <p>
+                        Modules register tabs with hook_toolbar().
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="toolbar.js.html#line38" class="source">toolbar.js:38</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="tour">
+                      <span class="type-signature">&lt;static&gt;</span> tour <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches the tour's toolbar tab behavior.
+                      </p>
+                      <p>
+                        It uses the query string for:
+                      </p>
+                      <ul>
+                        <li>tour: When ?tour=1 is present, the tour will start automatically
+                          <pre>
+<code>  after the page has loaded.</code>
+</pre>
+                        </li>
+                        <li>tips: Pass ?tips=class in the url to filter the available tips to
+                          <pre>
+<code>  the subset which match the given class.</code>
+</pre>
+                        </li>
+                      </ul>
+                      <p>
+                        Example: http://example.com/foo?tour=1&amp;tips=bar
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="tour.js.html#line26" class="source">tour.js:26</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="verticalTabs">
+                      <span class="type-signature">&lt;static&gt;</span> verticalTabs <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        This script transforms a set of details into a stack of vertical tabs. Another tab pane can be selected by clicking on the respective tab.
+                      </p>
+                      <p>
+                        Each tab may have a summary which can be updated by another script. For that to work, each details element has an associated 'verticalTabCallback' (with jQuery.data() attached to the details), which is called every time the user performs an update to a form element inside the tab pane.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="vertical-tabs.js.html#line18" class="source">vertical-tabs.js:18</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsAjax">
+                      <span class="type-signature">&lt;static&gt;</span> viewsAjax <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="ajax.js_.html#line93" class="source">ajax.js:93</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="ViewsAjaxView">
+                      <span class="type-signature">&lt;static&gt;</span> ViewsAjaxView <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Attaches the AJAX behavior to Views exposed filter forms and key View links.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="ajax_view.js.html#line13" class="source">ajax_view.js:13</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsContextualLinks">
+                      <span class="type-signature">&lt;static&gt;</span> viewsContextualLinks <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-contextual.js.html#line12" class="source">views-contextual.js:12</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsFilterConfigSelectAll">
+                      <span class="type-signature">&lt;static&gt;</span> viewsFilterConfigSelectAll <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Add a select all checkbox, which checks each checkbox at once.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line831" class="source">views-admin.js:831</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsModalContent">
+                      <span class="type-signature">&lt;static&gt;</span> viewsModalContent <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="dialog.views.js.html#line34" class="source">dialog.views.js:34</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsRemoveIconClass">
+                      <span class="type-signature">&lt;static&gt;</span> viewsRemoveIconClass <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Remove icon class from elements that are themed as buttons or dropbuttons.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line859" class="source">views-admin.js:859</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiAddView">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiAddView <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        In the add view wizard, use the view name to prepopulate form fields such as page title and menu link.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line33" class="source">views-admin.js:33</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiChangeDefaultWidget">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiChangeDefaultWidget <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Change the default widget to select the default group according to the selected widget for the exposed group.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line887" class="source">views-admin.js:887</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiCheckboxify">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiCheckboxify <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Change "Expose filter" buttons into checkboxes.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line871" class="source">views-admin.js:871</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiEditView">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiEditView <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Improve the user experience of the views edit interface.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line18" class="source">views-admin.js:18</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiHandlerRemoveLink">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiHandlerRemoveLink <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line987" class="source">views-admin.js:987</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiOverrideSelect">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiOverrideSelect <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Change the Apply button text based upon the override select state.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line951" class="source">views-admin.js:951</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiPreview">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiPreview <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line428" class="source">views-admin.js:428</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiRearrangeFilter">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiRearrangeFilter <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line456" class="source">views-admin.js:456</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiRenderAddViewButton">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiRenderAddViewButton <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        The input field items that add displays must be rendered as <code>&lt;input&gt;</code> elements. The following behavior detaches the <code>&lt;input&gt;</code> elements from the DOM, wraps them in an unordered list, then appends them to the list of tabs.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line250" class="source">views-admin.js:250</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewsUiSearchOptions">
+                      <span class="type-signature">&lt;static&gt;</span> viewsUiSearchOptions <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views-admin.js.html#line309" class="source">views-admin.js:309</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="viewTableFilterByText">
+                      <span class="type-signature">&lt;static&gt;</span> viewTableFilterByText <span class="type-signature">:<a href="global.html#Behavior">Behavior</a></span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Filters the view listing tables by a text input search string.
+                      </p>
+                      <p>
+                        Text search input: input.views-filter-text Target table: input.views-filter-text[data-table] Source text: .views-table-filter-text-source
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="views_ui.listing.js.html#line16" class="source">views_ui.listing.js:16</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                </dl>
+              </article>
+            </section>
+          </div>
+        </div>
+        <nav class="pure-u-1-5">
+          <div class="box">
+            <h2>
+              <a href="index.html">Index</a>
+            </h2>
+            <h3>
+              Classes
+            </h3>
+            <ul>
+              <li>
+                <a href="Drupal.ajax.html">Drupal.ajax</a>
+              </li>
+              <li>
+                <a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a>
+              </li>
+              <li>
+                <a href="Drupal.AjaxError.html">Drupal.AjaxError</a>
+              </li>
+              <li>
+                <a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.DropButton.html">Drupal.DropButton</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a>
+              </li>
+              <li>
+                <a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a>
+              </li>
+              <li>
+                <a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a>
+              </li>
+              <li>
+                <a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a>
+              </li>
+              <li>
+                <a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a>
+              </li>
+              <li>
+                <a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a>
+              </li>
+              <li>
+                <a href="Drupal.states.State.html">Drupal.states.State</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a>
+              </li>
+              <li>
+                <a href="Drupal.tableDrag.html">Drupal.tableDrag</a>
+              </li>
+              <li>
+                <a href="Drupal.TableHeader.html">Drupal.TableHeader</a>
+              </li>
+              <li>
+                <a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a>
+              </li>
+              <li>
+                <a href="Drupal.verticalTab.html">Drupal.verticalTab</a>
+              </li>
+              <li>
+                <a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a>
+              </li>
+            </ul>
+            <h3>
+              Events
+            </h3>
+            <ul>
+              <li>
+                <a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a>
+              </li>
+            </ul>
+            <h3>
+              Namespaces
+            </h3>
+            <ul>
+              <li>
+                <a href="Drupal.html" class="root">Drupal</a>
+              </li>
+              <li>
+                <a href="Drupal.behaviors.html">Drupal.behaviors</a>
+              </li>
+              <li>
+                <a href="Drupal.color.html">Drupal.color</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.html">Drupal.contextual</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.html">Drupal.edit</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.html">Drupal.edit.util</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a>
+              </li>
+              <li>
+                <a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a>
+              </li>
+              <li>
+                <a href="Drupal.editors.html">Drupal.editors</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a>
+              </li>
+              <li>
+                <a href="Drupal.file.html">Drupal.file</a>
+              </li>
+              <li>
+                <a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a>
+              </li>
+              <li>
+                <a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a>
+              </li>
+              <li>
+                <a href="Drupal.history.html">Drupal.history</a>
+              </li>
+              <li>
+                <a href="Drupal.states.html">Drupal.states</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a>
+              </li>
+              <li>
+                <a href="Drupal.theme.html">Drupal.theme</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.html">Drupal.toolbar</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.html">Drupal.tour</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.models.html">Drupal.tour.models</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.views.html">Drupal.tour.views</a>
+              </li>
+              <li>
+                <a href="Drupal.Views.html">Drupal.Views</a>
+              </li>
+              <li>
+                <a href="Drupal.views_.html">Drupal.views</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.html">Drupal.viewsUi</a>
+              </li>
+            </ul>
+            <h3>
+              Global
+            </h3>
+            <ul>
+              <li>
+                <a href="global.html#drupalSettings" class="root">drupalSettings</a>
+              </li>
+              <li>
+                <a href="global.html#matchMedia" class="root">matchMedia</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
       </div>
-    </div>
-
-    <nav class="pure-u-1-5">
-      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
-    </nav>
-  </div>
-
-</div>
-
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
+    </div><script type="text/javascript">
+prettyPrint();
+    </script><script src="scripts/linenumber.js" type="text/javascript">
+</script>
+  </body>
 </html>

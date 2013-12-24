@@ -1,36 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
     <meta charset="utf-8">
-    <title>Source: modules/color/color.js — Drupal JS API</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <title>
+      Source: modules/color/color.js &#226;&#8364;&#8221;&#226;&#8364;&#175;Drupal JS API
+    </title>
+    <script src="scripts/prettify/prettify.js" type="text/javascript">
+</script>
+    <script src="scripts/prettify/lang-css.js" type="text/javascript">
+</script>
     <link type="text/css" rel="stylesheet" href="pure/pure.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <!--<link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">-->
     <link type="text/css" rel="stylesheet" href="styles/drupal.css">
-</head>
-
-<body>
-
-<div id="main" class="pure">
-
-  <div class="pure-g">
-
-    <div class="pure-u-4-5">
-      <div class="box">
-        <h1 class="page-title">Source: modules/color/color.js</h1>
-        
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>/**
+  </head>
+  <body>
+    <div id="main" class="pure">
+      <div class="pure-g">
+        <div class="pure-u-4-5">
+          <div class="box">
+            <h1 class="page-title">
+              Source: modules/color/color.js
+            </h1>
+            <section>
+              <article>
+                <pre class="prettyprint source">
+<code>/**
  * @file
  * Attaches the behaviors for the Color module.
  */
@@ -55,7 +50,7 @@ Drupal.behaviors.color = {
     var focused = null;
 
     // Add Farbtastic.
-    $('&lt;div id="placeholder">&lt;/div>').once('color').prependTo(form);
+    $('&lt;div id="placeholder"&gt;&lt;/div&gt;').once('color').prependTo(form);
     var farb = $.farbtastic('#placeholder');
 
     // Decode reference colors to HSL.
@@ -73,7 +68,7 @@ Drupal.behaviors.color = {
     for (i in settings.gradients) {
       if (settings.gradients.hasOwnProperty(i)) {
         // Add element to display the gradient.
-        $('#preview').once('color').append('&lt;div id="gradient-' + i + '">&lt;/div>');
+        $('#preview').once('color').append('&lt;div id="gradient-' + i + '"&gt;&lt;/div&gt;');
         var gradient = $('#preview #gradient-' + i);
         // Add height of current gradient to the list (divided by 10).
         height.push(parseInt(gradient.css('height'), 10) / 10);
@@ -83,7 +78,7 @@ Drupal.behaviors.color = {
         // Each gradient line should have a height (or width for horizontal
         // gradients) of 10px (because we divided the height/width by 10 above).
         for (j = 0; j &lt; (settings.gradients[i].direction === 'vertical' ? height[i] : width[i]); ++j) {
-          gradient.append('&lt;div class="gradient-line">&lt;/div>');
+          gradient.append('&lt;div class="gradient-line"&gt;&lt;/div&gt;');
         }
       }
     }
@@ -133,7 +128,7 @@ Drupal.behaviors.color = {
       }
       else {
         d = ref1[1] / ref2[1];
-        if (d > 1) {
+        if (d &gt; 1) {
           given[1] /= d;
         }
         else {
@@ -147,7 +142,7 @@ Drupal.behaviors.color = {
       }
       else {
         d = ref1[2] / ref2[2];
-        if (d > 1) {
+        if (d &gt; 1) {
           given[2] /= d;
         }
         else {
@@ -166,7 +161,7 @@ Drupal.behaviors.color = {
       // Set background/foreground colors.
       $(input).css({
         backgroundColor: color,
-        'color': farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
+        'color': farb.RGBToHSL(farb.unpack(color))[2] &gt; 0.5 ? '#000' : '#fff'
       });
 
       // Change input value.
@@ -244,7 +239,7 @@ Drupal.behaviors.color = {
       var i = inputs.length;
       if (inputs.length) {
         var toggleClick = true;
-        var lock = $('&lt;div class="lock">&lt;/div>').on('click', function () {
+        var lock = $('&lt;div class="lock"&gt;&lt;/div&gt;').on('click', function () {
           if (toggleClick) {
             $(this).addClass('unlocked');
             $(hooks[i - 1]).attr('class',
@@ -270,7 +265,7 @@ Drupal.behaviors.color = {
       }
 
       // Add hook.
-      var hook = $('&lt;div class="hook">&lt;/div>');
+      var hook = $('&lt;div class="hook"&gt;&lt;/div&gt;');
       $(this).after(hook);
       hooks.push(hook);
 
@@ -291,25 +286,301 @@ Drupal.behaviors.color = {
 };
 
 })(jQuery);
-</code></pre>
-        </article>
-    </section>
-
-
-
-
+</code>
+</pre>
+              </article>
+            </section>
+          </div>
+        </div>
+        <nav class="pure-u-1-5">
+          <div class="box">
+            <h2>
+              <a href="index.html">Index</a>
+            </h2>
+            <h3>
+              Classes
+            </h3>
+            <ul>
+              <li>
+                <a href="Drupal.ajax.html">Drupal.ajax</a>
+              </li>
+              <li>
+                <a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a>
+              </li>
+              <li>
+                <a href="Drupal.AjaxError.html">Drupal.AjaxError</a>
+              </li>
+              <li>
+                <a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.DropButton.html">Drupal.DropButton</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a>
+              </li>
+              <li>
+                <a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a>
+              </li>
+              <li>
+                <a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a>
+              </li>
+              <li>
+                <a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a>
+              </li>
+              <li>
+                <a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a>
+              </li>
+              <li>
+                <a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a>
+              </li>
+              <li>
+                <a href="Drupal.states.State.html">Drupal.states.State</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a>
+              </li>
+              <li>
+                <a href="Drupal.tableDrag.html">Drupal.tableDrag</a>
+              </li>
+              <li>
+                <a href="Drupal.TableHeader.html">Drupal.TableHeader</a>
+              </li>
+              <li>
+                <a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a>
+              </li>
+              <li>
+                <a href="Drupal.verticalTab.html">Drupal.verticalTab</a>
+              </li>
+              <li>
+                <a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a>
+              </li>
+            </ul>
+            <h3>
+              Events
+            </h3>
+            <ul>
+              <li>
+                <a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a>
+              </li>
+            </ul>
+            <h3>
+              Namespaces
+            </h3>
+            <ul>
+              <li>
+                <a href="Drupal.html" class="root">Drupal</a>
+              </li>
+              <li>
+                <a href="Drupal.behaviors.html">Drupal.behaviors</a>
+              </li>
+              <li>
+                <a href="Drupal.color.html">Drupal.color</a>
+              </li>
+              <li>
+                <a href="Drupal.contextual.html">Drupal.contextual</a>
+              </li>
+              <li>
+                <a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.html">Drupal.edit</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.html">Drupal.edit.util</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a>
+              </li>
+              <li>
+                <a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a>
+              </li>
+              <li>
+                <a href="Drupal.editors.html">Drupal.editors</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a>
+              </li>
+              <li>
+                <a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a>
+              </li>
+              <li>
+                <a href="Drupal.file.html">Drupal.file</a>
+              </li>
+              <li>
+                <a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a>
+              </li>
+              <li>
+                <a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a>
+              </li>
+              <li>
+                <a href="Drupal.history.html">Drupal.history</a>
+              </li>
+              <li>
+                <a href="Drupal.states.html">Drupal.states</a>
+              </li>
+              <li>
+                <a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a>
+              </li>
+              <li>
+                <a href="Drupal.theme.html">Drupal.theme</a>
+              </li>
+              <li>
+                <a href="Drupal.toolbar.html">Drupal.toolbar</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.html">Drupal.tour</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.models.html">Drupal.tour.models</a>
+              </li>
+              <li>
+                <a href="Drupal.tour.views.html">Drupal.tour.views</a>
+              </li>
+              <li>
+                <a href="Drupal.Views.html">Drupal.Views</a>
+              </li>
+              <li>
+                <a href="Drupal.views_.html">Drupal.views</a>
+              </li>
+              <li>
+                <a href="Drupal.viewsUi.html">Drupal.viewsUi</a>
+              </li>
+            </ul>
+            <h3>
+              Global
+            </h3>
+            <ul>
+              <li>
+                <a href="global.html#drupalSettings" class="root">drupalSettings</a>
+              </li>
+              <li>
+                <a href="global.html#matchMedia" class="root">matchMedia</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
       </div>
-    </div>
-
-    <nav class="pure-u-1-5">
-      <div class="box"><h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Drupal.ajax.html">Drupal.ajax</a></li><li><a href="Drupal.AjaxCommands.html">Drupal.AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">Drupal.AjaxError</a></li><li><a href="Drupal.CollapsibleDetails.html">Drupal.CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">Drupal.contextual.AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a></li><li><a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a></li><li><a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a></li><li><a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a></li><li><a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a></li><li><a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a></li><li><a href="Drupal.DropButton.html">Drupal.DropButton</a></li><li><a href="Drupal.edit.AppModel.html">Drupal.edit.AppModel</a></li><li><a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a></li><li><a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a></li><li><a href="Drupal.edit.EditorModel.html">Drupal.edit.EditorModel</a></li><li><a href="Drupal.edit.editors.editor.html">Drupal.edit.editors.editor</a></li><li><a href="Drupal.edit.editors.form.html">Drupal.edit.editors.form</a></li><li><a href="Drupal.edit.editors.plain_text.html">Drupal.edit.editors.plain_text</a></li><li><a href="Drupal.edit.EditorView.html">Drupal.edit.EditorView</a></li><li><a href="Drupal.edit.EntityCollection.html">Drupal.edit.EntityCollection</a></li><li><a href="Drupal.edit.EntityDecorationView.html">Drupal.edit.EntityDecorationView</a></li><li><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></li><li><a href="Drupal.edit.EntityToolbarView.html">Drupal.edit.EntityToolbarView</a></li><li><a href="Drupal.edit.FieldCollection.html">Drupal.edit.FieldCollection</a></li><li><a href="Drupal.edit.FieldDecorationView.html">Drupal.edit.FieldDecorationView</a></li><li><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></li><li><a href="Drupal.edit.FieldToolbarView.html">Drupal.edit.FieldToolbarView</a></li><li><a href="Drupal.EditorFeature.html">Drupal.EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">Drupal.EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">Drupal.fieldUIDisplayOverview.field</a></li><li><a href="Drupal.FilterHTMLRule.html">Drupal.FilterHTMLRule</a></li><li><a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a></li><li><a href="Drupal.ProgressBar.html">Drupal.ProgressBar</a></li><li><a href="Drupal.states.Dependent.html">Drupal.states.Dependent</a></li><li><a href="Drupal.states.State.html">Drupal.states.State</a></li><li><a href="Drupal.states.Trigger.html">Drupal.states.Trigger</a></li><li><a href="Drupal.tableDrag.html">Drupal.tableDrag</a></li><li><a href="Drupal.TableHeader.html">Drupal.TableHeader</a></li><li><a href="Drupal.TableResponsive.html">Drupal.TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">Drupal.toolbar.BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">Drupal.toolbar.MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">Drupal.toolbar.MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">Drupal.toolbar.ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">Drupal.toolbar.ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">Drupal.toolbar.ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">Drupal.tour.models.StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">Drupal.tour.views.ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">Drupal.verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">Drupal.viewsUi.AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Drupal.viewsUi.Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">Drupal.viewsUi.FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">Drupal.viewsUi.OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">Drupal.viewsUi.RearrangeFilterHandler</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a></li></ul><h3>Namespaces</h3><ul><li><a href="Drupal.html" class="root">Drupal</a></li><li><a href="Drupal.behaviors.html">Drupal.behaviors</a></li><li><a href="Drupal.color.html">Drupal.color</a></li><li><a href="Drupal.contextual.html">Drupal.contextual</a></li><li><a href="Drupal.contextualToolbar.html">Drupal.contextualToolbar</a></li><li><a href="Drupal.edit.html">Drupal.edit</a></li><li><a href="Drupal.edit.metadata.html">Drupal.edit.metadata</a></li><li><a href="Drupal.edit.util.html">Drupal.edit.util</a></li><li><a href="Drupal.edit.util.constants.html">Drupal.edit.util.constants</a></li><li><a href="Drupal.edit.util.form.html">Drupal.edit.util.form</a></li><li><a href="Drupal.editorConfiguration.html">Drupal.editorConfiguration</a></li><li><a href="Drupal.editors.html">Drupal.editors</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">Drupal.fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">Drupal.fieldUIOverview</a></li><li><a href="Drupal.file.html">Drupal.file</a></li><li><a href="Drupal.filterConfiguration.html">Drupal.filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">Drupal.filterConfiguration.liveSettingParsers</a></li><li><a href="Drupal.history.html">Drupal.history</a></li><li><a href="Drupal.states.html">Drupal.states</a></li><li><a href="Drupal.states.Trigger.states.html">Drupal.states.Trigger.states</a></li><li><a href="Drupal.theme.html">Drupal.theme</a></li><li><a href="Drupal.toolbar.html">Drupal.toolbar</a></li><li><a href="Drupal.tour.html">Drupal.tour</a></li><li><a href="Drupal.tour.models.html">Drupal.tour.models</a></li><li><a href="Drupal.tour.views.html">Drupal.tour.views</a></li><li><a href="Drupal.Views.html">Drupal.Views</a></li><li><a href="Drupal.views_.html">Drupal.views</a></li><li><a href="Drupal.viewsUi.html">Drupal.viewsUi</a></li></ul><h3>Global</h3><ul><li><a href="global.html#drupalSettings" class="root">drupalSettings</a></li><li><a href="global.html#matchMedia" class="root">matchMedia</a></li></ul></div>
-    </nav>
-  </div>
-
-</div>
-
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
+    </div><script type="text/javascript">
+prettyPrint();
+    </script><script src="scripts/linenumber.js" type="text/javascript">
+</script>
+  </body>
 </html>
