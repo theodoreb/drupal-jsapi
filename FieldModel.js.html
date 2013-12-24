@@ -50,14 +50,14 @@ Drupal.edit.FieldModel = Backbone.Model.extend(/** @lends Drupal.edit.FieldModel
     // a DOM element in a Backbone Model, but we need to be able to map fields
     // in the DOM to FieldModels in memory.
      * @name Drupal.edit.FieldModel#el
-     * @type {?DOMElement}
+     * @type {?HTMLElement}
      * @virtual
      */
     el: null,
     /**
      * A field ID, of the form
-     * "&lt;entity type>/&lt;id>/&lt;field name>/&lt;language>/&lt;view mode>", e.g.
-     * "node/1/field_tags/und/full".
+     * `&lt;entity type>/&lt;id>/&lt;field name>/&lt;language>/&lt;view mode>`, e.g.
+     * `node/1/field_tags/und/full`.
      * @name Drupal.edit.FieldModel#fieldID
      * @type {?String}
      * @virtual
@@ -65,7 +65,7 @@ Drupal.edit.FieldModel = Backbone.Model.extend(/** @lends Drupal.edit.FieldModel
     fieldID: null,
     /**
      * The unique ID of this field within its entity instance on the page, of
-     * the form "&lt;entity type>/&lt;id>/&lt;field name>/&lt;language>/&lt;view mode>[entity instance ID]",
+     * the form `&lt;entity type>/&lt;id>/&lt;field name>/&lt;language>/&lt;view mode>[entity instance ID]`,
      * e.g. "node/1/field_tags/und/full[0]".
      * @name Drupal.edit.FieldModel#id
      * @type {?String}
@@ -97,9 +97,9 @@ Drupal.edit.FieldModel = Backbone.Model.extend(/** @lends Drupal.edit.FieldModel
     acceptStateChange: null,
     /**
      * A logical field ID, of the form
-     * "&lt;entity type>/&lt;id>/&lt;field name>/&lt;language>", i.e. the fieldID without
+     * `&lt;entity type>/&lt;id>/&lt;field name>/&lt;language>`, i.e. the fieldID without
      * the view mode, to be able to identify other instances of the same field
-     * on the page but rendered in a different view mode. e.g. "node/1/field_tags/und".
+     * on the page but rendered in a different view mode. e.g. `node/1/field_tags/und`.
      * @name Drupal.edit.FieldModel#logicalFieldID
      * @type {?String}
      * @virtual
@@ -111,7 +111,7 @@ Drupal.edit.FieldModel = Backbone.Model.extend(/** @lends Drupal.edit.FieldModel
      * during the life of a FieldModel instance.
      *
      * In-place editing state of this field. Defaults to the initial state.
-     * Possible values: {@linkto Drupal.edit.FieldModel#states}
+     * Possible values: {@linkto Drupal.edit.FieldModel.states}
      * @name Drupal.edit.FieldModel#state
      * @type {String}
      * @virtual
@@ -127,7 +127,7 @@ Drupal.edit.FieldModel = Backbone.Model.extend(/** @lends Drupal.edit.FieldModel
     isChanged: false,
     /**
      * Is tracked by the EntityModel, is mirrored here solely for decorative
-     * purposes: so that FieldDecorationView.renderChanged() can react to it.
+     * purposes: so that `FieldDecorationView.renderChanged()` can react to it.
      * @name Drupal.edit.FieldModel#inTempStore
      * @type {Boolean}
      * @virtual
@@ -177,7 +177,7 @@ Drupal.edit.FieldModel = Backbone.Model.extend(/** @lends Drupal.edit.FieldModel
     if (this.get('state') !== 'inactive') {
       throw new Error("FieldModel cannot be destroyed if it is not inactive state.");
     }
-    Backbone.Model.prototype.destroy.apply(this, options);
+    Backbone.Model.prototype.destroy.call(this, options);
   },
 
   /**
@@ -193,11 +193,6 @@ Drupal.edit.FieldModel = Backbone.Model.extend(/** @lends Drupal.edit.FieldModel
    * @param {object} options
    */
   validate: function (attrs, options) {
-    // We only care about validating the 'state' attribute.
-    if (!_.has(attrs, 'state')) {
-      return;
-    }
-
     var current = this.get('state');
     var next = attrs.state;
     if (current !== next) {

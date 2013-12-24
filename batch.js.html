@@ -59,7 +59,7 @@ Drupal.behaviors.batch = {
       $progress.prepend($('&lt;p class="error">&lt;/p>').html(batch.errorMessage));
       $('#wait').hide();
     }
-    Drupal.announce()
+
     if ($progress.length) {
       progressBar = new Drupal.ProgressBar('updateprogress', updateCallback, 'POST', errorCallback);
       progressBar.setProgress(-1, batch.initMessage);

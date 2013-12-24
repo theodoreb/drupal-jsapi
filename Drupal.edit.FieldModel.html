@@ -227,7 +227,7 @@ previous state, new state, context, and a callback</p>
         
             
 <dt>
-    <h3 class="name" id="el"><span class="type-signature">&lt;abstract> </span>el<span class="type-signature"> :DOMElement</span></h3>
+    <h3 class="name" id="el"><span class="type-signature">&lt;abstract> </span>el<span class="type-signature"> :HTMLElement</span></h3>
 
     
 </dt>
@@ -336,8 +336,8 @@ FieldCollection, is automatically updated to include this FieldModel.</p>
     
     <div class="description">
         <p>A field ID, of the form
-&quot;<entity type>/<id>/<field name>/<language>/<view mode>&quot;, e.g.
-&quot;node/1/field_tags/und/full&quot;.</p>
+<code>&lt;entity type&gt;/&lt;id&gt;/&lt;field name&gt;/&lt;language&gt;/&lt;view mode&gt;</code>, e.g.
+<code>node/1/field_tags/und/full</code>.</p>
     </div>
     
 
@@ -489,7 +489,7 @@ in a different view mode.</p>
     
     <div class="description">
         <p>The unique ID of this field within its entity instance on the page, of
-the form &quot;<entity type>/<id>/<field name>/<language>/<view mode>[entity instance ID]&quot;,
+the form <code>&lt;entity type&gt;/&lt;id&gt;/&lt;field name&gt;/&lt;language&gt;/&lt;view mode&gt;[entity instance ID]</code>,
 e.g. &quot;node/1/field_tags/und/full[0]&quot;.</p>
     </div>
     
@@ -540,7 +540,7 @@ e.g. &quot;node/1/field_tags/und/full[0]&quot;.</p>
     
     <div class="description">
         <p>Is tracked by the EntityModel, is mirrored here solely for decorative
-purposes: so that FieldDecorationView.renderChanged() can react to it.</p>
+purposes: so that <code>FieldDecorationView.renderChanged()</code> can react to it.</p>
     </div>
     
 
@@ -640,9 +640,9 @@ states in which the field is still changed.</p>
     
     <div class="description">
         <p>A logical field ID, of the form
-&quot;<entity type>/<id>/<field name>/<language>&quot;, i.e. the fieldID without
+<code>&lt;entity type&gt;/&lt;id&gt;/&lt;field name&gt;/&lt;language&gt;</code>, i.e. the fieldID without
 the view mode, to be able to identify other instances of the same field
-on the page but rendered in a different view mode. e.g. &quot;node/1/field_tags/und&quot;.</p>
+on the page but rendered in a different view mode. e.g. <code>node/1/field_tags/und</code>.</p>
     </div>
     
 
@@ -743,7 +743,7 @@ on the page but rendered in a different view mode. e.g. &quot;node/1/field_tags/
         <p>The attributes below are stateful. The ones above will never change
 during the life of a FieldModel instance.</p>
 <p>In-place editing state of this field. Defaults to the initial state.
-Possible values: {@linkto Drupal.edit.FieldModel#states}</p>
+Possible values: {@linkto Drupal.edit.FieldModel.states}</p>
     </div>
     
 
@@ -932,7 +932,7 @@ Possible values: {@linkto Drupal.edit.FieldModel#states}</p>
     
 
     
-      <dt class="source"><a href="FieldModel.js.html#line209" class="source">FieldModel.js:209</a></dt>
+      <dt class="source"><a href="FieldModel.js.html#line204" class="source">FieldModel.js:204</a></dt>
     
 
     
@@ -1014,7 +1014,7 @@ Possible values: {@linkto Drupal.edit.FieldModel#states}</p>
     
 
     
-      <dt class="source"><a href="FieldModel.js.html#line189" class="source">FieldModel.js:189</a></dt>
+      <dt class="source"><a href="FieldModel.js.html#line184" class="source">FieldModel.js:184</a></dt>
     
 
     
@@ -1096,7 +1096,7 @@ Possible values: {@linkto Drupal.edit.FieldModel#states}</p>
     
 
     
-      <dt class="source"><a href="FieldModel.js.html#line199" class="source">FieldModel.js:199</a></dt>
+      <dt class="source"><a href="FieldModel.js.html#line194" class="source">FieldModel.js:194</a></dt>
     
 
     

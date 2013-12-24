@@ -173,7 +173,7 @@
         
             
 <dt>
-    <h3 class="name" id="el"><span class="type-signature">&lt;abstract> </span>el<span class="type-signature"> :DOMElement</span></h3>
+    <h3 class="name" id="el"><span class="type-signature">&lt;abstract> </span>el<span class="type-signature"> :HTMLElement</span></h3>
 
     
 </dt>
@@ -231,7 +231,7 @@ entities in the DOM to EntityModels in memory.</p>
 <dd>
     
     <div class="description">
-        <p>An entity ID, of the form &quot;<entity type>/<entity ID>&quot;, e.g. &quot;node/1&quot;.</p>
+        <p>An entity ID, of the form <code>&lt;entity type&gt;/&lt;entity ID&gt;</code>, e.g. <code>node/1</code>.</p>
     </div>
     
 
@@ -831,7 +831,7 @@ in order to restore the original values to its fields in the client.</p>
         <dl>
             
 <dt>
-    <h3 class="name" id="_fieldsHaveAcceptableStates"><span class="type-signature"></span>_fieldsHaveAcceptableStates<span class="signature">(acceptedFieldStates)</span><span class="type-signature"></span></h3>
+    <h3 class="name" id="_fieldsHaveAcceptableStates"><span class="type-signature"></span>_fieldsHaveAcceptableStates<span class="signature">(acceptedFieldStates)</span><span class="type-signature"> &rarr; {Boolean}</span></h3>
 
     
 </dt>
@@ -913,7 +913,7 @@ in order to restore the original values to its fields in the client.</p>
     
 
     
-      <dt class="source"><a href="EntityModel.js.html#line552" class="source">EntityModel.js:552</a></dt>
+      <dt class="source"><a href="EntityModel.js.html#line560" class="source">EntityModel.js:560</a></dt>
     
 
     
@@ -922,7 +922,7 @@ in order to restore the original values to its fields in the client.</p>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>validate()</li>
+            <li><a href="Drupal.edit.EntityModel.html#validate">Drupal.edit.EntityModel#validate</a></li>
         </ul>
     </dd>
     
@@ -945,14 +945,151 @@ in order to restore the original values to its fields in the client.</p>
             
 
 
+        
 
-<div class="param-desc">
-    <p>Boolean</p>
-</div>
-
-
+    
+</dd>
 
         
+            
+<dt>
+    <h3 class="name" id="_updateInTempStoreAttributes"><span class="type-signature"></span>_updateInTempStoreAttributes<span class="signature">(entityModel, fieldModel)</span><span class="type-signature"></span></h3>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Updates a Field and Entity model's &quot;inTempStore&quot; when appropriate.</p>
+<p>Helper function.</p>
+    </div>
+    
+
+    
+
+    
+        <h4>Parameters:</h4>
+        
+
+<table class="params pure-table">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>entityModel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.edit.EntityModel.html">Drupal.edit.EntityModel</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The model of the entity for which a field's state attribute has changed.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>fieldModel</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.edit.FieldModel.html">Drupal.edit.FieldModel</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The model of the field whose state attribute has changed.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+      <dt class="source"><a href="EntityModel.js.html#line269" class="source">EntityModel.js:269</a></dt>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Drupal.edit.EntityModel.html#fieldStateChange">Drupal.edit.EntityModel#fieldStateChange</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -993,7 +1130,7 @@ in order to restore the original values to its fields in the client.</p>
     
 
     
-      <dt class="source"><a href="EntityModel.js.html#line573" class="source">EntityModel.js:573</a></dt>
+      <dt class="source"><a href="EntityModel.js.html#line581" class="source">EntityModel.js:581</a></dt>
     
 
     
@@ -1076,7 +1213,7 @@ in order to restore the original values to its fields in the client.</p>
 
             
 
-            <td class="description last"><p>The model of the field whose state property changed.</p></td>
+            <td class="description last"><p>The model of the field whose state attribute changed.</p></td>
         </tr>
 
 	
@@ -1129,7 +1266,7 @@ in order to restore the original values to its fields in the client.</p>
     
 
     
-      <dt class="source"><a href="EntityModel.js.html#line272" class="source">EntityModel.js:272</a></dt>
+      <dt class="source"><a href="EntityModel.js.html#line304" class="source">EntityModel.js:304</a></dt>
     
 
     
@@ -1244,7 +1381,7 @@ in order to restore the original values to its fields in the client.</p>
     
 
     
-      <dt class="source"><a href="EntityModel.js.html#line415" class="source">EntityModel.js:415</a></dt>
+      <dt class="source"><a href="EntityModel.js.html#line425" class="source">EntityModel.js:425</a></dt>
     
 
     
@@ -1463,7 +1600,7 @@ in order to restore the original values to its fields in the client.</p>
     
 
     
-      <dt class="source"><a href="EntityModel.js.html#line585" class="source">EntityModel.js:585</a></dt>
+      <dt class="source"><a href="EntityModel.js.html#line593" class="source">EntityModel.js:593</a></dt>
     
 
     
@@ -1602,7 +1739,7 @@ for the save or set call to validate and proceed.</code></pre></td>
     
 
     
-      <dt class="source"><a href="EntityModel.js.html#line474" class="source">EntityModel.js:474</a></dt>
+      <dt class="source"><a href="EntityModel.js.html#line482" class="source">EntityModel.js:482</a></dt>
     
 
     
