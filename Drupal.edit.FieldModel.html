@@ -427,18 +427,6 @@
                   </dd>
                   <dd>
                     <h3 class="name" id="destroy">
-                      destroy<span class="signature">()</span>
-                    </h3>
-                  </dd>
-                  <dd>
-                    <dl class="details">
-                      <dt class="source">
-                        <a href="EntityModel.js.html#line584" class="source">EntityModel.js:584</a>
-                      </dt>
-                    </dl>
-                  </dd>
-                  <dd>
-                    <h3 class="name" id="destroy">
                       destroy<span class="signature">(options)</span>
                     </h3>
                   </dd>
@@ -473,6 +461,18 @@
                     <dl class="details">
                       <dt class="source">
                         <a href="FieldModel.js.html#line147" class="source">FieldModel.js:147</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                  <dd>
+                    <h3 class="name" id="destroy">
+                      destroy<span class="signature">()</span>
+                    </h3>
+                  </dd>
+                  <dd>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="EntityModel.js.html#line584" class="source">EntityModel.js:584</a>
                       </dt>
                     </dl>
                   </dd>
@@ -800,22 +800,39 @@ fully saved.</code>
                           <td class="type">
                             <span class="param-type">Object</span>
                           </td>
-                          <td class="description last"></td>
+                          <td class="description last">
+                            <p>
+                              The attributes changes in the save or set call.
+                            </p>
+                          </td>
                         </tr>
                         <tr>
                           <td class="name">
                             <code>options</code>
                           </td>
                           <td class="type">
-                            <span class="param-type">object</span>
+                            <span class="param-type">Object</span>
                           </td>
-                          <td class="description last"></td>
+                          <td class="description last">
+                            <p>
+                              An object with the following option:
+                            </p>
+                            <pre>
+<code>- String reason (optional): a string that conveys a particular reason
+  to allow for an exceptional state change.
+- Array accept-field-states (optional) An array of strings that
+represent field states that the entities must be in to validate. For
+example, if accept-field-states is ['candidate', 'highlighted'], then
+all the fields of the entity must be in either of these two states
+for the save or set call to validate and proceed.</code>
+</pre>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
                     <dl class="details">
                       <dt class="source">
-                        <a href="FieldModel.js.html#line166" class="source">FieldModel.js:166</a>
+                        <a href="EntityModel.js.html#line485" class="source">EntityModel.js:485</a>
                       </dt>
                     </dl>
                   </dd>
@@ -850,39 +867,22 @@ fully saved.</code>
                           <td class="type">
                             <span class="param-type">Object</span>
                           </td>
-                          <td class="description last">
-                            <p>
-                              The attributes changes in the save or set call.
-                            </p>
-                          </td>
+                          <td class="description last"></td>
                         </tr>
                         <tr>
                           <td class="name">
                             <code>options</code>
                           </td>
                           <td class="type">
-                            <span class="param-type">Object</span>
+                            <span class="param-type">object</span>
                           </td>
-                          <td class="description last">
-                            <p>
-                              An object with the following option:
-                            </p>
-                            <pre>
-<code>- String reason (optional): a string that conveys a particular reason
-  to allow for an exceptional state change.
-- Array accept-field-states (optional) An array of strings that
-represent field states that the entities must be in to validate. For
-example, if accept-field-states is ['candidate', 'highlighted'], then
-all the fields of the entity must be in either of these two states
-for the save or set call to validate and proceed.</code>
-</pre>
-                          </td>
+                          <td class="description last"></td>
                         </tr>
                       </tbody>
                     </table>
                     <dl class="details">
                       <dt class="source">
-                        <a href="EntityModel.js.html#line485" class="source">EntityModel.js:485</a>
+                        <a href="FieldModel.js.html#line166" class="source">FieldModel.js:166</a>
                       </dt>
                     </dl>
                   </dd>
@@ -1094,6 +1094,9 @@ for the save or set call to validate and proceed.</code>
                 <a href="Drupal.behaviors.html">Drupal.behaviors</a>
               </li>
               <li>
+                <a href="Drupal.ckeditor.html">Drupal.ckeditor</a>
+              </li>
+              <li>
                 <a href="Drupal.color.html">Drupal.color</a>
               </li>
               <li>
@@ -1163,10 +1166,10 @@ for the save or set call to validate and proceed.</code>
                 <a href="Drupal.tour.views.html">Drupal.tour.views</a>
               </li>
               <li>
-                <a href="Drupal.Views.html">Drupal.Views</a>
+                <a href="Drupal.views.html">Drupal.views</a>
               </li>
               <li>
-                <a href="Drupal.views_.html">Drupal.views</a>
+                <a href="Drupal.Views_.html">Drupal.Views</a>
               </li>
               <li>
                 <a href="Drupal.viewsUi.html">Drupal.viewsUi</a>
@@ -1184,7 +1187,7 @@ for the save or set call to validate and proceed.</code>
               </li>
             </ul>
             <p>
-              <strong>For more information about this documentation please see <a href="#todo">Issue #XXX</a>.</strong>
+              <strong>For more information about this documentation please see <a href="https://drupal.org/node/2182153">Issue #2182153: Use JSDoc</a>.</strong>
             </p>
           </div>
         </nav>

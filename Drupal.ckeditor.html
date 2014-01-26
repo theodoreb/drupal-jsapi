@@ -4,7 +4,7 @@
     <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
     <meta charset="utf-8">
     <title>
-      Namespace: Drupal.Views — Drupal JS API
+      Namespace: Drupal.ckeditor — Drupal JS API
     </title>
     <script src="scripts/prettify/prettify.js" type="text/javascript">
 </script>
@@ -20,35 +20,60 @@
         <div class="pure-u-4-5">
           <div class="box">
             <h1 class="page-title">
-              Namespace: Drupal.Views
+              Namespace: Drupal.ckeditor
             </h1>
             <section>
               <header>
                 <h2>
-                  <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span> Views
+                  <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span> ckeditor
                 </h2>
               </header>
               <article>
                 <div class="container-overview">
                   <dl class="details">
                     <dt class="source">
-                      <a href="base.js.html#line12" class="source">base.js:12</a>
+                      <a href="ckeditor.js.html#line188" class="source">ckeditor.js:188</a>
                     </dt>
                   </dl>
                 </div>
+                <h3 class="subsection-title">
+                  Members
+                </h3>
+                <dl>
+                  <dd>
+                    <h3 class="name" id="saveCallack">
+                      <span class="type-signature">&lt;static&gt;</span> saveCallack
+                    </h3>
+                  </dd>
+                  <dd>
+                    <div class="description">
+                      <p>
+                        Variable storing the current dialog's save callback.
+                      </p>
+                    </div>
+                    <dl class="details">
+                      <dt class="source">
+                        <a href="ckeditor.js.html#line192" class="source">ckeditor.js:192</a>
+                      </dt>
+                    </dl>
+                  </dd>
+                </dl>
                 <h3 class="subsection-title">
                   Methods
                 </h3>
                 <dl>
                   <dd>
-                    <h3 class="name" id="getPath">
-                      <span class="type-signature">&lt;static&gt;</span> getPath<span class="signature">(href)</span>
+                    <h3 class="name" id="openDialog">
+                      <span class="type-signature">&lt;static&gt;</span> openDialog<span class="signature">(editor, url, existingValues, saveCallback, dialogSettings)</span>
                     </h3>
                   </dd>
                   <dd>
                     <div class="description">
                       <p>
-                        Return the Drupal path portion of an href.
+                        Open a dialog for a Drupal-based plugin.
+                      </p>
+                      <p>
+                        This dynamically loads jQuery UI (if necessary) using the Drupal AJAX framework, then opens a dialog at the specified Drupal path.
                       </p>
                     </div>
                     <h4>
@@ -71,165 +96,74 @@
                       <tbody>
                         <tr>
                           <td class="name">
-                            <code>href</code>
+                            <code>editor</code>
                           </td>
                           <td class="type">
-                            <span class="param-type">String</span>
+                            <span class="param-type">CKEditor</span>
                           </td>
-                          <td class="description last"></td>
+                          <td class="description last">
+                            <p>
+                              The CKEditor instance that is opening the dialog.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>url</code>
+                          </td>
+                          <td class="type">
+                            <span class="param-type">string</span>
+                          </td>
+                          <td class="description last">
+                            <p>
+                              The URL that contains the contents of the dialog.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>existingValues</code>
+                          </td>
+                          <td class="type">
+                            <span class="param-type">Object</span>
+                          </td>
+                          <td class="description last">
+                            <p>
+                              Existing values that will be sent via POST to the url for the dialog contents.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>saveCallback</code>
+                          </td>
+                          <td class="type">
+                            <span class="param-type">function</span>
+                          </td>
+                          <td class="description last">
+                            <p>
+                              A function to be called upon saving the dialog.
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="name">
+                            <code>dialogSettings</code>
+                          </td>
+                          <td class="type">
+                            <span class="param-type">Object</span>
+                          </td>
+                          <td class="description last">
+                            <p>
+                              An object containing settings to be passed to the jQuery UI.
+                            </p>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
                     <dl class="details">
                       <dt class="source">
-                        <a href="base.js.html#line72" class="source">base.js:72</a>
-                      </dt>
-                    </dl>
-                  </dd>
-                  <dd>
-                    <h3 class="name" id="parseQueryString">
-                      <span class="type-signature">&lt;static&gt;</span> parseQueryString<span class="signature">(query)</span>
-                    </h3>
-                  </dd>
-                  <dd>
-                    <div class="description">
-                      <p>
-                        Helper function to parse a querystring.
-                      </p>
-                    </div>
-                    <h4>
-                      Parameters:
-                    </h4>
-                    <table class="params pure-table">
-                      <thead>
-                        <tr>
-                          <th>
-                            Name
-                          </th>
-                          <th>
-                            Type
-                          </th>
-                          <th class="last">
-                            Description
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="name">
-                            <code>query</code>
-                          </td>
-                          <td class="type">
-                            <span class="param-type">String</span>
-                          </td>
-                          <td class="description last"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <dl class="details">
-                      <dt class="source">
-                        <a href="base.js.html#line18" class="source">base.js:18</a>
-                      </dt>
-                    </dl>
-                  </dd>
-                  <dd>
-                    <h3 class="name" id="parseViewArgs">
-                      <span class="type-signature">&lt;static&gt;</span> parseViewArgs<span class="signature">(href, viewPath)</span>
-                    </h3>
-                  </dd>
-                  <dd>
-                    <div class="description">
-                      <p>
-                        Helper function to return a view's arguments based on a path.
-                      </p>
-                    </div>
-                    <h4>
-                      Parameters:
-                    </h4>
-                    <table class="params pure-table">
-                      <thead>
-                        <tr>
-                          <th>
-                            Name
-                          </th>
-                          <th>
-                            Type
-                          </th>
-                          <th class="last">
-                            Description
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="name">
-                            <code>href</code>
-                          </td>
-                          <td class="type">
-                            <span class="param-type">String</span>
-                          </td>
-                          <td class="description last"></td>
-                        </tr>
-                        <tr>
-                          <td class="name">
-                            <code>viewPath</code>
-                          </td>
-                          <td class="type">
-                            <span class="param-type">String</span>
-                          </td>
-                          <td class="description last"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <dl class="details">
-                      <dt class="source">
-                        <a href="base.js.html#line42" class="source">base.js:42</a>
-                      </dt>
-                    </dl>
-                  </dd>
-                  <dd>
-                    <h3 class="name" id="pathPortion">
-                      <span class="type-signature">&lt;static&gt;</span> pathPortion<span class="signature">(href)</span>
-                    </h3>
-                  </dd>
-                  <dd>
-                    <div class="description">
-                      <p>
-                        Strip off the protocol plus domain from an href.
-                      </p>
-                    </div>
-                    <h4>
-                      Parameters:
-                    </h4>
-                    <table class="params pure-table">
-                      <thead>
-                        <tr>
-                          <th>
-                            Name
-                          </th>
-                          <th>
-                            Type
-                          </th>
-                          <th class="last">
-                            Description
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="name">
-                            <code>href</code>
-                          </td>
-                          <td class="type">
-                            <span class="param-type">String</span>
-                          </td>
-                          <td class="description last"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <dl class="details">
-                      <dt class="source">
-                        <a href="base.js.html#line58" class="source">base.js:58</a>
+                        <a href="ckeditor.js.html#line212" class="source">ckeditor.js:212</a>
                       </dt>
                     </dl>
                   </dd>
@@ -441,6 +375,9 @@
                 <a href="Drupal.behaviors.html">Drupal.behaviors</a>
               </li>
               <li>
+                <a href="Drupal.ckeditor.html">Drupal.ckeditor</a>
+              </li>
+              <li>
                 <a href="Drupal.color.html">Drupal.color</a>
               </li>
               <li>
@@ -510,10 +447,10 @@
                 <a href="Drupal.tour.views.html">Drupal.tour.views</a>
               </li>
               <li>
-                <a href="Drupal.Views.html">Drupal.Views</a>
+                <a href="Drupal.views.html">Drupal.views</a>
               </li>
               <li>
-                <a href="Drupal.views_.html">Drupal.views</a>
+                <a href="Drupal.Views_.html">Drupal.Views</a>
               </li>
               <li>
                 <a href="Drupal.viewsUi.html">Drupal.viewsUi</a>
@@ -531,7 +468,7 @@
               </li>
             </ul>
             <p>
-              <strong>For more information about this documentation please see <a href="#todo">Issue #XXX</a>.</strong>
+              <strong>For more information about this documentation please see <a href="https://drupal.org/node/2182153">Issue #2182153: Use JSDoc</a>.</strong>
             </p>
           </div>
         </nav>

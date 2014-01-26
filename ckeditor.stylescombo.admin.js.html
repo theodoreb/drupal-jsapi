@@ -4,7 +4,7 @@
     <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
     <meta charset="utf-8">
     <title>
-      Namespace: Drupal.views — Drupal JS API
+      Source: modules/ckeditor/js/ckeditor.stylescombo.admin.js — Drupal JS API
     </title>
     <script src="scripts/prettify/prettify.js" type="text/javascript">
 </script>
@@ -20,47 +20,129 @@
         <div class="pure-u-4-5">
           <div class="box">
             <h1 class="page-title">
-              Namespace: Drupal.views
+              Source: modules/ckeditor/js/ckeditor.stylescombo.admin.js
             </h1>
             <section>
-              <header>
-                <h2>
-                  <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span> views
-                </h2>
-              </header>
               <article>
-                <div class="container-overview">
-                  <dl class="details">
-                    <dt class="source">
-                      <a href="ajax_view.js.html#line28" class="source">ajax_view.js:28</a>
-                    </dt>
-                  </dl>
-                </div>
-                <h3 class="subsection-title">
-                  Classes
-                </h3>
-                <dl>
-                  <dt>
-                    <a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a>
-                  </dt>
-                </dl>
-                <h3 class="subsection-title">
-                  Members
-                </h3>
-                <dl>
-                  <dd>
-                    <h3 class="name" id="instances">
-                      <span class="type-signature">&lt;static&gt;</span> instances <span class="type-signature">:Object.&lt;<a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a>&gt;</span>
-                    </h3>
-                  </dd>
-                  <dd>
-                    <dl class="details">
-                      <dt class="source">
-                        <a href="ajax_view.js.html#line32" class="source">ajax_view.js:32</a>
-                      </dt>
-                    </dl>
-                  </dd>
-                </dl>
+                <pre class="prettyprint source">
+<code>/**
+ * @file
+ */
+(function ($, Drupal, drupalSettings) {
+
+"use strict";
+
+/**
+ * Ensures that the "stylescombo" button's metadata remains up-to-date.
+ *
+ * Triggers the CKEditorPluginSettingsChanged event whenever the "stylescombo"
+ * plugin settings change, to ensure that the corresponding feature metadata is
+ * immediately updated — i.e. ensure that HTML tags and classes entered here are
+ * known to be "required", which may affect filter settings.
+ * @type {Behavior}
+ */
+Drupal.behaviors.ckeditorStylesComboSettings = {
+  attach: function (context) {
+    var $context = $(context);
+
+    // React to changes in the list of user-defined styles: calculate the new
+    // stylesSet setting up to 2 times per second, and if it is different, fire
+    // the CKEditorPluginSettingsChanged event with the updated parts of the
+    // CKEditor configuration. (This will, in turn, cause the hidden CKEditor
+    // instance to be updated and a drupalEditorFeatureModified event to fire.)
+    var $ckeditorActiveToolbar = $context
+      .find('.ckeditor-toolbar-configuration')
+      .find('.ckeditor-toolbar-active');
+    var previousStylesSet = drupalSettings.ckeditor.hiddenCKEditorConfig.stylesSet;
+    var that = this;
+    $context.find('[name="editor[settings][plugins][stylescombo][styles]"]')
+      .on('blur.ckeditorStylesComboSettings', function () {
+        var styles = $.trim($('#edit-editor-settings-plugins-stylescombo-styles').val());
+        var stylesSet = that._generateStylesSetSetting(styles);
+        if (!_.isEqual(previousStylesSet, stylesSet)) {
+          previousStylesSet = stylesSet;
+          $ckeditorActiveToolbar.trigger('CKEditorPluginSettingsChanged', [{ stylesSet: stylesSet } ]);
+        }
+      });
+  },
+
+
+  /**
+   * Builds the "stylesSet" configuration part of the CKEditor JS settings.
+   *
+   * see \Drupal\ckeditor\Plugin\ckeditor\plugin\StylesCombo::generateStylesSetSetting()
+   *
+   * Note that this is a more forgiving implementation than the PHP version: the
+   * parsing works identically, but instead of failing on invalid styles, we
+   * just ignore those.
+   *
+   * @param {String} sstyles
+   *   The "styles" setting.
+   *
+   * @return {array}
+   *   An array containing the "stylesSet" configuration.
+   */
+  _generateStylesSetSetting: function (styles) {
+    var stylesSet = [];
+
+    styles = styles.replace(/\r/g, "\n");
+    var lines = styles.split("\n");
+    for (var i = 0; i &lt; lines.length; i++) {
+      var style = $.trim(lines[i]);
+
+      // Ignore empty lines in between non-empty lines.
+      if (style.length === 0) {
+        continue;
+      }
+
+      // Validate syntax: element[.class...]|label pattern expected.
+      if (style.match(/^ *[a-zA-Z0-9]+ *(\.[a-zA-Z0-9_-]+ *)*\| *.+ *$/) === null) {
+        // Instead of failing, we just ignore any invalid styles.
+        continue;
+      }
+
+      // Parse.
+      var parts = style.split('|');
+      var selector = parts[0];
+      var label = parts[1];
+      var classes = selector.split('.');
+      var element = classes.shift();
+
+      // Build the data structure CKEditor's stylescombo plugin expects.
+      // @see http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Styles
+      stylesSet.push({
+        attributes: { class: classes.join(' ') },
+        element: element,
+        name: label
+      });
+    }
+
+    return stylesSet;
+  }
+};
+
+/**
+ * Provides the summary for the "stylescombo" plugin settings vertical tab.
+ * @type {Behavior}
+ */
+Drupal.behaviors.ckeditorStylesComboSettingsSummary = {
+  attach: function () {
+    $('#edit-editor-settings-plugins-stylescombo').drupalSetSummary(function (context) {
+      var styles = $.trim($('#edit-editor-settings-plugins-stylescombo-styles').val());
+      if (styles.length === 0) {
+        return Drupal.t('No styles configured');
+      }
+      else {
+        var count = $.trim(styles).split("\n").length;
+        return Drupal.t('@count styles configured', { '@count': count});
+      }
+    });
+  }
+};
+
+})(jQuery, Drupal, drupalSettings);
+</code>
+</pre>
               </article>
             </section>
           </div>
@@ -268,6 +350,9 @@
                 <a href="Drupal.behaviors.html">Drupal.behaviors</a>
               </li>
               <li>
+                <a href="Drupal.ckeditor.html">Drupal.ckeditor</a>
+              </li>
+              <li>
                 <a href="Drupal.color.html">Drupal.color</a>
               </li>
               <li>
@@ -337,10 +422,10 @@
                 <a href="Drupal.tour.views.html">Drupal.tour.views</a>
               </li>
               <li>
-                <a href="Drupal.Views.html">Drupal.Views</a>
+                <a href="Drupal.views.html">Drupal.views</a>
               </li>
               <li>
-                <a href="Drupal.views_.html">Drupal.views</a>
+                <a href="Drupal.Views_.html">Drupal.Views</a>
               </li>
               <li>
                 <a href="Drupal.viewsUi.html">Drupal.viewsUi</a>
@@ -358,7 +443,7 @@
               </li>
             </ul>
             <p>
-              <strong>For more information about this documentation please see <a href="#todo">Issue #XXX</a>.</strong>
+              <strong>For more information about this documentation please see <a href="https://drupal.org/node/2182153">Issue #2182153: Use JSDoc</a>.</strong>
             </p>
           </div>
         </nav>
