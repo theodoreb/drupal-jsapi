@@ -43,12 +43,23 @@ var strings = {
 /**
  * Initializes a contextual link: updates its DOM, sets up model and views
  *
- * @param {HTMLElement} links
+ * @param {HTMLElement} context
  *   A contextual links DOM element as rendered by the server.
  */
 function initContextualToolbar (context) {
+  if (!Drupal.contextual || !Drupal.contextual.collection) {
+    return;
+  }
+
   var contextualToolbar = Drupal.contextualToolbar;
-  var model = contextualToolbar.model = new contextualToolbar.Model();
+  var model = contextualToolbar.model = new contextualToolbar.Model({
+    // Checks whether localStorage indicates we should start in edit mode
+    // rather than view mode.
+    // @see Drupal.contextualToolbar.VisualView.persist()
+    isViewing: localStorage.getItem('Drupal.contextualToolbar.isViewing') !== 'false'
+  }, {
+    contextualCollection: Drupal.contextual.collection
+  });
 
   var viewOptions = {
     el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
@@ -57,36 +68,6 @@ function initContextualToolbar (context) {
   };
   new contextualToolbar.VisualView(viewOptions);
   new contextualToolbar.AuralView(viewOptions);
-
-  // Show the edit tab while there's &gt;=1 contextual link.
-  if (Drupal.contextual &amp;&amp; Drupal.contextual.collection) {
-    var contextualCollection = Drupal.contextual.collection;
-    var trackContextualCount = function () {
-      model.set('contextualCount', contextualCollection.length);
-    };
-    contextualCollection.on('reset remove add', trackContextualCount);
-    trackContextualCount();
-
-    // Whenever edit mode is toggled, lock all contextual links.
-    model.on('change:isViewing', function() {
-      contextualCollection.each(function (contextualModel) {
-        contextualModel.set('isLocked', !model.get('isViewing'));
-      });
-    });
-    // When a new contextual link is added and edit mode is enabled, lock it.
-    contextualCollection.on('add', function (contextualModel) {
-      if (!model.get('isViewing')) {
-        contextualModel.set('isLocked', true);
-      }
-    });
-  }
-
-  // Checks whether localStorage indicates we should start in edit mode
-  // rather than view mode.
-  // @see Drupal.contextualToolbar.VisualView.persist()
-  if (localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false') {
-    model.set('isViewing', false);
-  }
 }
 
 /**
@@ -114,8 +95,13 @@ Drupal.contextualToolbar = {
 
   /**
    * Models the state of the edit mode toggle.
+   * @name Drupal.contextualToolbar.Model
+   * @constructor
    */
   Model: Backbone.Model.extend(/** @lends Drupal.contextualToolbar.Model# */{
+    /**
+     * @type {Object}
+     */
     defaults: {
       // Indicates whether the toggle is currently in "view" or "edit" mode.
       isViewing: true,
@@ -128,22 +114,72 @@ Drupal.contextualToolbar = {
       // of tabbable elements when edit mode is enabled.
       tabbingContext: null
     },
+
     /**
-     * @constructs Drupal.contextualToolbar.Model
+     * @param {Object} attrs
+     * @param {Object} options
+     * @param {Backbone.collection.&lt;Drupal.contextual.Model&gt;} options.contextualCollection
+     *   collection of Drupal.contextual.Model models that represent the
+     *   contextual links on the page.
      */
-    initialize: function () {
-      this.on('change:contextualCount', function (model) {
-        model.set('isVisible', model.get('contextualCount') &gt; 0);
+    initialize: function (attrs, options) {
+      // Respond to new/removed contextual links.
+      this.listenTo(options.contextualCollection, {
+        'reset remove add': this.countCountextualLinks,
+        'add': this.lockNewContextualLinks
       });
+
+      this.listenTo(this, {
+        // Automatically determine visibility.
+        'change:contextualCount': this.updateVisibility,
+        // Whenever edit mode is toggled, lock all contextual links.
+        'change:isViewing': function (model, isViewing) {
+          options.contextualCollection.each(function (contextualModel) {
+            contextualModel.set('isLocked', !isViewing);
+          });
+        }
+      });
+    },
+
+    /**
+     * Tracks the number of contextual link models in the collection.
+     *
+     * @param {Drupal.contextual.Model} affectedModel
+     *   The contextual links model that was added or removed.
+     * @param {Backbone.Collection} contextualCollection
+     *    The collection of contextual link models.
+     */
+    countCountextualLinks: function (contextualModel, contextualCollection) {
+      this.set('contextualCount', contextualCollection.length);
+    },
+
+    /**
+     * Lock newly added contextual links if edit mode is enabled.
+     *
+     * @param {Drupal.contextual.Model} addedContextualModel
+     *   The contextual links model that was added.
+     * @param {Backbone.Collection} contextualCollection
+     *    The collection of contextual link models.
+     */
+    lockNewContextualLinks: function (contextualModel, contextualCollection) {
+      if (!this.get('isViewing')) {
+        contextualModel.set('isLocked', true);
+      }
+    },
+
+    /**
+     * Automatically updates visibility of the view/edit mode toggle.
+     * @method
+     */
+    updateVisibility: function () {
+      this.set('isVisible', this.get('contextualCount') &gt; 0);
     }
   }),
 
-  /**
-   * Renders the visual view of the edit mode toggle. Listens to mouse &amp; touch.
-   *
-   * Handles edit mode toggle interactions.
-   */
   VisualView: Backbone.View.extend(/** @lends Drupal.contextualToolbar.VisualView# */ {
+    /**
+     * @return {Object}
+     */
     events: function () {
       // Prevents delay and simulated mouse events.
       var touchEndToClick = function (event) {
@@ -160,11 +196,16 @@ Drupal.contextualToolbar = {
     },
 
     /**
+     * Renders the visual view of the edit mode toggle. Listens to mouse &amp; touch.
+     *
+     * Handles edit mode toggle interactions.
+     *
      * @constructs Drupal.contextualToolbar.VisualView
+     * @augments Backbone.View
      */
     initialize: function () {
-      this.model.on('change', this.render, this);
-      this.model.on('change:isViewing', this.persist, this);
+      this.listenTo(this.model, 'change', this.render);
+      this.listenTo(this.model, 'change:isViewing', this.persist);
     },
 
     /**
@@ -200,9 +241,6 @@ Drupal.contextualToolbar = {
     }
   }),
 
-  /**
-   * Renders the aural view of the edit mode toggle (i.e.screen reader support).
-   */
   AuralView: Backbone.View.extend(/** @lends Drupal.contextualToolbar.AuralView# */ {
     /**
      * Tracks whether the tabbing constraint announcement has been read once yet.
@@ -211,11 +249,15 @@ Drupal.contextualToolbar = {
     announcedOnce: false,
 
     /*
+     * Renders the aural view of the edit mode toggle (i.e.screen reader support).
      * @constructs Drupal.contextualToolbar.AuralView
+     * @augments Backbone.View
      */
-    initialize: function () {
-      this.model.on('change', this.render, this);
-      this.model.on('change:isViewing', this.manageTabbing, this);
+    initialize: function (options) {
+      this.options = options;
+
+      this.listenTo(this.model, 'change', this.render);
+      this.listenTo(this.model, 'change:isViewing', this.manageTabbing);
 
       $(document).on('keyup', _.bind(this.onKeypress, this));
     },
@@ -322,19 +364,19 @@ Drupal.contextualToolbar = {
                 <a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a>
               </li>
               <li>
-                <a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a>
+                <a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a>
               </li>
               <li>
-                <a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a>
+                <a href="Drupal.contextual.StateModel.html">Drupal.contextual.StateModel</a>
               </li>
               <li>
                 <a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a>
               </li>
               <li>
-                <a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a>
+                <a href="Drupal.contextualToolbar.Model.html">Drupal.contextualToolbar.Model</a>
               </li>
               <li>
-                <a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a>
+                <a href="Drupal.contextualToolbar.VisualView.html">Drupal.contextualToolbar.VisualView</a>
               </li>
               <li>
                 <a href="Drupal.DropButton.html">Drupal.DropButton</a>
@@ -344,6 +386,9 @@ Drupal.contextualToolbar = {
               </li>
               <li>
                 <a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.BaseModel.html">Drupal.edit.BaseModel</a>
               </li>
               <li>
                 <a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a>
@@ -476,6 +521,12 @@ Drupal.contextualToolbar = {
               <li>
                 <a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a>
               </li>
+              <li>
+                <a href="global.html#event:formUpdated">event:formUpdated</a>
+              </li>
+              <li>
+                <a href="global.html#event:summaryUpdated">event:summaryUpdated</a>
+              </li>
             </ul>
             <h3>
               Namespaces
@@ -577,10 +628,21 @@ Drupal.contextualToolbar = {
                 <a href="global.html#matchMedia" class="root">matchMedia</a>
               </li>
             </ul>
+            <p>
+              <strong>For more information about this documentation please see <a href="#todo">Issue #XXX</a>.</strong>
+            </p>
           </div>
         </nav>
       </div>
     </div><script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-47079344-1', 'theodoreb.net');
+    ga('send', 'pageview');
+    </script><script type="text/javascript">
 prettyPrint();
     </script><script src="scripts/linenumber.js" type="text/javascript">
 </script>

@@ -80,16 +80,16 @@ Drupal.DropButton = function (dropbutton, settings) {
   var options = $.extend({'title': Drupal.t('List additional actions')}, settings);
   var $dropbutton = $(dropbutton);
   /**
-   * @type {jQueryelement}
+   * @type {jQueryObject}
    */
   this.$dropbutton = $dropbutton;
   /**
-   * @type {jQueryelement}
+   * @type {jQueryObject}
    */
   this.$list = $dropbutton.find('.dropbutton');
   /**
    * Find actions and mark them.
-   * @type {jQueryelement}
+   * @type {jQueryObject}
    */
   this.$actions = this.$list.find('li').addClass('dropbutton-action');
 
@@ -133,7 +133,7 @@ Drupal.DropButton.dropbuttons = [];
 /**
  * Extend the DropButton prototype.
  */
-$.extend(Drupal.DropButton.prototype, /** @lends Drupal.DropButton# */ {
+$.extend(Drupal.DropButton.prototype, /** @lends Drupal.DropButton# */{
   /**
    * Toggle the dropbutton open and closed.
    *
@@ -188,7 +188,7 @@ $.extend(Drupal.DropButton.prototype, /** @lends Drupal.DropButton# */ {
   /**
    * @param {Event} e
    */
-  focusIn: function (e) {
+  focusIn: function(e) {
     this.hoverIn.call(this, e);
   }
 });
@@ -243,19 +243,19 @@ Drupal.theme.dropbuttonToggle = function (options) {
                 <a href="Drupal.contextual.KeyboardView.html">Drupal.contextual.KeyboardView</a>
               </li>
               <li>
-                <a href="Drupal.contextual.Model.html">Drupal.contextual.Model</a>
+                <a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a>
               </li>
               <li>
-                <a href="Drupal.contextual.RegionView.html">Drupal.contextual.RegionView</a>
+                <a href="Drupal.contextual.StateModel.html">Drupal.contextual.StateModel</a>
               </li>
               <li>
                 <a href="Drupal.contextual.VisualView.html">Drupal.contextual.VisualView</a>
               </li>
               <li>
-                <a href="Drupal.contextualToolbar.html#Model">Drupal.contextualToolbar.Model</a>
+                <a href="Drupal.contextualToolbar.Model.html">Drupal.contextualToolbar.Model</a>
               </li>
               <li>
-                <a href="Drupal.contextualToolbar.html#VisualView">Drupal.contextualToolbar.VisualView</a>
+                <a href="Drupal.contextualToolbar.VisualView.html">Drupal.contextualToolbar.VisualView</a>
               </li>
               <li>
                 <a href="Drupal.DropButton.html">Drupal.DropButton</a>
@@ -265,6 +265,9 @@ Drupal.theme.dropbuttonToggle = function (options) {
               </li>
               <li>
                 <a href="Drupal.edit.AppView.html">Drupal.edit.AppView</a>
+              </li>
+              <li>
+                <a href="Drupal.edit.BaseModel.html">Drupal.edit.BaseModel</a>
               </li>
               <li>
                 <a href="Drupal.edit.ContextualLinkView.html">Drupal.edit.ContextualLinkView</a>
@@ -397,6 +400,12 @@ Drupal.theme.dropbuttonToggle = function (options) {
               <li>
                 <a href="global.html#event:drupalViewportOffsetChange">event:drupalViewportOffsetChange</a>
               </li>
+              <li>
+                <a href="global.html#event:formUpdated">event:formUpdated</a>
+              </li>
+              <li>
+                <a href="global.html#event:summaryUpdated">event:summaryUpdated</a>
+              </li>
             </ul>
             <h3>
               Namespaces
@@ -498,10 +507,21 @@ Drupal.theme.dropbuttonToggle = function (options) {
                 <a href="global.html#matchMedia" class="root">matchMedia</a>
               </li>
             </ul>
+            <p>
+              <strong>For more information about this documentation please see <a href="#todo">Issue #XXX</a>.</strong>
+            </p>
           </div>
         </nav>
       </div>
     </div><script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-47079344-1', 'theodoreb.net');
+    ga('send', 'pageview');
+    </script><script type="text/javascript">
 prettyPrint();
     </script><script src="scripts/linenumber.js" type="text/javascript">
 </script>
