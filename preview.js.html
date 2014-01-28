@@ -46,7 +46,7 @@
      * @param {Array.&lt;Number&gt;} height
      * @param {Array.&lt;Number&gt;} width
      */
-    callback: function(context, settings, form, farb, height, width) {
+    callback: function (context, settings, form, farb, height, width) {
       // Solid background.
       form.find('#preview').css('backgroundColor', form.find('#palette input[name="palette[base]"]').val());
 
@@ -54,7 +54,7 @@
       form.find('#text').css('color', form.find('#palette input[name="palette[text]"]').val());
       form.find('#text a, #text h2').css('color', form.find('#palette input[name="palette[link]"]').val());
 
-      function gradientLineColor(i, element) {
+      function gradientLineColor (i, element) {
         for (var k in accum) {
           if (accum.hasOwnProperty(k)) {
             accum[k] += delta[k];

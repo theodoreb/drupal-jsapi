@@ -34,47 +34,47 @@
 
 (function (Backbone, Drupal) {
 
-"use strict";
+  "use strict";
 
-/**
- * @class
- * @augments Backbone.Model
- */
-Drupal.edit.AppModel = Backbone.Model.extend(/** @lends Drupal.edit.AppModel# */ {
   /**
-   * @type {Object}
-   * @prop {?Drupal.edit.FieldModel} highlightedField
-   * @prop {?Drupal.edit.FieldModel} activeField
-   * @prop {?Drupal.dialog} activeModal
+   * @class
+   * @augments Backbone.Model
    */
-  defaults: {
+  Drupal.edit.AppModel = Backbone.Model.extend(/** @lends Drupal.edit.AppModel# */ {
     /**
-     * The currently state = 'highlighted' Drupal.edit.FieldModel, if any.
-     * {@linkto Drupal.edit.FieldModel.states}
-     * @name Drupal.edit.AppModel#highlightedField
-     * @type {?Drupal.edit.FieldModel}
-     * @virtual
+     * @type {Object}
+     * @prop {?Drupal.edit.FieldModel} highlightedField
+     * @prop {?Drupal.edit.FieldModel} activeField
+     * @prop {?Drupal.dialog} activeModal
      */
-    highlightedField: null,
-    /**
-     * The currently state = 'active' Drupal.edit.FieldModel, if any.
-     * {@linkto Drupal.edit.FieldModel.states}
-     * @name Drupal.edit.AppModel#activeField
-     * @type {?Drupal.edit.FieldModel}
-     * @virtual
-     */
-    activeField: null,
-    /**
-     * Reference to a Drupal.dialog instance if a state change requires
-     * confirmation.
-     * @name Drupal.edit.AppModel#activeModal
-     * @type {?Drupal.dialog}
-     * @virtual
-     */
-    activeModal: null
-  }
+    defaults: {
+      /**
+       * The currently state = 'highlighted' Drupal.edit.FieldModel, if any.
+       * {@linkto Drupal.edit.FieldModel.states}
+       * @name Drupal.edit.AppModel#highlightedField
+       * @type {?Drupal.edit.FieldModel}
+       * @virtual
+       */
+      highlightedField: null,
+      /**
+       * The currently state = 'active' Drupal.edit.FieldModel, if any.
+       * {@linkto Drupal.edit.FieldModel.states}
+       * @name Drupal.edit.AppModel#activeField
+       * @type {?Drupal.edit.FieldModel}
+       * @virtual
+       */
+      activeField: null,
+      /**
+       * Reference to a Drupal.dialog instance if a state change requires
+       * confirmation.
+       * @name Drupal.edit.AppModel#activeModal
+       * @type {?Drupal.dialog}
+       * @virtual
+       */
+      activeModal: null
+    }
 
-});
+  });
 
 }(Backbone, Drupal));
 </code>

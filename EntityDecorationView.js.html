@@ -32,36 +32,36 @@
 
 (function (Drupal, $, Backbone) {
 
-"use strict";
+  "use strict";
 
-Drupal.edit.EntityDecorationView = Backbone.View.extend(/** @lends Drupal.edit.EntityDecorationView# */ {
+  Drupal.edit.EntityDecorationView = Backbone.View.extend(/** @lends Drupal.edit.EntityDecorationView# */ {
 
-  /**
-   * @constructs Drupal.edit.EntityDecorationView
-   * @augments Backbone.View
-   *
-   * Associated with the DOM root node of an editable entity.
-   */
-  initialize: function () {
-    this.listenTo(this.model, 'change', this.render);
-  },
+    /**
+     * @constructs Drupal.edit.EntityDecorationView
+     * @augments Backbone.View
+     *
+     * Associated with the DOM root node of an editable entity.
+     */
+    initialize: function () {
+      this.listenTo(this.model, 'change', this.render);
+    },
 
-  /**
-   * @method
-   */
-  render: function () {
-    this.$el.toggleClass('edit-entity-active', this.model.get('isActive'));
-  },
+    /**
+     * @method
+     */
+    render: function () {
+      this.$el.toggleClass('edit-entity-active', this.model.get('isActive'));
+    },
 
-  /**
-   * @method
-   */
-  remove: function () {
-    this.setElement(null);
-    Backbone.View.prototype.remove.call(this);
-  }
+    /**
+     * @method
+     */
+    remove: function () {
+      this.setElement(null);
+      Backbone.View.prototype.remove.call(this);
+    }
 
-});
+  });
 
 }(Drupal, jQuery, Backbone));
 </code>

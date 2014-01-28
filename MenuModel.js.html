@@ -32,27 +32,27 @@
 
 (function (Backbone, Drupal) {
 
-"use strict";
+  "use strict";
 
-/**
- * Backbone Model for collapsible menus.
- *
- * @constructor
- * @augments Backbone.Model
- */
-Drupal.toolbar.MenuModel = Backbone.Model.extend(/** @lends Drupal.toolbar.MenuModel# */ {
   /**
-   * @type {Object}
+   * Backbone Model for collapsible menus.
+   *
+   * @constructor
+   * @augments Backbone.Model
    */
-  defaults: {
+  Drupal.toolbar.MenuModel = Backbone.Model.extend(/** @lends Drupal.toolbar.MenuModel# */ {
     /**
-     * @name Drupal.toolbar.MenuModel#subtrees
      * @type {Object}
-     * @virtual
      */
-    subtrees: {}
-  }
-});
+    defaults: {
+      /**
+       * @name Drupal.toolbar.MenuModel#subtrees
+       * @type {Object}
+       * @virtual
+       */
+      subtrees: {}
+    }
+  });
 
 }(Backbone, Drupal));
 </code>

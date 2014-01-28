@@ -34,43 +34,43 @@
 
 (function (Backbone, Drupal) {
 
-"use strict";
+  "use strict";
 
-/**
- * @class
- * @augments Backbone.Model
- */
-Drupal.edit.EditorModel = Backbone.Model.extend(/** @lends Drupal.edit.EditorModel# */ {
   /**
-   * @type {Object}
+   * @class
+   * @augments Backbone.Model
    */
-  defaults: {
+  Drupal.edit.EditorModel = Backbone.Model.extend(/** @lends Drupal.edit.EditorModel# */ {
     /**
-     * Not the full HTML representation of this field, but the "actual"
-     * original value of the field, stored by the used in-place editor, and
-     * in a representation that can be chosen by the in-place editor.
-     * @name Drupal.edit.EditorModel#originalValue
-     * @type {?*}
-     * @virtual
+     * @type {Object}
      */
-    originalValue: null,
-    /**
-     * Analogous to originalValue, but the current value.
-     * @name Drupal.edit.EditorModel#currentValue
-     * @type {?*}
-     * @virtual
-     */
-    currentValue: null,
-    /**
-     * Stores any validation errors to be rendered.
-     * @name Drupal.edit.EditorModel#validationErrors
-     * @type {?Array|String}
-     * @virtual
-     */
-    validationErrors: null
-  }
+    defaults: {
+      /**
+       * Not the full HTML representation of this field, but the "actual"
+       * original value of the field, stored by the used in-place editor, and
+       * in a representation that can be chosen by the in-place editor.
+       * @name Drupal.edit.EditorModel#originalValue
+       * @type {?*}
+       * @virtual
+       */
+      originalValue: null,
+      /**
+       * Analogous to originalValue, but the current value.
+       * @name Drupal.edit.EditorModel#currentValue
+       * @type {?*}
+       * @virtual
+       */
+      currentValue: null,
+      /**
+       * Stores any validation errors to be rendered.
+       * @name Drupal.edit.EditorModel#validationErrors
+       * @type {?Array|String}
+       * @virtual
+       */
+      validationErrors: null
+    }
 
-});
+  });
 
 }(Backbone, Drupal));
 </code>

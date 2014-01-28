@@ -32,219 +32,219 @@
 
 (function (CKEDITOR) {
 
-"use strict";
+  "use strict";
 
-CKEDITOR.on('instanceCreated', function (event) {
-  var editor = event.editor;
+  CKEDITOR.on('instanceCreated', function (event) {
+    var editor = event.editor;
 
-  // Listen to widget definitions and customize them as needed. It's
-  // basically rewriting parts of the definition.
-  editor.on('widgetDefinition', function (event) {
-    var widgetDefinition = event.data;
+    // Listen to widget definitions and customize them as needed. It's
+    // basically rewriting parts of the definition.
+    editor.on('widgetDefinition', function (event) {
+      var widgetDefinition = event.data;
 
-    // Customize the "drupalimagecaption" widget definition.
-    if (widgetDefinition.name === 'drupalimagecaption') {
+      // Customize the "drupalimagecaption" widget definition.
+      if (widgetDefinition.name === 'drupalimagecaption') {
 
-      widgetDefinition.template =
-        '&lt;figure class="caption caption-img"&gt;' +
-          '&lt;img src="" data-caption="" data-align="center" /&gt;' +
-          '&lt;figcaption&gt;&lt;/figcaption&gt;' +
-        '&lt;/figure&gt;';
+        widgetDefinition.template =
+          '&lt;figure class="caption caption-img"&gt;' +
+            '&lt;img src="" data-caption="" data-align="center" /&gt;' +
+            '&lt;figcaption&gt;&lt;/figcaption&gt;' +
+            '&lt;/figure&gt;';
 
-      // Define the editables created by the overridden upcasting.
-      widgetDefinition.editables = {
-        caption: 'figcaption'
-      };
-
-      // Define the additional parts created by the overridden upcasting.
-      widgetDefinition.parts.caption = 'figcaption';
-
-      // Override "data" so we can make the new widget structure
-      // behave according to changes on data.
-      widgetDefinition.data = CKEDITOR.tools.override(widgetDefinition.data, function (originalDataFn) {
-        return function () {
-          // Call the original "data" implementation.
-          originalDataFn.apply(this, arguments);
-
-          // The image is wrapped in &lt;figure&gt;.
-          if (this.element.is('figure')) {
-            // The image is wrapped in &lt;figure&gt;, but it should no longer be.
-            if (!this.data.hasCaption &amp;&amp; this.data.data_align === null) {
-              // Destroy this widget, so we can unwrap the &lt;img&gt;.
-              editor.widgets.destroy(this);
-              // Unwrap &lt;img&gt; from &lt;figure&gt;.
-              this.parts.image.replace(this.element);
-              // Reinitialize this widget with the current data.
-              editor.widgets.initOn(this.parts.image, 'drupalimagecaption', this.data);
-            }
-            // The image is wrapped in &lt;figure&gt;, as it should be; update it.
-            else {
-              // Set the caption visibility.
-              this.parts.caption.setStyle('display', this.data.hasCaption ? '' : 'none');
-
-              // Set the alignment, if any.
-              this.element.removeClass('caption-left');
-              this.element.removeClass('caption-center');
-              this.element.removeClass('caption-right');
-              if (this.data.data_align) {
-                this.element.addClass('caption-' + this.data.data_align);
-              }
-            }
-          }
-          // The image is not wrapped in &lt;figure&gt;.
-          else if (this.element.is('img')) {
-            // The image is not wrapped in &lt;figure&gt;, but it should be.
-            if (this.data.hasCaption) {
-              // Destroy this widget, so we can wrap the &lt;img&gt;.
-              editor.widgets.destroy(this);
-              // Replace the widget's element (the &lt;img&gt;) with the template (a
-              // &lt;figure&gt; wrapping an &lt;img&gt;) and then replace the the template's
-              // default &lt;img&gt; by our &lt;img&gt; so we won't lose attributes. We must
-              // do this manually because upcast() won't run.
-              var figure = CKEDITOR.dom.element.createFromHtml(this.template.output(), editor.document);
-              figure.replace(this.element);
-              this.element.replace(figure.findOne('img'));
-              // Reinitialize this widget with the current data.
-              editor.widgets.initOn(figure, 'drupalimagecaption', this.data);
-            }
-            else if (this.data.data_align !== null) {
-              this.element.addClass('align-' + this.data.data_align);
-            }
-          }
+        // Define the editables created by the overridden upcasting.
+        widgetDefinition.editables = {
+          caption: 'figcaption'
         };
-      });
 
-      // Upcast to &lt;figure&gt; if data-caption or data-align is set.
-      widgetDefinition.upcast = CKEDITOR.tools.override(widgetDefinition.upcast, function (originalUpcastFn) {
-        return function (el) {
-          // Execute the original upcast first. If "true", this is an
-          // element to be upcasted.
-          if (originalUpcastFn.apply(this, arguments)) {
-            var figure;
-            var captionValue = el.attributes['data-caption'];
-            var alignValue = el.attributes['data-align'];
+        // Define the additional parts created by the overridden upcasting.
+        widgetDefinition.parts.caption = 'figcaption';
 
-            // Wrap image in &lt;figure&gt; only if data-caption is set.
-            if (captionValue !== undefined) {
-              var classes = 'caption caption-img';
-              if (alignValue !== null) {
-                classes += ' caption-' + alignValue;
+        // Override "data" so we can make the new widget structure
+        // behave according to changes on data.
+        widgetDefinition.data = CKEDITOR.tools.override(widgetDefinition.data, function (originalDataFn) {
+          return function () {
+            // Call the original "data" implementation.
+            originalDataFn.apply(this, arguments);
+
+            // The image is wrapped in &lt;figure&gt;.
+            if (this.element.is('figure')) {
+              // The image is wrapped in &lt;figure&gt;, but it should no longer be.
+              if (!this.data.hasCaption &amp;&amp; this.data.data_align === null) {
+                // Destroy this widget, so we can unwrap the &lt;img&gt;.
+                editor.widgets.destroy(this);
+                // Unwrap &lt;img&gt; from &lt;figure&gt;.
+                this.parts.image.replace(this.element);
+                // Reinitialize this widget with the current data.
+                editor.widgets.initOn(this.parts.image, 'drupalimagecaption', this.data);
               }
-              figure = el.wrapWith(new CKEDITOR.htmlParser.element('figure', { 'class' : classes }));
-              var caption = CKEDITOR.htmlParser.fragment.fromHtml(captionValue || '', 'figcaption');
-              figure.add(caption);
-            }
-            else if (alignValue !== undefined) {
-              if (el.attributes['class'] === undefined) {
-                el.attributes['class'] = '';
-              }
-              el.attributes['class'] += 'align-' + alignValue;
-            }
+              // The image is wrapped in &lt;figure&gt;, as it should be; update it.
+              else {
+                // Set the caption visibility.
+                this.parts.caption.setStyle('display', this.data.hasCaption ? '' : 'none');
 
-            return figure || el;
-          }
-        };
-      });
-
-      // Downcast to &lt;img&gt;.
-      widgetDefinition.downcast = CKEDITOR.tools.override(widgetDefinition.downcast, function (originalDowncastFn) {
-        return function (el) {
-          if (el.name === 'figure') {
-            // Update data with the current caption.
-            var caption = el.getFirst('figcaption');
-            caption = caption ? caption.getHtml() : '';
-            this.setData({
-              data_caption: caption
-            });
-
-            // We downcast to just the &lt;img&gt; element.
-            el = el.getFirst('img');
-          }
-
-          // Call the original downcast to setup the &lt;img&gt;
-          // meta data accordingly.
-          return originalDowncastFn.call(this, el) || el;
-        };
-      });
-
-      // Generate a &lt;figure&gt;-wrapped &lt;img&gt; if either data-caption or data-align
-      // are set for a newly created image.
-      widgetDefinition.insert = CKEDITOR.tools.override(widgetDefinition.downcast, function (originalInsertFn) {
-        return function () {
-          var saveCallback = function (returnValues) {
-            // We can't create an image with an empty "src" attribute.
-            if (returnValues.attributes.src.length === 0) {
-              return;
-            }
-            // Normalize the "data_align" attribute and the "hasCaption" value.
-            if (returnValues.attributes.data_align === '' || returnValues.attributes.data_align === 'none') {
-              returnValues.attributes.data_align = null;
-            }
-            if (typeof returnValues.hasCaption === 'number') {
-              returnValues.hasCaption = !!returnValues.hasCaption;
-            }
-            // Use the original save callback if the image has no caption.
-            if (returnValues.hasCaption === false) {
-              widgetDefinition._insertSaveCallback.apply(this, arguments);
-              return;
-            }
-
-            editor.fire('saveSnapshot');
-
-            // Build the HTML for the widget.
-            var html = '&lt;figure class="caption caption-img';
-            if (returnValues.attributes.data_align &amp;&amp; returnValues.attributes.data_align !== 'none') {
-              html += ' caption-' + returnValues.attributes.data_align;
-            }
-            html += '"&gt;&lt;img ';
-            for (var attr in returnValues.attributes) {
-              if (returnValues.attributes.hasOwnProperty(attr) &amp;&amp; !attr.match(/^data_/)) {
-                html += attr + '="' + returnValues.attributes[attr] + '" ';
-                html += 'data-cke-saved-' + attr + '="' + returnValues.attributes[attr] + '" ';
+                // Set the alignment, if any.
+                this.element.removeClass('caption-left');
+                this.element.removeClass('caption-center');
+                this.element.removeClass('caption-right');
+                if (this.data.data_align) {
+                  this.element.addClass('caption-' + this.data.data_align);
+                }
               }
             }
-            // The init() method will run on this and if it does not find
-            // data-caption or data-align attributes, the subsequent call to the
-            // data() method will cause the &lt;figure&gt; to be transformed back to
-            // an &lt;img&gt;. Hence, set the data-caption and data-align attributes
-            // on the newly inserted &lt;img&gt;.
-            if (returnValues.hasCaption) {
-              html += ' data-caption=""';
-              html += ' data-cke-saved-data-caption=""';
+            // The image is not wrapped in &lt;figure&gt;.
+            else if (this.element.is('img')) {
+              // The image is not wrapped in &lt;figure&gt;, but it should be.
+              if (this.data.hasCaption) {
+                // Destroy this widget, so we can wrap the &lt;img&gt;.
+                editor.widgets.destroy(this);
+                // Replace the widget's element (the &lt;img&gt;) with the template (a
+                // &lt;figure&gt; wrapping an &lt;img&gt;) and then replace the the template's
+                // default &lt;img&gt; by our &lt;img&gt; so we won't lose attributes. We must
+                // do this manually because upcast() won't run.
+                var figure = CKEDITOR.dom.element.createFromHtml(this.template.output(), editor.document);
+                figure.replace(this.element);
+                this.element.replace(figure.findOne('img'));
+                // Reinitialize this widget with the current data.
+                editor.widgets.initOn(figure, 'drupalimagecaption', this.data);
+              }
+              else if (this.data.data_align !== null) {
+                this.element.addClass('align-' + this.data.data_align);
+              }
             }
-            if (returnValues.attributes.data_align &amp;&amp; returnValues.attributes.data_align !== 'none') {
-              html += ' data-align="' + returnValues.attributes.data_align + '"';
-              html += ' data-cke-saved-data-align="' + returnValues.attributes.data_align + '"';
-            }
-            html += '/&gt;';
-            html += '&lt;figcaption data-placeholder="' + Drupal.t('Enter caption here') + '"&gt;&lt;/figcaption&gt;';
-            html += '&lt;/figure&gt;';
-            var el = new CKEDITOR.dom.element.createFromHtml(html, editor.document);
-            editor.insertElement(editor.widgets.wrapElement(el, 'drupalimagecaption'));
-
-            // Save snapshot for undo support.
-            editor.fire('saveSnapshot');
-
-            // Initialize and focus the widget.
-            var widget = editor.widgets.initOn(el, 'drupalimagecaption');
-            widget.focus();
           };
-          var override = {
-            imageDOMElement: null,
-            existingValues: { hasCaption: false, data_align: '' },
-            saveCallback: saveCallback,
-            dialogTitle: editor.config.drupalImage_dialogTitleAdd
+        });
+
+        // Upcast to &lt;figure&gt; if data-caption or data-align is set.
+        widgetDefinition.upcast = CKEDITOR.tools.override(widgetDefinition.upcast, function (originalUpcastFn) {
+          return function (el) {
+            // Execute the original upcast first. If "true", this is an
+            // element to be upcasted.
+            if (originalUpcastFn.apply(this, arguments)) {
+              var figure;
+              var captionValue = el.attributes['data-caption'];
+              var alignValue = el.attributes['data-align'];
+
+              // Wrap image in &lt;figure&gt; only if data-caption is set.
+              if (captionValue !== undefined) {
+                var classes = 'caption caption-img';
+                if (alignValue !== null) {
+                  classes += ' caption-' + alignValue;
+                }
+                figure = el.wrapWith(new CKEDITOR.htmlParser.element('figure', { 'class': classes }));
+                var caption = CKEDITOR.htmlParser.fragment.fromHtml(captionValue || '', 'figcaption');
+                figure.add(caption);
+              }
+              else if (alignValue !== undefined) {
+                if (el.attributes['class'] === undefined) {
+                  el.attributes['class'] = '';
+                }
+                el.attributes['class'] += 'align-' + alignValue;
+              }
+
+              return figure || el;
+            }
           };
-          if (this._selectionWillCreateInlineImage()) {
-            override.existingValues.isInline = this._selectionWillCreateInlineImage();
-            delete override.saveCallback;
-          }
-          editor.execCommand('drupalimage', override);
-        };
-      });
-    }
+        });
+
+        // Downcast to &lt;img&gt;.
+        widgetDefinition.downcast = CKEDITOR.tools.override(widgetDefinition.downcast, function (originalDowncastFn) {
+          return function (el) {
+            if (el.name === 'figure') {
+              // Update data with the current caption.
+              var caption = el.getFirst('figcaption');
+              caption = caption ? caption.getHtml() : '';
+              this.setData({
+                data_caption: caption
+              });
+
+              // We downcast to just the &lt;img&gt; element.
+              el = el.getFirst('img');
+            }
+
+            // Call the original downcast to setup the &lt;img&gt;
+            // meta data accordingly.
+            return originalDowncastFn.call(this, el) || el;
+          };
+        });
+
+        // Generate a &lt;figure&gt;-wrapped &lt;img&gt; if either data-caption or data-align
+        // are set for a newly created image.
+        widgetDefinition.insert = CKEDITOR.tools.override(widgetDefinition.downcast, function (originalInsertFn) {
+          return function () {
+            var saveCallback = function (returnValues) {
+              // We can't create an image with an empty "src" attribute.
+              if (returnValues.attributes.src.length === 0) {
+                return;
+              }
+              // Normalize the "data_align" attribute and the "hasCaption" value.
+              if (returnValues.attributes.data_align === '' || returnValues.attributes.data_align === 'none') {
+                returnValues.attributes.data_align = null;
+              }
+              if (typeof returnValues.hasCaption === 'number') {
+                returnValues.hasCaption = !!returnValues.hasCaption;
+              }
+              // Use the original save callback if the image has no caption.
+              if (returnValues.hasCaption === false) {
+                widgetDefinition._insertSaveCallback.apply(this, arguments);
+                return;
+              }
+
+              editor.fire('saveSnapshot');
+
+              // Build the HTML for the widget.
+              var html = '&lt;figure class="caption caption-img';
+              if (returnValues.attributes.data_align &amp;&amp; returnValues.attributes.data_align !== 'none') {
+                html += ' caption-' + returnValues.attributes.data_align;
+              }
+              html += '"&gt;&lt;img ';
+              for (var attr in returnValues.attributes) {
+                if (returnValues.attributes.hasOwnProperty(attr) &amp;&amp; !attr.match(/^data_/)) {
+                  html += attr + '="' + returnValues.attributes[attr] + '" ';
+                  html += 'data-cke-saved-' + attr + '="' + returnValues.attributes[attr] + '" ';
+                }
+              }
+              // The init() method will run on this and if it does not find
+              // data-caption or data-align attributes, the subsequent call to the
+              // data() method will cause the &lt;figure&gt; to be transformed back to
+              // an &lt;img&gt;. Hence, set the data-caption and data-align attributes
+              // on the newly inserted &lt;img&gt;.
+              if (returnValues.hasCaption) {
+                html += ' data-caption=""';
+                html += ' data-cke-saved-data-caption=""';
+              }
+              if (returnValues.attributes.data_align &amp;&amp; returnValues.attributes.data_align !== 'none') {
+                html += ' data-align="' + returnValues.attributes.data_align + '"';
+                html += ' data-cke-saved-data-align="' + returnValues.attributes.data_align + '"';
+              }
+              html += '/&gt;';
+              html += '&lt;figcaption data-placeholder="' + Drupal.t('Enter caption here') + '"&gt;&lt;/figcaption&gt;';
+              html += '&lt;/figure&gt;';
+              var el = new CKEDITOR.dom.element.createFromHtml(html, editor.document);
+              editor.insertElement(editor.widgets.wrapElement(el, 'drupalimagecaption'));
+
+              // Save snapshot for undo support.
+              editor.fire('saveSnapshot');
+
+              // Initialize and focus the widget.
+              var widget = editor.widgets.initOn(el, 'drupalimagecaption');
+              widget.focus();
+            };
+            var override = {
+              imageDOMElement: null,
+              existingValues: { hasCaption: false, data_align: '' },
+              saveCallback: saveCallback,
+              dialogTitle: editor.config.drupalImage_dialogTitleAdd
+            };
+            if (this._selectionWillCreateInlineImage()) {
+              override.existingValues.isInline = this._selectionWillCreateInlineImage();
+              delete override.saveCallback;
+            }
+            editor.execCommand('drupalimage', override);
+          };
+        });
+      }
+    });
   });
-});
 
 })(CKEDITOR);
 </code>

@@ -32,114 +32,114 @@
 
 (function (Drupal, Backbone) {
 
-"use strict";
-
-/**
- * Models the state of a contextual link's trigger, list &amp; region.
- *
- * @constructor
- * @augments Bacbbone.Model
- */
-Drupal.contextual.StateModel = Backbone.Model.extend(/** @lends Drupal.contextual.StateModel# */{
-  /**
-   * @type {Object}
-   */
-  defaults: {
-    /**
-     * The title of the entity to which these contextual links apply.
-     *
-     * @name Drupal.contextual.StateModel#title
-     * @type {String}
-     * @virtual
-     */
-    title: '',
-    /**
-     * Represents if the contextual region is being hovered.
-     *
-     * @name Drupal.contextual.StateModel#regionIsHovered
-     * @type {Boolean}
-     * @virtual
-     */
-    regionIsHovered: false,
-    /**
-     * Represents if the contextual trigger or options have focus.
-     *
-     * @name Drupal.contextual.StateModel#hasFocus
-     * @type {Boolean}
-     * @virtual
-     */
-    hasFocus: false,
-    /**
-     * Represents if the contextual options for an entity are available to
-     * be selected (i.e. whether the list of options is visible).
-     *
-     * @name Drupal.contextual.StateModel#isOpen
-     * @type {Boolean}
-     * @virtual
-     */
-    isOpen: false,
-    /**
-     * When the model is locked, the trigger remains active.
-     *
-     * @name Drupal.contextual.StateModel#isLocked
-     * @type {Boolean}
-     * @virtual
-     */
-    isLocked: false
-  },
+  "use strict";
 
   /**
-   * Opens or closes the contextual link.
+   * Models the state of a contextual link's trigger, list &amp; region.
    *
-   * If it is opened, then also give focus.
+   * @constructor
+   * @augments Bacbbone.Model
    */
-  toggleOpen: function () {
-    var newIsOpen = !this.get('isOpen');
-    this.set('isOpen', newIsOpen);
-    if (newIsOpen) {
-      this.focus();
-    }
-    return this;
-  },
+  Drupal.contextual.StateModel = Backbone.Model.extend(/** @lends Drupal.contextual.StateModel# */{
+    /**
+     * @type {Object}
+     */
+    defaults: {
+      /**
+       * The title of the entity to which these contextual links apply.
+       *
+       * @name Drupal.contextual.StateModel#title
+       * @type {String}
+       * @virtual
+       */
+      title: '',
+      /**
+       * Represents if the contextual region is being hovered.
+       *
+       * @name Drupal.contextual.StateModel#regionIsHovered
+       * @type {Boolean}
+       * @virtual
+       */
+      regionIsHovered: false,
+      /**
+       * Represents if the contextual trigger or options have focus.
+       *
+       * @name Drupal.contextual.StateModel#hasFocus
+       * @type {Boolean}
+       * @virtual
+       */
+      hasFocus: false,
+      /**
+       * Represents if the contextual options for an entity are available to
+       * be selected (i.e. whether the list of options is visible).
+       *
+       * @name Drupal.contextual.StateModel#isOpen
+       * @type {Boolean}
+       * @virtual
+       */
+      isOpen: false,
+      /**
+       * When the model is locked, the trigger remains active.
+       *
+       * @name Drupal.contextual.StateModel#isLocked
+       * @type {Boolean}
+       * @virtual
+       */
+      isLocked: false
+    },
 
-  /**
-   * Closes this contextual link.
-   *
-   * Does not call blur() because we want to allow a contextual link to have
-   * focus, yet be closed for example when hovering.
-   */
-  close: function () {
-    this.set('isOpen', false);
-    return this;
-  },
-
-  /**
-   * Gives focus to this contextual link.
-   *
-   * Also closes + removes focus from every other contextual link.
-   */
-  focus: function () {
-    this.set('hasFocus', true);
-    var cid = this.cid;
-    this.collection.each(function (model) {
-      if (model.cid !== cid) {
-        model.close().blur();
+    /**
+     * Opens or closes the contextual link.
+     *
+     * If it is opened, then also give focus.
+     */
+    toggleOpen: function () {
+      var newIsOpen = !this.get('isOpen');
+      this.set('isOpen', newIsOpen);
+      if (newIsOpen) {
+        this.focus();
       }
-    });
-    return this;
-  },
+      return this;
+    },
 
-  /**
-   * Removes focus from this contextual link, unless it is open.
-   */
-  blur: function () {
-    if (!this.get('isOpen')) {
-      this.set('hasFocus', false);
+    /**
+     * Closes this contextual link.
+     *
+     * Does not call blur() because we want to allow a contextual link to have
+     * focus, yet be closed for example when hovering.
+     */
+    close: function () {
+      this.set('isOpen', false);
+      return this;
+    },
+
+    /**
+     * Gives focus to this contextual link.
+     *
+     * Also closes + removes focus from every other contextual link.
+     */
+    focus: function () {
+      this.set('hasFocus', true);
+      var cid = this.cid;
+      this.collection.each(function (model) {
+        if (model.cid !== cid) {
+          model.close().blur();
+        }
+      });
+      return this;
+    },
+
+    /**
+     * Removes focus from this contextual link, unless it is open.
+     */
+    blur: function () {
+      if (!this.get('isOpen')) {
+        this.set('hasFocus', false);
+      }
+      return this;
     }
-    return this;
-  }
 
-});
+  });
 
 })(Drupal, Backbone);
 </code>

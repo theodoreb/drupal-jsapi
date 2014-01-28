@@ -32,62 +32,63 @@
 
 (function ($, Backbone, Drupal) {
 
-"use strict";
+  "use strict";
 
-Drupal.edit.ContextualLinkView = Backbone.View.extend(/** @lends Drupal.edit.ContextualLinkView# */ {
+  Drupal.edit.ContextualLinkView = Backbone.View.extend(/** @lends Drupal.edit.ContextualLinkView# */ {
 
-  /**
-   * @return {Object}
-   */
-   events: function () {
-    // Prevents delay and simulated mouse events.
-    function touchEndToClick (event) {
-      event.preventDefault();
-      event.target.click();
-    }
-    return {
-      'click a': function (event) {
+    /**
+     * @return {Object}
+     */
+    events: function () {
+      // Prevents delay and simulated mouse events.
+      function touchEndToClick (event) {
         event.preventDefault();
-        this.model.set('state', 'launching');
-      },
-      'touchEnd a': touchEndToClick
-    };
-  },
+        event.target.click();
+      }
 
-  /**
-   * @constructs Drupal.edit.ContextualLinkView
-   * @augments Backbone.View
-   * @param {Object} options
-   * @param {Drupal.edit.EntityModel} options.model
-   *   the associated entity's model
-   * @param {Drupal.edit.AppModel} options.appModel
-   *   the application state model
-   * @param {Object.&lt;String&gt;} options.strings
-   *   the strings for the "Quick edit" link
-   */
-  initialize: function (options) {
-    // Insert the text of the quick edit toggle.
-    this.$el.find('a').text(options.strings.quickEdit);
-    // Initial render.
-    this.render();
-    // Re-render whenever this entity's isActive attribute changes.
-    this.listenTo(this.model, 'change:isActive', this.render);
-  },
+      return {
+        'click a': function (event) {
+          event.preventDefault();
+          this.model.set('state', 'launching');
+        },
+        'touchEnd a': touchEndToClick
+      };
+    },
 
-  /**
-   * @param {Drupal.edit.EntityModel} entityModel
-   * @param {Boolean} isActive
-   */
-  render: function (entityModel, isActive) {
-    this.$el.find('a').attr('aria-pressed', isActive);
+    /**
+     * @constructs Drupal.edit.ContextualLinkView
+     * @augments Backbone.View
+     * @param {Object} options
+     * @param {Drupal.edit.EntityModel} options.model
+     *   the associated entity's model
+     * @param {Drupal.edit.AppModel} options.appModel
+     *   the application state model
+     * @param {Object.&lt;String&gt;} options.strings
+     *   the strings for the "Quick edit" link
+     */
+    initialize: function (options) {
+      // Insert the text of the quick edit toggle.
+      this.$el.find('a').text(options.strings.quickEdit);
+      // Initial render.
+      this.render();
+      // Re-render whenever this entity's isActive attribute changes.
+      this.listenTo(this.model, 'change:isActive', this.render);
+    },
 
-    // Hides the contextual links if an in-place editor is active.
-    this.$el.closest('.contextual').toggle(!isActive);
+    /**
+     * @param {Drupal.edit.EntityModel} entityModel
+     * @param {Boolean} isActive
+     */
+    render: function (entityModel, isActive) {
+      this.$el.find('a').attr('aria-pressed', isActive);
 
-    return this;
-  }
+      // Hides the contextual links if an in-place editor is active.
+      this.$el.closest('.contextual').toggle(!isActive);
 
-});
+      return this;
+    }
+
+  });
 
 })(jQuery, Backbone, Drupal);
 </code>

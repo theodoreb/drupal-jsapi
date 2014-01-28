@@ -32,144 +32,144 @@
 
 (function (Backbone, Drupal) {
 
-"use strict";
+  "use strict";
 
-/**
- * Backbone model for the toolbar.
- *
- * @constructor
- * @augments Backbone.Model
- */
-Drupal.toolbar.ToolbarModel = Backbone.Model.extend(/** @lends Drupal.toolbar.ToolbarModel# */ {
   /**
-   * @type {Object}
+   * Backbone model for the toolbar.
+   *
+   * @constructor
+   * @augments Backbone.Model
    */
-  defaults: {
+  Drupal.toolbar.ToolbarModel = Backbone.Model.extend(/** @lends Drupal.toolbar.ToolbarModel# */ {
     /**
-     * The active toolbar tab. All other tabs should be inactive under
-     * normal circumstances. It will remain active across page loads. The
-     * active item is stored as an ID selector e.g. '#toolbar-item--1'.
-     *
-     * @name Drupal.toolbar.ToolbarModel#activeTab
-     * @type {HTMLElement}
-     * @virtual
-     */
-    activeTab: null,
-    /**
-     * Represents whether a tray is open or not. Stored as an ID selector e.g.
-     * '#toolbar-item--1-tray'.
-     *
-     * @name Drupal.toolbar.ToolbarModel#activeTray
-     * @type {HTMLElement}
-     * @virtual
-     */
-    activeTray: null,
-    /**
-     * Indicates whether the toolbar is displayed in an oriented fashion,
-     * either horizontal or vertical.
-     *
-     * @name Drupal.toolbar.ToolbarModel#isOriented
-     * @type {Boolean}
-     * @virtual
-     */
-    isOriented: false,
-    /**
-     * Indicates whether the toolbar is positioned absolute (false) or fixed
-     * (true).
-     *
-     * @name Drupal.toolbar.ToolbarModel#isFixed
-     * @type {Boolean}
-     * @virtual
-     */
-    isFixed: false,
-    /**
-     * Menu subtrees are loaded through an AJAX request only when the Toolbar
-     * is set to a vertical orientation.
-     *
-     * @name Drupal.toolbar.ToolbarModel#areSubtreesLoaded
-     * @type {Boolean}
-     * @virtual
-     */
-    areSubtreesLoaded: false,
-    /**
-     * If the viewport overflow becomes constrained, isFixed must be true so
-     * that elements in the trays aren't lost off-screen and impossible to
-     * get to.
-     *
-     * @name Drupal.toolbar.ToolbarModel#isViewportOverflowConstrained
-     * @type {Boolean}
-     * @virtual
-     */
-    isViewportOverflowConstrained: false,
-    /**
-     * The orientation of the active tray.
-     *
-     * @name Drupal.toolbar.ToolbarModel#orientation
-     * @type {String}
-     * @virtual
-     */
-    orientation: 'vertical',
-    /**
-     * A tray is locked if a user toggled it to vertical. Otherwise a tray
-     * will switch between vertical and horizontal orientation based on the
-     * configured breakpoints. The locked state will be maintained across page
-     * loads.
-     *
-     * @name Drupal.toolbar.ToolbarModel#locked
-     * @type {Boolean}
-     * @virtual
-     */
-    locked: false,
-    /**
-     * Indicates whether the tray orientation toggle is visible.
-     *
-     * @name Drupal.toolbar.ToolbarModel#isTrayToggleVisible
-     * @type {Boolean}
-     * @virtual
-     */
-    isTrayToggleVisible: false,
-    /**
-     * The height of the toolbar.
-     *
-     * @name Drupal.toolbar.ToolbarModel#height
-     * @type {Null|Number}
-     * @virtual
-     */
-    height: null,
-    /**
-     * The current viewport offsets determined by Drupal.displace(). The
-     * offsets suggest how a module might position is components relative to
-     * the viewport.
-     *
-     * @name Drupal.toolbar.ToolbarModel#offsets
      * @type {Object}
-     * @prop {Number} top
-     * @prop {Number} right
-     * @prop {Number} bottom
-     * @prop {Number} left
-     * @virtual
      */
-    offsets: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    }
-  },
+    defaults: {
+      /**
+       * The active toolbar tab. All other tabs should be inactive under
+       * normal circumstances. It will remain active across page loads. The
+       * active item is stored as an ID selector e.g. '#toolbar-item--1'.
+       *
+       * @name Drupal.toolbar.ToolbarModel#activeTab
+       * @type {HTMLElement}
+       * @virtual
+       */
+      activeTab: null,
+      /**
+       * Represents whether a tray is open or not. Stored as an ID selector e.g.
+       * '#toolbar-item--1-tray'.
+       *
+       * @name Drupal.toolbar.ToolbarModel#activeTray
+       * @type {HTMLElement}
+       * @virtual
+       */
+      activeTray: null,
+      /**
+       * Indicates whether the toolbar is displayed in an oriented fashion,
+       * either horizontal or vertical.
+       *
+       * @name Drupal.toolbar.ToolbarModel#isOriented
+       * @type {Boolean}
+       * @virtual
+       */
+      isOriented: false,
+      /**
+       * Indicates whether the toolbar is positioned absolute (false) or fixed
+       * (true).
+       *
+       * @name Drupal.toolbar.ToolbarModel#isFixed
+       * @type {Boolean}
+       * @virtual
+       */
+      isFixed: false,
+      /**
+       * Menu subtrees are loaded through an AJAX request only when the Toolbar
+       * is set to a vertical orientation.
+       *
+       * @name Drupal.toolbar.ToolbarModel#areSubtreesLoaded
+       * @type {Boolean}
+       * @virtual
+       */
+      areSubtreesLoaded: false,
+      /**
+       * If the viewport overflow becomes constrained, isFixed must be true so
+       * that elements in the trays aren't lost off-screen and impossible to
+       * get to.
+       *
+       * @name Drupal.toolbar.ToolbarModel#isViewportOverflowConstrained
+       * @type {Boolean}
+       * @virtual
+       */
+      isViewportOverflowConstrained: false,
+      /**
+       * The orientation of the active tray.
+       *
+       * @name Drupal.toolbar.ToolbarModel#orientation
+       * @type {String}
+       * @virtual
+       */
+      orientation: 'vertical',
+      /**
+       * A tray is locked if a user toggled it to vertical. Otherwise a tray
+       * will switch between vertical and horizontal orientation based on the
+       * configured breakpoints. The locked state will be maintained across page
+       * loads.
+       *
+       * @name Drupal.toolbar.ToolbarModel#locked
+       * @type {Boolean}
+       * @virtual
+       */
+      locked: false,
+      /**
+       * Indicates whether the tray orientation toggle is visible.
+       *
+       * @name Drupal.toolbar.ToolbarModel#isTrayToggleVisible
+       * @type {Boolean}
+       * @virtual
+       */
+      isTrayToggleVisible: false,
+      /**
+       * The height of the toolbar.
+       *
+       * @name Drupal.toolbar.ToolbarModel#height
+       * @type {Null|Number}
+       * @virtual
+       */
+      height: null,
+      /**
+       * The current viewport offsets determined by Drupal.displace(). The
+       * offsets suggest how a module might position is components relative to
+       * the viewport.
+       *
+       * @name Drupal.toolbar.ToolbarModel#offsets
+       * @type {Object}
+       * @prop {Number} top
+       * @prop {Number} right
+       * @prop {Number} bottom
+       * @prop {Number} left
+       * @virtual
+       */
+      offsets: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      }
+    },
 
-  /**
-   * @param {Object} attributes
-   * @param {Object} options
-   * @return {String}
-   */
-  validate: function (attributes, options) {
-    // Prevent the orientation being set to horizontal if it is locked, unless
-    // override has not been passed as an option.
-    if (attributes.orientation === 'horizontal' &amp;&amp; this.get('locked') &amp;&amp; !options.override) {
-      return Drupal.t('The toolbar cannot be set to a horizontal orientation when it is locked.');
+    /**
+     * @param {Object} attributes
+     * @param {Object} options
+     * @return {String}
+     */
+    validate: function (attributes, options) {
+      // Prevent the orientation being set to horizontal if it is locked, unless
+      // override has not been passed as an option.
+      if (attributes.orientation === 'horizontal' &amp;&amp; this.get('locked') &amp;&amp; !options.override) {
+        return Drupal.t('The toolbar cannot be set to a horizontal orientation when it is locked.');
+      }
     }
-  }
-});
+  });
 
 }(Backbone, Drupal));
 </code>
