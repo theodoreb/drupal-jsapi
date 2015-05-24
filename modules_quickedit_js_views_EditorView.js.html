@@ -3643,12 +3643,12 @@
     /**
      * A base implementation that outlines the structure for in-place editors.
      *
-     * Specific in-place editor implementations should subclass (extend) this View
-     * and override whichever method they deem necessary to override.
+     * Specific in-place editor implementations should subclass (extend) this
+     * View and override whichever method they deem necessary to override.
      *
-     * Typically you would want to override this method to set the originalValue
-     * attribute in the FieldModel to such a value that your in-place editor can
-     * revert to the original value when necessary.
+     * Typically you would want to override this method to set the
+     * originalValue attribute in the FieldModel to such a value that your
+     * in-place editor can revert to the original value when necessary.
      *
      * @example &lt;caption>If you override this method, you should call this
      * method (the parent class' initialize()) first.&lt;/caption>
@@ -3738,8 +3738,8 @@
 
         case 'candidate':
           // Nothing to do for the typical in-place editor: it should not be
-          // visible yet.
-          // Except when we come from the 'invalid' state, then we clean up.
+          // visible yet. Except when we come from the 'invalid' state, then we
+          // clean up.
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
@@ -3754,9 +3754,8 @@
           // The user has indicated he wants to do in-place editing: if
           // something needs to be loaded (CSS/JavaScript/server data/…), then
           // do so at this stage, and once the in-place editor is ready,
-          // set the 'active' state.
-          // A "loading" indicator will be shown in the UI for as long as the
-          // field remains in this state.
+          // set the 'active' state. A "loading" indicator will be shown in the
+          // UI for as long as the field remains in this state.
           var loadDependencies = function (callback) {
             // Do the loading here.
             callback();
@@ -3777,10 +3776,10 @@
 
         case 'saving':
           // When the user has indicated he wants to save his changes to this
-          // field, this state will be entered.
-          // If the previous saving attempt resulted in validation errors, the
-          // previous state will be 'invalid'. Clean up those validation errors
-          // while the user is saving.
+          // field, this state will be entered. If the previous saving attempt
+          // resulted in validation errors, the previous state will be
+          // 'invalid'. Clean up those validation errors while the user is
+          // saving.
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
@@ -3872,12 +3871,13 @@
           removeHiddenForm();
           // First, transition the state to 'saved'.
           fieldModel.set('state', 'saved');
-          // Second, set the 'htmlForOtherViewModes' attribute, so that when this
-          // field is rerendered, the change can be propagated to other instances of
-          // this field, which may be displayed in different view modes.
+          // Second, set the 'htmlForOtherViewModes' attribute, so that when
+          // this field is rerendered, the change can be propagated to other
+          // instances of this field, which may be displayed in different view
+          // modes.
           fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
-          // Finally, set the 'html' attribute on the field model. This will cause
-          // the field to be rerendered.
+          // Finally, set the 'html' attribute on the field model. This will
+          // cause the field to be rerendered.
           fieldModel.set('html', response.data);
         };
 

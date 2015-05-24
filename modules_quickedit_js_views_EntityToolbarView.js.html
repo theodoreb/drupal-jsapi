@@ -3677,8 +3677,8 @@
       // Rerender when a field of the entity changes state.
       this.listenTo(this.model.get('fields'), 'change:state', this.fieldStateChange);
 
-      // Reposition the entity toolbar as the viewport and the position within the
-      // viewport changes.
+      // Reposition the entity toolbar as the viewport and the position within
+      // the viewport changes.
       $(window).on('resize.quickedit scroll.quickedit', debounce($.proxy(this.windowChangeHandler, this), 150));
 
       // Adjust the fence placement within which the entity toolbar may be
@@ -3727,7 +3727,8 @@
         this.position();
       }
 
-      // The save button text and state varies with the state of the entity model.
+      // The save button text and state varies with the state of the entity
+      // model.
       var $button = this.$el.find('.quickedit-button.action-save');
       var isDirty = this.model.get('isDirty');
       // Adjust the save button according to the state of the model.
@@ -3906,8 +3907,8 @@
         // Don't position the toolbar past the first or last editable field if
         // the entity is the target.
         if (view.$entity[0] === info.target.element[0]) {
-          // Get the first or last field according to whether the toolbar is above
-          // or below the entity.
+          // Get the first or last field according to whether the toolbar is
+          // above or below the entity.
           var $field = view.$entity.find('.quickedit-editable').eq((isBelow) ? -1 : 0);
           if ($field.length > 0) {
             suggested.top = (isBelow) ? ($field.offset().top + $field.outerHeight(true)) : $field.offset().top - info.element.element.outerHeight(true);
@@ -3938,8 +3939,9 @@
           .position({
             my: edge + ' bottom',
             // Move the toolbar 1px towards the start edge of the 'of' element,
-            // plus any horizontal padding that may have been added to the element
-            // that is being added, to prevent unwanted horizontal movement.
+            // plus any horizontal padding that may have been added to the
+            // element that is being added, to prevent unwanted horizontal
+            // movement.
             at: edge + '+' + (1 + horizontalPadding) + ' top',
             of: of,
             collision: 'flipfit',
@@ -3962,10 +3964,10 @@
       // only after the user has focused on an editable for 250ms. This prevents
       // the toolbar from jumping around the screen.
       this.timer = setTimeout(function () {
-        // Render the position in the next execution cycle, so that animations on
-        // the field have time to process. This is not strictly speaking, a
-        // guarantee that all animations will be finished, but it's a simple way
-        // to get better positioning without too much additional code.
+        // Render the position in the next execution cycle, so that animations
+        // on the field have time to process. This is not strictly speaking, a
+        // guarantee that all animations will be finished, but it's a simple
+        // way to get better positioning without too much additional code.
         _.defer(positionToolbar);
       }, delay);
     },
@@ -4034,8 +4036,8 @@
           ]
         }));
 
-      // Give the toolbar a sensible starting position so that it doesn't animate
-      // on to the screen from a far off corner.
+      // Give the toolbar a sensible starting position so that it doesn't
+      // animate on to the screen from a far off corner.
       $toolbar
         .css({
           left: this.$entity.offset().left,

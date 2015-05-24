@@ -3650,9 +3650,9 @@
     /**
      * @type {object}
      *
-     * @prop {?Drupal.quickedit.FieldModel} highlightedField
-     * @prop {?Drupal.quickedit.FieldModel} activeField
-     * @prop {?Drupal.dialog~dialogDefinition} activeModal
+     * @prop {Drupal.quickedit.FieldModel} highlightedField
+     * @prop {Drupal.quickedit.FieldModel} activeField
+     * @prop {Drupal.dialog~dialogDefinition} activeModal
      */
     defaults: /** @lends Drupal.quickedit.AppModel# */{
 
@@ -3660,7 +3660,7 @@
        * The currently state = 'highlighted' Drupal.quickedit.FieldModel, if
        * any.
        *
-       * @type {?Drupal.quickedit.FieldModel}
+       * @type {Drupal.quickedit.FieldModel}
        *
        * @see Drupal.quickedit.FieldModel.states
        */
@@ -3669,7 +3669,7 @@
       /**
        * The currently state = 'active' Drupal.quickedit.FieldModel, if any.
        *
-       * @type {?Drupal.quickedit.FieldModel}
+       * @type {Drupal.quickedit.FieldModel}
        *
        * @see Drupal.quickedit.FieldModel.states
        */
@@ -3679,7 +3679,7 @@
        * Reference to a Drupal.dialog instance if a state change requires
        * confirmation.
        *
-       * @type {?Drupal.dialog~dialogDefinition}
+       * @type {Drupal.dialog~dialogDefinition}
        */
       activeModal: null
     }

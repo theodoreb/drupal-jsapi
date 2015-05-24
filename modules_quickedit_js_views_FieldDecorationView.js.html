@@ -3688,7 +3688,8 @@
      *
      * @param {Drupal.quickedit.FieldModel} model
      * @param {string} state
-     *   The state of the associated field. One of Drupal.quickedit.FieldModel.states.
+     *   The state of the associated field. One of
+     *   {@link Drupal.quickedit.FieldModel.states}.
      */
     stateChange: function (model, state) {
       var from = model.previous('state');
@@ -3715,8 +3716,8 @@
           break;
 
         case 'activating':
-          // NOTE: this state is not used by every editor! It's only used by those
-          // that need to interact with the server.
+          // NOTE: this state is not used by every editor! It's only used by
+          // those that need to interact with the server.
           this.prepareEdit();
           break;
 
@@ -3850,7 +3851,7 @@
     },
 
     /**
-     * Adds padding around the editable element in order to make it pop visually.
+     * Adds padding around the editable element to make it pop visually.
      */
     _pad: function () {
       // Early return if the element has already been padded.

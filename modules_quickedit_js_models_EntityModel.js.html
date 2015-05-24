@@ -3646,84 +3646,123 @@
     defaults: /** @lends Drupal.quickedit.EntityModel# */{
 
       /**
-       * The DOM element that represents this entity. It may seem bizarre to
-       * have a DOM element in a Backbone Model, but we need to be able to map
-       * entities in the DOM to EntityModels in memory.
+       * The DOM element that represents this entity.
+       *
+       * It may seem bizarre to have a DOM element in a Backbone Model, but we
+       * need to be able to map entities in the DOM to EntityModels in memory.
+       *
+       * @type {HTMLElement}
        */
       el: null,
 
       /**
-       * An entity ID, of the form "&lt;entity type>/&lt;entity ID>", e.g. "node/1".
+       * An entity ID, of the form `&lt;entity type>/&lt;entity ID>`
+       *
+       * @example
+       * "node/1"
+       *
+       * @type {string}
        */
       entityID: null,
 
       /**
-       * An entity instance ID. The first instance of a specific entity (i.e. with
-       * a given entity ID) is assigned 0, the second 1, and so on.
+       * An entity instance ID.
+       *
+       * The first instance of a specific entity (i.e. with a given entity ID)
+       * is assigned 0, the second 1, and so on.
+       *
+       * @type {number}
        */
       entityInstanceID: null,
 
       /**
-       * The unique ID of this entity instance on the page, of the form `&lt;entity
-       * type>/&lt;entity ID>[entity instance ID]`, e.g. `node/1[0]`.
+       * The unique ID of this entity instance on the page, of the form
+       * `&lt;entity type>/&lt;entity ID>[entity instance ID]`
+       *
+       * @example
+       * "node/1[0]"
+       *
+       * @type {string}
        */
       id: null,
 
       /**
        * The label of the entity.
+       *
+       * @type {string}
        */
       label: null,
 
       /**
-       * A Drupal.quickedit.FieldCollection for all fields of this entity.
+       * A FieldCollection for all fields of the entity.
+       *
+       * @type {Drupal.quickedit.FieldCollection}
+       *
+       * @see Drupal.quickedit.FieldCollection
        */
       fields: null,
 
       // The attributes below are stateful. The ones above will never change
       // during the life of a EntityModel instance.
+
       /**
-       * Indicates whether this instance of this entity is currently being
-       * edited in-place.
+       * Indicates whether this entity is currently being edited in-place.
+       *
+       * @type {bool}
        */
       isActive: false,
 
       /**
-       * Whether one or more fields have already been stored in
-       * PrivateTempStore.
+       * Whether one or more fields are already been stored in PrivateTempStore.
+       *
+       * @type {bool}
        */
       inTempStore: false,
 
       /**
+       * Indicates whether a "Save" button is necessary or not.
+       *
        * Whether one or more fields have already been stored in PrivateTempStore
        * *or* the field that's currently being edited is in the 'changed' or a
-       * later state. In other words, this boolean indicates whether a "Save"
-       * button is necessary or not.
+       * later state.
+       *
+       * @type {bool}
        */
       isDirty: false,
 
       /**
        * Whether the request to the server has been made to commit this entity.
+       *
        * Used to prevent multiple such requests.
+       *
+       * @type {bool}
        */
       isCommitting: false,
 
       /**
        * The current processing state of an entity.
+       *
+       * @type {string}
        */
       state: 'closed',
 
       /**
-       * The IDs of the fields whose new values have been stored in
-       * PrivateTempStore. We must store this on the EntityModel as well (even
-       * though it already is on the FieldModel) because when a field is
-       * rerendered, its FieldModel is destroyed and this allows us to
-       * transition it back to the proper state.
+       * IDs of fields whose new values have been stored in PrivateTempStore.
+       *
+       * We must store this on the EntityModel as well (even though it already
+       * is on the FieldModel) because when a field is rerendered, its
+       * FieldModel is destroyed and this allows us to transition it back to
+       * the proper state.
+       *
+       * @type {Array.&lt;string>}
        */
       fieldsInTempStore: [],
 
       /**
        * A flag the tells the application that this EntityModel must be reloaded
        * in order to restore the original values to its fields in the client.
+       *
+       * @type {bool}
        */
       reload: false
     },
@@ -4219,10 +4258,9 @@
   }, /** @lends Drupal.quickedit.EntityModel */{
 
     /**
-     * A list (sequence) of all possible states an entity can be in during
-     * in-place editing.
+     * Sequence of all possible states an entity can be in during quickediting.
      *
-     * @enum
+     * @type {Array.&lt;string>}
      */
     states: [
       // Initial state, like field's 'inactive' OR the user has just finished
@@ -4281,9 +4319,9 @@
      * Indicates whether the 'from' state comes before the 'to' state.
      *
      * @param {string} from
-     *   One of Drupal.quickedit.EntityModel.states.
+     *   One of {@link Drupal.quickedit.EntityModel.states}.
      * @param {string} to
-     *   One of Drupal.quickedit.EntityModel.states.
+     *   One of {@link Drupal.quickedit.EntityModel.states}.
      *
      * @return {bool}
      */
