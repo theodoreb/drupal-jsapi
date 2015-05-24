@@ -2191,55 +2191,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal.quickedit.editors.editor">
-            <span class="title">
-                <a href="Drupal.quickedit.editors.editor.html">Drupal.quickedit.editors.editor</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal.quickedit.editors.editor#$textElement"><a href="Drupal.quickedit.editors.editor.html#$textElement">$textElement</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#textEditor"><a href="Drupal.quickedit.editors.editor.html#textEditor">textEditor</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#textFormat"><a href="Drupal.quickedit.editors.editor.html#textFormat">textFormat</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#textFormatHasTransformations"><a href="Drupal.quickedit.editors.editor.html#textFormatHasTransformations">textFormatHasTransformations</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="Drupal.quickedit.editors.editor#_getUntransformedText"><a href="Drupal.quickedit.editors.editor.html#_getUntransformedText">_getUntransformedText</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#getEditedElement"><a href="Drupal.quickedit.editors.editor.html#getEditedElement">getEditedElement</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#getQuickEditUISettings"><a href="Drupal.quickedit.editors.editor.html#getQuickEditUISettings">getQuickEditUISettings</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#remove"><a href="Drupal.quickedit.editors.editor.html#remove">remove</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#removeValidationErrors"><a href="Drupal.quickedit.editors.editor.html#removeValidationErrors">removeValidationErrors</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#revert"><a href="Drupal.quickedit.editors.editor.html#revert">revert</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#save"><a href="Drupal.quickedit.editors.editor.html#save">save</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#showValidationErrors"><a href="Drupal.quickedit.editors.editor.html#showValidationErrors">showValidationErrors</a></li>
-            
-                <li data-name="Drupal.quickedit.editors.editor#stateChange"><a href="Drupal.quickedit.editors.editor.html#stateChange">stateChange</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal.quickedit.editors.form">
             <span class="title">
                 <a href="Drupal.quickedit.editors.form.html">Drupal.quickedit.editors.form</a>
@@ -3646,45 +3597,40 @@
 
   "use strict";
 
-  /**
-   * Editor.
-   *
-   * @constructor
-   *
-   * @augments Drupal.quickedit.EditorView
-   */
   Drupal.quickedit.editors.editor = Drupal.quickedit.EditorView.extend(/** @lends Drupal.quickedit.editors.editor# */{
 
     /**
      * The text format for this field.
      *
-     * @type {?string}
+     * @type {string}
      */
     textFormat: null,
 
     /**
      * Indicates whether this text format has transformations.
      *
-     * @type {?bool}
+     * @type {bool}
      */
     textFormatHasTransformations: null,
 
     /**
      * Stores a reference to the text editor object for this field.
      *
-     * @type {?Drupal.quickedit.EditorModel}
+     * @type {Drupal.quickedit.EditorModel}
      */
     textEditor: null,
 
     /**
      * Stores the textual DOM element that is being in-place edited.
      *
-     * @type {?jQuery}
+     * @type {jQuery}
      */
     $textElement: null,
 
     /**
      * @constructs
+     *
+     * @augments Drupal.quickedit.EditorView
      *
      * @param {object} options
      */
