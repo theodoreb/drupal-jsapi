@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/filter/filter.admin.js</title>
+    <title>Class: TabbingManager</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -3622,82 +3622,866 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="modules_filter_filter.admin.js.html">Source: modules/filter/filter.admin.js</h1>
+        <h1 class="page-title" data-filename="Drupal-TabbingManager.html">Class: TabbingManager</h1>
         
 
 
+
+<section>
     
-    <section>
-        <article>
-            <pre class="prettyprint source "><code>/**
- * @file
- * Attaches administration-specific behavior for the Filter module.
- */
+<header>
+    <h2>
+        <span class="ancestors"><a href="Drupal.html">Drupal</a>~</span>
+    
+    TabbingManager
+    </h2>
+    
+</header>  
 
-(function ($) {
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="TabbingManager">
+            
+            new TabbingManager<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line34">line 34</a>
+        </div>
+        
+    </div>
 
-  "use strict";
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Provides an API for managing page tabbing order modifications.</p>
+    </div>
+    
 
-  /**
-   *
-   * @type {Drupal~behavior}
-   */
-  Drupal.behaviors.filterStatus = {
-    attach: function (context, settings) {
-      var $context = $(context);
-      $context.find('#filters-status-wrapper input.form-checkbox').once('filter-status').each(function () {
-        var $checkbox = $(this);
-        // Retrieve the tabledrag row belonging to this filter.
-        var $row = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-weight')).closest('tr');
-        // Retrieve the vertical tab belonging to this filter.
-        var $filterSettings = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-settings'));
-        var filterSettingsTab = $filterSettings.data('verticalTab');
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-        // Bind click handler to this checkbox to conditionally show and hide the
-        // filter's tableDrag row and vertical tab pane.
-        $checkbox.on('click.filterUpdate', function () {
-          if ($checkbox.is(':checked')) {
-            $row.show();
-            if (filterSettingsTab) {
-              filterSettingsTab.tabShow().updateSummary();
-            }
-            else {
-              // On very narrow viewports, Vertical Tabs are disabled.
-              $filterSettings.show();
-            }
-          }
-          else {
-            $row.hide();
-            if (filterSettingsTab) {
-              filterSettingsTab.tabHide().updateSummary();
-            }
-            else {
-              // On very narrow viewports, Vertical Tabs are disabled.
-              $filterSettings.hide();
-            }
-          }
-          // Restripe table after toggling visibility of table row.
-          Drupal.tableDrag['filter-order'].restripeTable();
-        });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-        // Attach summary for configurable filters (only for screen readers).
-        if (filterSettingsTab) {
-          filterSettingsTab.details.drupalSetSummary(function (tabContext) {
-            return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
-          });
-        }
+    
+    
 
-        // Trigger our bound click handler to update elements to initial state.
-        $checkbox.triggerHandler('click.filterUpdate');
-      });
-    }
-  };
+    
 
-})(jQuery);
-</code></pre>
-        </article>
-    </section>
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="activate">
+            
+            activate<span class="signature">(tabbingContext)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line139">line 139</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Makes all elements outside the of the tabbingContext's set untabbable.</p>
+<p>Elements made untabbable have their original tabindex and autofocus
+values stored so that they might be restored later when this
+tabbingContext is deactivated.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tabbingContext</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The TabbingContext instance that has been activated.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="constrain">
+            
+            constrain<span class="signature">(elements)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line72">line 72</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Constrain tabbing to the specified set of elements only.</p>
+<p>Makes elements outside of the specified set of elements unreachable via
+the tab key.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>elements</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#jQuery">jQuery</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The set of elements to which tabbing should be constrained. Can also
+  be a jQuery-compatible selector string.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    <h5>Fires:</h5>
+    <ul>
+        <li><a href="global.html#event:drupalTabbingConstrained">event:drupalTabbingConstrained</a></li>
+    </ul>
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="deactivate">
+            
+            deactivate<span class="signature">(tabbingContext)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line180">line 180</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Restores that tabbable state of a tabbingContext's disabled elements.</p>
+<p>Elements that were made untabbable have their original tabindex and
+autofocus values restored.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tabbingContext</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The TabbingContext instance that has been deactivated.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="recordTabindex">
+            
+            recordTabindex<span class="signature">($el, level)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line197">line 197</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Records the tabindex and autofocus values of an untabbable element.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>$el</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#jQuery">jQuery</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The set of elements that have been disabled.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>level</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The stack level for which the tabindex attribute should be recorded.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="release">
+            
+            release<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line111">line 111</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Restores a former tabbingContext when an active one is released.</p>
+<p>The TabbingManager stack of tabbingContext instances will be unwound
+from the top-most released tabbingContext down to the first non-released
+tabbingContext instance. This non-released instance is then activated.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="restoreTabindex">
+            
+            restoreTabindex<span class="signature">($el, level)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line214">line 214</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Restores the tabindex and autofocus values of a reactivated element.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>$el</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#jQuery">jQuery</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The element that is being reactivated.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>level</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The stack level for which the tabindex attribute should be restored.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
 
 
 
@@ -3706,8 +4490,8 @@
         
 
         <footer>
-            <p><strong>For more information about this documentation please see <a href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
-            <p><small>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
+            <p><strong>For more information about this documentation please see <a target="_blank" href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
+            <p><small>Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a target="_blank" href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
         </footer>
     </div>
 </div>

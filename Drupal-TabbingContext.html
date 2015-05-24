@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Namespace: Views</title>
+    <title>Class: TabbingContext</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -37,8 +37,6 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="Drupal.displace"><a href="Drupal.html#.displace">displace</a></li>
-            
                 <li data-name="Drupal.tabbingManager"><a href="Drupal.html#.tabbingManager">tabbingManager</a></li>
             
             </ul>
@@ -51,6 +49,8 @@
                 <li data-name="Drupal~behaviorAttach"><a href="Drupal.html#~behaviorAttach">behaviorAttach</a></li>
             
                 <li data-name="Drupal~behaviorDetach"><a href="Drupal.html#~behaviorDetach">behaviorDetach</a></li>
+            
+                <li data-name="Drupal~displaceOffset"><a href="Drupal.html#~displaceOffset">displaceOffset</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -72,6 +72,8 @@
                 <li data-name="Drupal.detachBehaviors"><a href="Drupal.html#.detachBehaviors">detachBehaviors</a></li>
             
                 <li data-name="Drupal.dialog"><a href="Drupal.html#.dialog">dialog</a></li>
+            
+                <li data-name="Drupal.displace"><a href="Drupal.html#.displace">displace</a></li>
             
                 <li data-name="Drupal.editorAttach"><a href="Drupal.html#.editorAttach">editorAttach</a></li>
             
@@ -1125,9 +1127,34 @@
             </ul>
         </li>
     
+        <li class="item" data-name="Drupal.views">
+            <span class="title">
+                <a href="Drupal.views.html">Drupal.views</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal.views.instances"><a href="Drupal.views.html#.instances">instances</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="Drupal.Views">
             <span class="title">
-                <a href="Drupal.Views.html">Drupal.Views</a>
+                <a href="Drupal.Views_.html">Drupal.Views</a>
                 
                 <span class="static">static</span>
                 
@@ -1142,38 +1169,13 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views.html#.getPath">getPath</a></li>
+                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views_.html#.getPath">getPath</a></li>
             
-                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views.html#.parseQueryString">parseQueryString</a></li>
+                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views_.html#.parseQueryString">parseQueryString</a></li>
             
-                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views.html#.parseViewArgs">parseViewArgs</a></li>
+                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views_.html#.parseViewArgs">parseViewArgs</a></li>
             
-                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views.html#.pathPortion">pathPortion</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="Drupal.views">
-            <span class="title">
-                <a href="Drupal.views_.html">Drupal.views</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal.views.instances"><a href="Drupal.views_.html#.instances">instances</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
+                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views_.html#.pathPortion">pathPortion</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3545,10 +3547,82 @@
             </ul>
         </li>
     
+        <li class="item" data-name="Drupal~TabbingContext">
+            <span class="title">
+                <a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal~TabbingContext#$disabledElements"><a href="Drupal-TabbingContext.html#$disabledElements">$disabledElements</a></li>
+            
+                <li data-name="Drupal~TabbingContext#$tabbableElements"><a href="Drupal-TabbingContext.html#$tabbableElements">$tabbableElements</a></li>
+            
+                <li data-name="Drupal~TabbingContext#active"><a href="Drupal-TabbingContext.html#active">active</a></li>
+            
+                <li data-name="Drupal~TabbingContext#level"><a href="Drupal-TabbingContext.html#level">level</a></li>
+            
+                <li data-name="Drupal~TabbingContext#released"><a href="Drupal-TabbingContext.html#released">released</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="Drupal~TabbingContext#activate"><a href="Drupal-TabbingContext.html#activate">activate</a></li>
+            
+                <li data-name="Drupal~TabbingContext#deactivate"><a href="Drupal-TabbingContext.html#deactivate">deactivate</a></li>
+            
+                <li data-name="Drupal~TabbingContext#release"><a href="Drupal-TabbingContext.html#release">release</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Drupal~TabbingManager">
+            <span class="title">
+                <a href="Drupal-TabbingManager.html">Drupal~TabbingManager</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="Drupal~TabbingManager#activate"><a href="Drupal-TabbingManager.html#activate">activate</a></li>
+            
+                <li data-name="Drupal~TabbingManager#constrain"><a href="Drupal-TabbingManager.html#constrain">constrain</a></li>
+            
+                <li data-name="Drupal~TabbingManager#deactivate"><a href="Drupal-TabbingManager.html#deactivate">deactivate</a></li>
+            
+                <li data-name="Drupal~TabbingManager#recordTabindex"><a href="Drupal-TabbingManager.html#recordTabindex">recordTabindex</a></li>
+            
+                <li data-name="Drupal~TabbingManager#release"><a href="Drupal-TabbingManager.html#release">release</a></li>
+            
+                <li data-name="Drupal~TabbingManager#restoreTabindex"><a href="Drupal-TabbingManager.html#restoreTabindex">restoreTabindex</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Drupal.Views.html">Namespace: Views</h1>
+        <h1 class="page-title" data-filename="Drupal-TabbingContext.html">Class: TabbingContext</h1>
         
 
 
@@ -3557,9 +3631,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span>
+        <span class="ancestors"><a href="Drupal.html">Drupal</a>~</span>
     
-    Views
+    TabbingContext
     </h2>
     
 </header>  
@@ -3570,8 +3644,225 @@
     
     
         
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="TabbingContext">
+            
+            new TabbingContext<span class="signature">(options)</span>
+        </h4>
+    
         
+        <div class="tag-source">
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line248">line 248</a>
+        </div>
         
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Stores a set of tabbable elements.</p>
+<p>This constraint can be removed with the release() method.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>A set of initiating values</p>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>level</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The level in the TabbingManager's stack of this tabbingContext.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>$tabbableElements</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#jQuery">jQuery</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The DOM elements that should be reachable via the tab key when this
+  tabbingContext is active.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>$disabledElements</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#jQuery">jQuery</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The DOM elements that should not be reachable via the tab key when this
+  tabbingContext is active.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>released</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>A released tabbingContext can never be activated again. It will be
+  cleaned up when the TabbingManager unwinds its stack.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>active</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>When true, the tabbable elements of this tabbingContext will be reachable
+  via the tab key and the disabled elements will not. Only one
+  tabbingContext can be active at a time.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
 <dl class="details">
     
         
@@ -3596,8 +3887,20 @@
     
 </dl>
 
-        
-        
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
     
     </div>
     
@@ -3611,6 +3914,215 @@
     
     
     
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="$disabledElements">$disabledElements<span class="type-signature type jquery"><a href="global.html#jQuery">jQuery</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="$tabbableElements">$tabbableElements<span class="type-signature type jquery"><a href="global.html#jQuery">jQuery</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="active">active<span class="type-signature type bool">bool</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="level"><span class="type-signature ">nullable</span>level<span class="type-signature type number">number</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="released">released<span class="type-signature type bool">bool</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
     
     
     
@@ -3620,14 +4132,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".getPath">
+        <h4 class="name" id="activate">
             
-            <span class="type-signature static">static</span>Drupal.Views.getPath<span class="signature">(href)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
+            activate<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line84">line 84</a>
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line332">line 332</a>
         </div>
         
     </div>
@@ -3638,7 +4150,7 @@
     
     
     <div class="description">
-        <p>Return the Drupal path portion of an href.</p>
+        <p>Activates this TabbingContext.</p>
     </div>
     
 
@@ -3646,51 +4158,6 @@
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>href</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -3720,42 +4187,18 @@
 
     
     
-
+    <h5>Fires:</h5>
+    <ul>
+        <li><a href="global.html#event:drupalTabbingContextActivated">event:drupalTabbingContextActivated</a></li>
+    </ul>
     
 
     
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
 
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
     
-        <tr>
-            
-            <td class="type">
-            
-                        string
-                        
-                    
-            </td>
-            <td class="description last"></td>
-        </tr>
     
-    </tbody>
-</table>
-
+    
+    
     
     
     
@@ -3765,14 +4208,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".parseQueryString">
+        <h4 class="name" id="deactivate">
             
-            <span class="type-signature static">static</span>Drupal.Views.parseQueryString<span class="signature">(query)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
+            deactivate<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line22">line 22</a>
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line347">line 347</a>
         </div>
         
     </div>
@@ -3783,7 +4226,7 @@
     
     
     <div class="description">
-        <p>Helper function to parse a querystring.</p>
+        <p>Deactivates this TabbingContext.</p>
     </div>
     
 
@@ -3791,51 +4234,6 @@
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>query</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -3865,42 +4263,18 @@
 
     
     
-
+    <h5>Fires:</h5>
+    <ul>
+        <li><a href="global.html#event:drupalTabbingContextDeactivated">event:drupalTabbingContextDeactivated</a></li>
+    </ul>
     
 
     
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
 
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
     
-        <tr>
-            
-            <td class="type">
-            
-                        object
-                        
-                    
-            </td>
-            <td class="description last"></td>
-        </tr>
     
-    </tbody>
-</table>
-
+    
+    
     
     
     
@@ -3910,14 +4284,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".parseViewArgs">
+        <h4 class="name" id="release">
             
-            <span class="type-signature static">static</span>Drupal.Views.parseViewArgs<span class="signature">(href, viewPath)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
+            release<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line48">line 48</a>
+            <a href="misc_tabbingmanager.js.html">misc/tabbingmanager.js</a>, <a href="misc_tabbingmanager.js.html#line317">line 317</a>
         </div>
         
     </div>
@@ -3928,7 +4302,9 @@
     
     
     <div class="description">
-        <p>Helper function to return a view's arguments based on a path.</p>
+        <p>Releases this TabbingContext.</p>
+<p>Once a TabbingContext object is released, it can never be activated
+again.</p>
     </div>
     
 
@@ -3936,74 +4312,6 @@
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>href</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>viewPath</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -4033,150 +4341,10 @@
 
     
     
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        object
-                        
-                    
-            </td>
-            <td class="description last"></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id=".pathPortion">
-            
-            <span class="type-signature static">static</span>Drupal.Views.pathPortion<span class="signature">(href)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line67">line 67</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Strip off the protocol plus domain from an href.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>href</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
+    <h5>Fires:</h5>
+    <ul>
+        <li><a href="global.html#event:drupalTabbingContextReleased">event:drupalTabbingContextReleased</a></li>
+    </ul>
     
 
     
@@ -4185,35 +4353,6 @@
     
     
     
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        string
-                        
-                    
-            </td>
-            <td class="description last"></td>
-        </tr>
-    
-    </tbody>
-</table>
-
     
     
     
@@ -4237,7 +4376,7 @@
 
         <footer>
             <p><strong>For more information about this documentation please see <a target="_blank" href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
-            <p><small>Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun May 24 2015 13:17:19 GMT+0200 (CEST). Using <a target="_blank" href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
+            <p><small>Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a target="_blank" href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
         </footer>
     </div>
 </div>
