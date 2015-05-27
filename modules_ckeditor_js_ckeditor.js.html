@@ -3785,8 +3785,8 @@
       dialogSettings.dialogClass = classes.join(' ');
       dialogSettings.autoResize = Drupal.checkWidthBreakpoint(600);
 
-      // Add a "Loading…" message, hide it underneath the CKEditor toolbar, create
-      // a Drupal.ajax instance to load the dialog and trigger it.
+      // Add a "Loading…" message, hide it underneath the CKEditor toolbar,
+      // create a Drupal.Ajax instance to load the dialog and trigger it.
       var $content = $('&lt;div class="ckeditor-dialog-loading">&lt;span style="top: -40px;" class="ckeditor-dialog-loading-link">' + Drupal.t('Loading...') + '&lt;/span>&lt;/div>');
       $content.appendTo($target);
 

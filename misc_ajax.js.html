@@ -3744,8 +3744,8 @@
    * Provides Ajax page updating via jQuery $.ajax.
    *
    * This function is designed to improve developer experience by wrapping the
-   * initialization of Drupal.Ajax objects and storing all created object in
-   * the {@link Drupal.ajax.instances} array.
+   * initialization of {@link Drupal.Ajax} objects and storing all created
+   * objects in the {@link Drupal.ajax.instances} array.
    *
    * @example
    * Drupal.behaviors.myCustomAJAXStuff = {
@@ -3778,11 +3778,12 @@
    * };
    *
    * @param {object} settings
-   *   The settings object passed to Drupal.Ajax constructor.
+   *   The settings object passed to {@link Drupal.Ajax} constructor.
    * @param {string} [settings.base]
-   *   Base is passed to Drupal.Ajax constructor as the 'base' parameter.
+   *   Base is passed to {@link Drupal.Ajax} constructor as the 'base'
+   *   parameter.
    * @param {HTMLElement} [settings.element]
-   *   Element parameter of Drupal.Ajax constructor, element on which
+   *   Element parameter of {@link Drupal.Ajax} constructor, element on which
    *   event listeners will be bound.
    *
    * @return {Drupal.Ajax}
@@ -3831,9 +3832,9 @@
    * @constructor
    *
    * @param {string} [base]
-   *   Base parameter of Drupal.Ajax constructor
+   *   Base parameter of {@link Drupal.Ajax} constructor
    * @param {HTMLElement} [element]
-   *   Element parameter of Drupal.Ajax constructor, element on which
+   *   Element parameter of {@link Drupal.Ajax} constructor, element on which
    *   event listeners will be bound.
    * @param {object} element_settings
    * @param {string} element_settings.url
@@ -3940,7 +3941,7 @@
     var ajax = this;
 
     /**
-     * Set the options for the ajaxSubmit function.
+     * Options for the ajaxSubmit function.
      *
      * @name Drupal.Ajax#options
      *

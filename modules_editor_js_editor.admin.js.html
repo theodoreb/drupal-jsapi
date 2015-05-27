@@ -3603,7 +3603,7 @@
      * feature is added by the user.
      *
      * Triggers the drupalEditorFeatureAdded event on the document, which
-     * receives a Drupal.EditorFeature object.
+     * receives a {@link Drupal.EditorFeature} object.
      *
      * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
@@ -3619,7 +3619,7 @@
      * feature is removed by the user.
      *
      * Triggers the drupalEditorFeatureRemoved event on the document, which
-     * receives a Drupal.EditorFeature object.
+     * receives a {@link Drupal.EditorFeature} object.
      *
      * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
@@ -3634,11 +3634,11 @@
      * Must be called by a specific text editor's configuration whenever a
      * feature is modified, i.e. has different rules.
      *
-     * For example when the "Bold" button is configured to use the &lt;b> tag
-     * instead of the &lt;strong> tag.
+     * For example when the "Bold" button is configured to use the `&lt;b>` tag
+     * instead of the `&lt;strong>` tag.
      *
      * Triggers the drupalEditorFeatureModified event on the document, which
-     * receives a Drupal.EditorFeature object.
+     * receives a {@link Drupal.EditorFeature} object.
      *
      * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
@@ -3662,7 +3662,7 @@
      *
      * Note: for filters to integrate with this functionality, it is necessary
      * that they implement
-     * Drupal.filterSettingsForEditors[filterID].getRules().
+     * `Drupal.filterSettingsForEditors[filterID].getRules()`.
      *
      * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
@@ -4375,8 +4375,8 @@
   };
 
   /**
-   * Tracks the configuration of all text filters in Drupal.FilterStatus objects
-   * for Drupal.editorConfiguration.featureIsAllowedByFilters().
+   * Tracks the configuration of all text filters in {@link Drupal.FilterStatus}
+   * objects for {@link Drupal.editorConfiguration.featureIsAllowedByFilters}.
    *
    * @namespace
    */
@@ -4404,13 +4404,14 @@
     liveSettingParsers: {},
 
     /**
-     * Updates all Drupal.FilterStatus objects to reflect the current state.
+     * Updates all {@link Drupal.FilterStatus} objects to reflect current state.
      *
      * Automatically checks whether a filter is currently enabled or not. To
      * support more finegrained.
      *
      * If a filter implements a live setting parser, then that will be used to
-     * keep the HTML rules for the Drupal.FilterStatus object up-to-date.
+     * keep the HTML rules for the {@link Drupal.FilterStatus} object
+     * up-to-date.
      */
     update: function () {
       for (var filterID in Drupal.filterConfiguration.statuses) {
@@ -4429,7 +4430,7 @@
   };
 
   /**
-   * Initializes Drupal.filterConfiguration.
+   * Initializes {@link Drupal.filterConfiguration}.
    *
    * @type {Drupal~behavior}
    */

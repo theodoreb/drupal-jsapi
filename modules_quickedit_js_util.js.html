@@ -3673,13 +3673,11 @@
     /**
      * Loads a form, calls a callback to insert.
      *
-     * Leverages Drupal.ajax' ability to have scoped (per-instance) command
-     * implementations to be able to call a callback.
+     * Leverages {@link Drupal.Ajax}' ability to have scoped (per-instance)
+     * command implementations to be able to call a callback.
      *
      * @param {object} options
      *   An object with the following keys:
-     * @param {jQuery} options.$el
-     *   DOM element necessary for Drupal.ajax to perform AJAX commands.
      * @param {string} options.fieldID
      *   The field ID that uniquely identifies the field for which this form
      *   will be loaded.
@@ -3727,7 +3725,7 @@
     },
 
     /**
-     * Creates a Drupal.ajax instance that is used to save a form.
+     * Creates a {@link Drupal.Ajax} instance that is used to save a form.
      *
      * @param {object} options
      * @param {bool} options.nocssjs
@@ -3739,7 +3737,7 @@
      * @param {jQuery} $submit
      *
      * @return {Drupal.Ajax}
-     *   A Drupal.ajax instance.
+     *   A {@link Drupal.Ajax} instance.
      */
     ajaxifySaving: function (options, $submit) {
       // Re-wire the form to handle submit.
@@ -3777,10 +3775,10 @@
     },
 
     /**
-     * Cleans up the Drupal.ajax instance that is used to save the form.
+     * Cleans up the {@link Drupal.Ajax} instance that is used to save the form.
      *
      * @param {Drupal.Ajax} ajax
-     *   A Drupal.Ajax instance that was returned by
+     *   A {@link Drupal.Ajax} instance that was returned by
      *   {@link Drupal.quickedit.form.ajaxifySaving}.
      */
     unajaxifySaving: function (ajax) {

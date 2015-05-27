@@ -3816,7 +3816,7 @@
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line210">line 210</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line211">line 211</a>
         </div>
         
     </div>
@@ -3829,8 +3829,8 @@
     <div class="description">
         <p>Provides Ajax page updating via jQuery $.ajax.</p>
 <p>This function is designed to improve developer experience by wrapping the
-initialization of Drupal.Ajax objects and storing all created object in
-the <a href="Drupal.html#.ajax#.instances"><code>Drupal.ajax.instances</code></a> array.</p>
+initialization of <a href="Drupal.Ajax.html"><code>Drupal.Ajax</code></a> objects and storing all created
+objects in the <a href="Drupal.html#.ajax#.instances"><code>Drupal.ajax.instances</code></a> array.</p>
     </div>
     
 
@@ -3877,7 +3877,7 @@ the <a href="Drupal.html#.ajax#.instances"><code>Drupal.ajax.instances</code></a
             
             <td class="description last">
                 
-                <p>The settings object passed to Drupal.Ajax constructor.</p>
+                <p>The settings object passed to <a href="Drupal.Ajax.html"><code>Drupal.Ajax</code></a> constructor.</p>
                 
 
 <table class="params">
@@ -3923,7 +3923,8 @@ the <a href="Drupal.html#.ajax#.instances"><code>Drupal.ajax.instances</code></a
                         
                     
                 
-                <p>Base is passed to Drupal.Ajax constructor as the 'base' parameter.</p></td>
+                <p>Base is passed to <a href="Drupal.Ajax.html"><code>Drupal.Ajax</code></a> constructor as the 'base'
+  parameter.</p></td>
         </tr>
 	
 	
@@ -3953,7 +3954,7 @@ the <a href="Drupal.html#.ajax#.instances"><code>Drupal.ajax.instances</code></a
                         
                     
                 
-                <p>Element parameter of Drupal.Ajax constructor, element on which
+                <p>Element parameter of <a href="Drupal.Ajax.html"><code>Drupal.Ajax</code></a> constructor, element on which
   event listeners will be bound.</p></td>
         </tr>
 	
@@ -4103,11 +4104,11 @@ the <a href="Drupal.html#.ajax#.instances"><code>Drupal.ajax.instances</code></a
         <p>Triggers audio UAs to read the supplied text.</p>
 <p>The aria-live region will only read the text that currently populates its
 text node. Replacing text quickly in rapid calls to announce results in
-only the text from the most recent call to Drupal.announce() being read.
-By wrapping the call to announce in a debounce function, we allow for
-time for multiple calls to Drupal.announce() to queue up their messages.
-These messages are then joined and append to the aria-live region as one
-text node.</p>
+only the text from the most recent call to <a href="Drupal.html#.announce"><code>Drupal.announce</code></a> being
+read. By wrapping the call to announce in a debounce function, we allow for
+time for multiple calls to <a href="Drupal.html#.announce"><code>Drupal.announce</code></a> to queue up their
+messages. These messages are then joined and append to the aria-live region
+as one text node.</p>
     </div>
     
 
@@ -4202,7 +4203,7 @@ text node.</p>
                     
                 
                 <p>A string to indicate the priority of the message. Can be either
-  'polite' or 'assertive'. Polite is the default.</p></td>
+  'polite' or 'assertive'.</p></td>
         </tr>
 	
 	
@@ -4310,9 +4311,9 @@ text node.</p>
         <p>Attach all registered behaviors to a page element.</p>
 <p>Behaviors are event-triggered actions that attach to page elements,
 enhancing default non-JavaScript UIs. Behaviors are registered in the
-Drupal.behaviors object using the method 'attach' and optionally also
-'detach' as follows:</p>
-<p>Drupal.attachBehaviors is added below to the jQuery.ready event and
+<a href="Drupal.behaviors.html"><code>Drupal.behaviors</code></a> object using the method 'attach' and optionally
+also 'detach' as follows:</p>
+<p><a href="Drupal.html#.attachBehaviors"><code>Drupal.attachBehaviors</code></a> is added below to the jQuery.ready event and
 therefore runs on initial page load. Developers implementing Ajax in their
 solutions should also call this function after new page content has been
 loaded, feeding in an element to be processed, in order to attach all
@@ -5117,7 +5118,7 @@ is detached only from previously processed elements.</p>
 <li>unload: (default) The context element is being removed from the DOM.</li>
 <li>move: The element is about to be moved within the DOM (for example,
 during a tabledrag row swap). After the move is completed,
-Drupal.attachBehaviors() is called, so that the behavior can undo
+<a href="Drupal.html#.attachBehaviors"><code>Drupal.attachBehaviors</code></a> is called, so that the behavior can undo
 whatever it did in response to the move. Many behaviors won't need to
 do anything simply in response to the element being moved, but because
 IFRAME elements reload their &quot;src&quot; when being moved within the DOM,
@@ -5903,7 +5904,7 @@ bound.</li>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line526">line 526</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line527">line 527</a>
         </div>
         
     </div>
@@ -6395,7 +6396,7 @@ attribute that begins with "data-").</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line497">line 497</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line498">line 498</a>
         </div>
         
     </div>
@@ -6408,7 +6409,7 @@ attribute that begins with "data-").</p>
     <div class="description">
         <p>Format a string containing a count of items.</p>
 <p>This function ensures that the string is pluralized correctly. Since
-Drupal.t() is called by this function, make sure not to pass
+<a href="Drupal.html#.t"><code>Drupal.t</code></a> is called by this function, make sure not to pass
 already-localized strings to it.</p>
 <p>See the documentation of the server-side
 \Drupal\Core\StringTranslation\TranslationInterface::formatPlural()
@@ -6556,7 +6557,7 @@ function for more details.</p>
                 
                 <p>An object of replacements pairs to make after translation. Incidences
   of any key in this array are replaced with the corresponding value.
-  See Drupal.formatString().
+  See <a href="Drupal.html#.formatString"><code>Drupal.formatString</code></a>.
   Note that you do not need to include @count in this array.
   This replacement is done automatically for the plural case.</p></td>
         </tr>
@@ -6588,7 +6589,7 @@ function for more details.</p>
                         
                     
                 
-                <p>The options to pass to the Drupal.t() function.</p></td>
+                <p>The options to pass to the <a href="Drupal.html#.t"><code>Drupal.t</code></a> function.</p></td>
         </tr>
 	
 	
@@ -6675,7 +6676,7 @@ function for more details.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line339">line 339</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line340">line 340</a>
         </div>
         
     </div>
@@ -6761,9 +6762,10 @@ function for more details.</p>
   character of the key, the value is escaped and/or themed:</p>
 <ul>
 <li>!variable: inserted as is</li>
-<li>@variable: escape plain text to HTML (Drupal.checkPlain)</li>
+<li>@variable: escape plain text to HTML (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</code></a>)</li>
 <li>%variable: escape text and theme as a placeholder for user-submitted
-content (checkPlain + Drupal.theme('placeholder'))</li>
+content (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</code></a> +
+<a href="Drupal.theme.html"><code>Drupal.theme</code></a>('placeholder'))</li>
 </ul></td>
         </tr>
 	
@@ -6929,7 +6931,7 @@ content (checkPlain + Drupal.theme('placeholder'))</li>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line383">line 383</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line384">line 384</a>
         </div>
         
     </div>
@@ -7125,7 +7127,7 @@ its new value will not be searched again.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line437">line 437</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line438">line 438</a>
         </div>
         
     </div>
@@ -7627,7 +7629,7 @@ its new value will not be searched again.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line460">line 460</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line461">line 461</a>
         </div>
         
     </div>

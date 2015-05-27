@@ -3685,7 +3685,7 @@
      * In order to get a list of all features needed by CKEditor, we create a
      * hidden CKEditor instance, then check the CKEditor's "allowedContent"
      * filter settings. Because creating an instance is expensive, a callback
-     * must be provided that will receive a hash of Drupal.EditorFeature
+     * must be provided that will receive a hash of {@link Drupal.EditorFeature}
      * features keyed by feature (button) name.
      *
      * @param {object} CKEditorConfig
@@ -3808,7 +3808,7 @@
      * Checks buttons against filter settings; disables disallowed buttons.
      *
      * @param {object} features
-     *   A map of Drupal.EditorFeature objects.
+     *   A map of {@link Drupal.EditorFeature} objects.
      */
     disableFeaturesDisallowedByFilters: function (features) {
       this.model.set('featuresMetadata', features);

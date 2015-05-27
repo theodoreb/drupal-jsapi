@@ -3735,10 +3735,10 @@ if (window.jQuery) {
    *
    * Behaviors are event-triggered actions that attach to page elements,
    * enhancing default non-JavaScript UIs. Behaviors are registered in the
-   * Drupal.behaviors object using the method 'attach' and optionally also
-   * 'detach' as follows:
+   * {@link Drupal.behaviors} object using the method 'attach' and optionally
+   * also 'detach' as follows:
    *
-   * Drupal.attachBehaviors is added below to the jQuery.ready event and
+   * {@link Drupal.attachBehaviors} is added below to the jQuery.ready event and
    * therefore runs on initial page load. Developers implementing Ajax in their
    * solutions should also call this function after new page content has been
    * loaded, feeding in an element to be processed, in order to attach all
@@ -3824,7 +3824,7 @@ if (window.jQuery) {
    *   - unload: (default) The context element is being removed from the DOM.
    *   - move: The element is about to be moved within the DOM (for example,
    *     during a tabledrag row swap). After the move is completed,
-   *     Drupal.attachBehaviors() is called, so that the behavior can undo
+   *     {@link Drupal.attachBehaviors} is called, so that the behavior can undo
    *     whatever it did in response to the move. Many behaviors won't need to
    *     do anything simply in response to the element being moved, but because
    *     IFRAME elements reload their "src" when being moved within the DOM,
@@ -3910,9 +3910,10 @@ if (window.jQuery) {
    *   array are replaced with the corresponding value. Based on the first
    *   character of the key, the value is escaped and/or themed:
    *    - !variable: inserted as is
-   *    - @variable: escape plain text to HTML (Drupal.checkPlain)
+   *    - @variable: escape plain text to HTML ({@link Drupal.checkPlain})
    *    - %variable: escape text and theme as a placeholder for user-submitted
-   *      content (checkPlain + Drupal.theme('placeholder'))
+   *      content ({@link Drupal.checkPlain} +
+   *      {@link Drupal.theme}('placeholder'))
    *
    * @return {string}
    *
@@ -4047,7 +4048,7 @@ if (window.jQuery) {
    * Format a string containing a count of items.
    *
    * This function ensures that the string is pluralized correctly. Since
-   * Drupal.t() is called by this function, make sure not to pass
+   * {@link Drupal.t} is called by this function, make sure not to pass
    * already-localized strings to it.
    *
    * See the documentation of the server-side
@@ -4067,11 +4068,11 @@ if (window.jQuery) {
    * @param {object} [args]
    *   An object of replacements pairs to make after translation. Incidences
    *   of any key in this array are replaced with the corresponding value.
-   *   See Drupal.formatString().
+   *   See {@link Drupal.formatString}.
    *   Note that you do not need to include @count in this array.
    *   This replacement is done automatically for the plural case.
    * @param {object} [options]
-   *   The options to pass to the Drupal.t() function.
+   *   The options to pass to the {@link Drupal.t} function.
    *
    * @return {string}
    *   A translated string.
