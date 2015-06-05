@@ -3695,17 +3695,19 @@
     this.oldY = 0;
 
     /**
+     * Whether anything in the entire table has changed.
      *
      * @type {bool}
      */
     this.changed = false;
-    // Whether anything in the entire table has changed.
+
     /**
+     * Maximum amount of allowed parenting.
      *
      * @type {number}
      */
     this.maxDepth = 0;
-    // Maximum amount of allowed parenting.
+
     /**
      * Direction of the table.
      *
@@ -4888,10 +4890,10 @@
   /**
    * Determine the valid indentations interval for the row at a given position.
    *
-   * @param {HTMLElement|null} prevRow
+   * @param {?HTMLElement} prevRow
    *   DOM object for the row before the tested position
    *   (or null for first position in the table).
-   * @param {HTMLElement|null} nextRow
+   * @param {?HTMLElement} nextRow
    *   DOM object for the row after the tested position
    *   (or null for last position in the table).
    *
