@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/contextual/js/views/VisualView.js</title>
+    <title>Source: modules/system/js/system.modules.js</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -3575,7 +3575,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="modules_contextual_js_views_VisualView.js.html">Source: modules/contextual/js/views/VisualView.js</h1>
+        <h1 class="page-title" data-filename="modules_system_js_system.modules.js.html">Source: modules/system/js/system.modules.js</h1>
         
 
 
@@ -3584,80 +3584,88 @@
         <article>
             <pre class="prettyprint source "><code>/**
  * @file
- * A Backbone View that provides the visual view of a contextual link.
+ * Module page behaviors.
  */
 
-(function (Drupal, Backbone, Modernizr) {
+(function ($, Drupal) {
 
   "use strict";
 
-  Drupal.contextual.VisualView = Backbone.View.extend(/** @lends Drupal.contextual.VisualView# */{
+  /**
+   * Filters the module list table by a text input search string.
+   *
+   * Additionally accounts for multiple tables being wrapped in "package" details
+   * elements.
+   *
+   * Text search input: input.table-filter-text
+   * Target table:      input.table-filter-text[data-table]
+   * Source text:       .table-filter-text-source
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.tableFilterByText = {
+    attach: function (context, settings) {
+      var $input = $('input.table-filter-text').once('table-filter-text');
+      var $table = $($input.attr('data-table'));
+      var $rowsAndDetails;
+      var $rows;
+      var $details;
+      var searching = false;
 
-    /**
-     * @return {object}
-     */
-    events: function () {
-      // Prevents delay and simulated mouse events.
-      var touchEndToClick = function (event) {
-        event.preventDefault();
-        event.target.click();
-      };
-      var mapping = {
-        'click .trigger': function () { this.model.toggleOpen(); },
-        'touchend .trigger': touchEndToClick,
-        'click .contextual-links a': function () { this.model.close().blur(); },
-        'touchend .contextual-links a': touchEndToClick
-      };
-      // We only want mouse hover events on non-touch.
-      if (!Modernizr.touch) {
-        mapping.mouseenter = function () { this.model.focus(); };
-      }
-      return mapping;
-    },
-
-    /**
-     * Renders the visual view of a contextual link. Listens to mouse &amp; touch.
-     *
-     * @constructs
-     *
-     * @augments Backbone.View
-     */
-    initialize: function () {
-      this.listenTo(this.model, 'change', this.render);
-    },
-
-    /**
-     * @inheritdoc
-     *
-     * @return {Drupal.contextual.VisualView}
-     */
-    render: function () {
-      var isOpen = this.model.get('isOpen');
-      // The trigger should be visible when:
-      //  - the mouse hovered over the region,
-      //  - the trigger is locked,
-      //  - and for as long as the contextual menu is open.
-      var isVisible = this.model.get('isLocked') || this.model.get('regionIsHovered') || isOpen;
-
-      this.$el
-        // The open state determines if the links are visible.
-        .toggleClass('open', isOpen)
-        // Update the visibility of the trigger.
-        .find('.trigger').toggleClass('visually-hidden', !isVisible);
-
-      // Nested contextual region handling: hide any nested contextual triggers.
-      if ('isOpen' in this.model.changed) {
-        this.$el.closest('.contextual-region')
-          .find('.contextual .trigger:not(:first)')
-          .toggle(!isOpen);
+      function hidePackageDetails(index, element) {
+        var $packDetails = $(element);
+        var $visibleRows = $packDetails.find('table:not(.sticky-header)').find('tbody tr:visible');
+        $packDetails.toggle($visibleRows.length > 0);
       }
 
-      return this;
+      function filterModuleList(e) {
+        var query = $(e.target).val().toLowerCase();
+
+        function showModuleRow(index, row) {
+          var $row = $(row);
+          var $sources = $row.find('.table-filter-text-source');
+          var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
+          $row.closest('tr').toggle(textMatch);
+        }
+        // Search over all rows and packages.
+        $rowsAndDetails.show();
+
+        // Filter if the length of the query is at least 2 characters.
+        if (query.length >= 2) {
+          searching = true;
+          $rows.each(showModuleRow);
+
+          // Note that we first open all &lt;details> to be able to use ':visible'.
+          // Mark the &lt;details> elements that were closed before filtering, so
+          // they can be reclosed when filtering is removed.
+          $details.not('[open]').attr('data-drupal-system-state', 'forced-open');
+
+          // Hide the package &lt;details> if they don't have any visible rows.
+          // Note that we first show() all &lt;details> to be able to use ':visible'.
+          $details.attr('open', true).each(hidePackageDetails);
+        }
+        else if (searching) {
+          searching = false;
+          $rowsAndDetails.show();
+          // Return &lt;details> elements that had been closed before filtering
+          // to a closed state.
+          $details.filter('[data-drupal-system-state="forced-open"]')
+            .removeAttr('data-drupal-system-state')
+            .attr('open', false);
+        }
+      }
+
+      if ($table.length) {
+        $rowsAndDetails = $table.find('tr, details');
+        $rows = $table.find('tbody tr');
+        $details = $rowsAndDetails.filter('.package-listing');
+
+        $input.on('keyup', filterModuleList);
+      }
     }
+  };
 
-  });
-
-})(Drupal, Backbone, Modernizr);
+}(jQuery, Drupal));
 </code></pre>
         </article>
     </section>

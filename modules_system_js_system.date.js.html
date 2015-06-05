@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: modules/system/system.modules.js</title>
+    <title>Source: modules/system/js/system.date.js</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -202,6 +202,8 @@
                 <li data-name="Drupal.behaviors.contextualToolbar"><a href="Drupal.behaviors.html#.contextualToolbar">contextualToolbar</a></li>
             
                 <li data-name="Drupal.behaviors.copyFieldValue"><a href="Drupal.behaviors.html#.copyFieldValue">copyFieldValue</a></li>
+            
+                <li data-name="Drupal.behaviors.dateFormat"><a href="Drupal.behaviors.html#.dateFormat">dateFormat</a></li>
             
                 <li data-name="Drupal.behaviors.dialog"><a href="Drupal.behaviors.html#.dialog">dialog</a></li>
             
@@ -1127,34 +1129,9 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal.views">
-            <span class="title">
-                <a href="Drupal.views.html">Drupal.views</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal.views.instances"><a href="Drupal.views.html#.instances">instances</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal.Views">
             <span class="title">
-                <a href="Drupal.Views_.html">Drupal.Views</a>
+                <a href="Drupal.Views.html">Drupal.Views</a>
                 
                 <span class="static">static</span>
                 
@@ -1169,13 +1146,38 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views_.html#.getPath">getPath</a></li>
+                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views.html#.getPath">getPath</a></li>
             
-                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views_.html#.parseQueryString">parseQueryString</a></li>
+                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views.html#.parseQueryString">parseQueryString</a></li>
             
-                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views_.html#.parseViewArgs">parseViewArgs</a></li>
+                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views.html#.parseViewArgs">parseViewArgs</a></li>
             
-                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views_.html#.pathPortion">pathPortion</a></li>
+                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views.html#.pathPortion">pathPortion</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Drupal.views">
+            <span class="title">
+                <a href="Drupal.views_.html">Drupal.views</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal.views.instances"><a href="Drupal.views_.html#.instances">instances</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
             
             </ul>
             <ul class="events itemMembers">
@@ -3573,7 +3575,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="modules_system_system.modules.js.html">Source: modules/system/system.modules.js</h1>
+        <h1 class="page-title" data-filename="modules_system_js_system.date.js.html">Source: modules/system/js/system.date.js</h1>
         
 
 
@@ -3582,88 +3584,57 @@
         <article>
             <pre class="prettyprint source "><code>/**
  * @file
- * Module page behaviors.
+ * Provides date format preview feature.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, drupalSettings) {
 
   "use strict";
 
+  var dateFormats = drupalSettings.dateFormats;
+
   /**
-   * Filters the module list table by a text input search string.
-   *
-   * Additionally accounts for multiple tables being wrapped in "package" details
-   * elements.
-   *
-   * Text search input: input.table-filter-text
-   * Target table:      input.table-filter-text[data-table]
-   * Source text:       .table-filter-text-source
+   * Display the preview for date format entered.
    *
    * @type {Drupal~behavior}
    */
-  Drupal.behaviors.tableFilterByText = {
-    attach: function (context, settings) {
-      var $input = $('input.table-filter-text').once('table-filter-text');
-      var $table = $($input.attr('data-table'));
-      var $rowsAndDetails;
-      var $rows;
-      var $details;
-      var searching = false;
+  Drupal.behaviors.dateFormat = {
+    attach: function (context) {
+      var $context = $(context);
+      var $source = $context.find('[data-drupal-date-formatter="source"]').once('dateFormat');
+      var $target = $context.find('[data-drupal-date-formatter="preview"]').once('dateFormat');
+      var $preview = $target.find('em');
 
-      function hidePackageDetails(index, element) {
-        var $packDetails = $(element);
-        var $visibleRows = $packDetails.find('table:not(.sticky-header)').find('tbody tr:visible');
-        $packDetails.toggle($visibleRows.length > 0);
+      // All elements have to exist.
+      if (!$source.length || !$target.length) {
+        return;
       }
 
-      function filterModuleList(e) {
-        var query = $(e.target).val().toLowerCase();
+      /**
+       * Event handler that replaces date characters with value.
+       *
+       * @param {jQuery.Event} e
+       */
+      function dateFormatHandler(e) {
+        var baseValue = $(e.target).val() || '';
+        var dateString = baseValue.replace(/\\?(.?)/gi, function (key, value) {
+          return dateFormats[key] ? dateFormats[key] : value;
+        });
 
-        function showModuleRow(index, row) {
-          var $row = $(row);
-          var $sources = $row.find('.table-filter-text-source');
-          var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
-          $row.closest('tr').toggle(textMatch);
-        }
-        // Search over all rows and packages.
-        $rowsAndDetails.show();
-
-        // Filter if the length of the query is at least 2 characters.
-        if (query.length >= 2) {
-          searching = true;
-          $rows.each(showModuleRow);
-
-          // Note that we first open all &lt;details> to be able to use ':visible'.
-          // Mark the &lt;details> elements that were closed before filtering, so
-          // they can be reclosed when filtering is removed.
-          $details.not('[open]').attr('data-drupal-system-state', 'forced-open');
-
-          // Hide the package &lt;details> if they don't have any visible rows.
-          // Note that we first show() all &lt;details> to be able to use ':visible'.
-          $details.attr('open', true).each(hidePackageDetails);
-        }
-        else if (searching) {
-          searching = false;
-          $rowsAndDetails.show();
-          // Return &lt;details> elements that had been closed before filtering
-          // to a closed state.
-          $details.filter('[data-drupal-system-state="forced-open"]')
-            .removeAttr('data-drupal-system-state')
-            .attr('open', false);
-        }
+        $preview.html(dateString);
+        $target.toggleClass('js-hide', !dateString.length);
       }
 
-      if ($table.length) {
-        $rowsAndDetails = $table.find('tr, details');
-        $rows = $table.find('tbody tr');
-        $details = $rowsAndDetails.filter('.package-listing');
-
-        $input.on('keyup', filterModuleList);
-      }
+      /**
+       * On given event triggers the date character replacement.
+       */
+      $source.on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler)
+        // Initialize preview.
+        .trigger('keyup');
     }
   };
 
-}(jQuery, Drupal));
+})(jQuery, Drupal, drupalSettings);
 </code></pre>
         </article>
     </section>
