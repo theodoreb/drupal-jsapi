@@ -3671,8 +3671,7 @@
       // Process each field element: queue to be used or to fetch metadata.
       // When a field is being rerendered after editing, it will be processed
       // immediately. New fields will be unable to be processed immediately,
-      // but
-      // will instead be queued to have their metadata fetched, which occurs
+      // but will instead be queued to have their metadata fetched, which occurs
       // below in fetchMissingMetaData().
       $fields.each(function (index, fieldElement) {
         processField(fieldElement);

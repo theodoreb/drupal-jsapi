@@ -3827,17 +3827,18 @@
       // the user can choose to start in-place editing that entity (and
       // consequently this field). No in-place editor (EditorView) is associated
       // with this field, because this field is not being in-place edited.
-      // This is both the initial (not yet in-place editing) and the end state (
-      // finished in-place editing).
+      // This is both the initial (not yet in-place editing) and the end state
+      // (finished in-place editing).
       'inactive',
       // The user is in-place editing this entity, and this field is a
       // candidate
       // for in-place editing. In-place editor should not
       // - Trigger: user.
       // - Guarantees: entity is ready, in-place editor (EditorView) is
-      // associated with the field. - Expected behavior: visual indicators
-      // around the field indicate it is available for in-place editing, no
-      // in-place editor presented yet.
+      //   associated with the field.
+      // - Expected behavior: visual indicators
+      //   around the field indicate it is available for in-place editing, no
+      //   in-place editor presented yet.
       'candidate',
       // User is highlighting this field.
       // - Trigger: user.
@@ -3846,11 +3847,13 @@
       //   editing toolbar shows field's label.
       'highlighted',
       // User has activated the in-place editing of this field; in-place editor
-      // is activating. - Trigger: user. - Guarantees: see 'candidate'. -
-      // Expected behavior: loading indicator, in-place editor is loading
-      // remote data (e.g. retrieve form from back-end). Upon retrieval of
-      // remote data, the in-place editor transitions the field's state to
-      // 'active'.
+      // is activating.
+      // - Trigger: user.
+      // - Guarantees: see 'candidate'.
+      // - Expected behavior: loading indicator, in-place editor is loading
+      //   remote data (e.g. retrieve form from back-end). Upon retrieval of
+      //   remote data, the in-place editor transitions the field's state to
+      //   'active'.
       'activating',
       // In-place editor has finished loading remote data; ready for use.
       // - Trigger: in-place editor.
@@ -3877,11 +3880,10 @@
       // - Guarantees: see 'candidate' and 'active'.
       // - Expected behavior: transition back to 'candidate' state because the
       //   deed is done. Then: 1) transition to 'inactive' to allow the field
-      // to
-      //   be rerendered, 2) destroy the FieldModel (which also destroys
-      // attached views like the EditorView), 3) replace the existing field
-      // HTML with the existing HTML and 4) attach behaviors again so that the
-      // field becomes available again for in-place editing.
+      //   to be rerendered, 2) destroy the FieldModel (which also destroys
+      //   attached views like the EditorView), 3) replace the existing field
+      //   HTML with the existing HTML and 4) attach behaviors again so that the
+      //   field becomes available again for in-place editing.
       'saved',
       // In-place editor has failed to saved the changed field: there were
       // validation errors.

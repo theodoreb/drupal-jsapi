@@ -3699,8 +3699,7 @@
        *
        * In this example, the given text editor feature resulted in the above
        * universe, which shows that it must be allowed to generate the a,
-       * strong
-       * and img tags. For the a tag, it must be able to set the "href"
+       * strong and img tags. For the a tag, it must be able to set the "href"
        * attribute and the "external" class. For the strong tag, no further
        * properties are required. For the img tag, the "src" attribute is
        * required. The "tag" key is used to track whether that tag was
@@ -4317,7 +4316,8 @@
    *     similarly use the "forbidden" subkey to blacklist specific property
    *     values.
    *
-   * @example &lt;caption>Whitelist the "p", "strong" and "a" HTML tags.&lt;/caption>
+   * @example
+   * &lt;caption>Whitelist the "p", "strong" and "a" HTML tags.&lt;/caption>
    * {
    *   tags: ['p', 'strong', 'a'],
    *   allow: true,
@@ -4327,7 +4327,8 @@
    *     forbidden: { attributes: [], styles: [], classes: [] }
    *   }
    * }
-   * @example &lt;caption>For the "a" HTML tag, only allow the "href" attribute
+   * @example
+   * &lt;caption>For the "a" HTML tag, only allow the "href" attribute
    * and the "external" class and disallow the "target" attribute.&lt;/caption>
    * {
    *   tags: [],
@@ -4338,7 +4339,8 @@
    *     forbidden: { attributes: ['target'], styles: [], classes: [] }
    *   }
    * }
-   * @example &lt;caption>For all tags, allow the "data-*" attribute (that is, any
+   * @example
+   * &lt;caption>For all tags, allow the "data-*" attribute (that is, any
    * attribute that begins with "data-").&lt;/caption>
    * {
    *   tags: [],
