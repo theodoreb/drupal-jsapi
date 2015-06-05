@@ -633,7 +633,7 @@
             
                 <li data-name="Drupal.file.progressBar"><a href="Drupal.file.html#.progressBar">progressBar</a></li>
             
-                <li data-name="Drupal.file.triggetUploadButton"><a href="Drupal.file.html#.triggetUploadButton">triggetUploadButton</a></li>
+                <li data-name="Drupal.file.triggerUploadButton"><a href="Drupal.file.html#.triggerUploadButton">triggerUploadButton</a></li>
             
                 <li data-name="Drupal.file.validateExtension"><a href="Drupal.file.html#.validateExtension">validateExtension</a></li>
             
@@ -3785,7 +3785,8 @@
      *
      * Or that are explicitly filtered out via the 'tips' query string.
      *
-     * @example &lt;caption>This will filter out tips that do not have a matching
+     * @example
+     * &lt;caption>This will filter out tips that do not have a matching
      * page element or don't have the "bar" class.&lt;/caption>
      * http://example.com/foo?tips=bar
      *
@@ -3795,7 +3796,7 @@
      *   A jQuery element pointing to the document within which the elements
      *   should be sought.
      *
-     * @see Drupal.tour.views.ToggleTourView#_getDocument()
+     * @see Drupal.tour.views.ToggleTourView#_getDocument
      */
     _removeIrrelevantTourItems: function ($tour, $document) {
       var removals = false;
