@@ -3708,7 +3708,6 @@
     // otherwise use value from the database.
     var $usernameBox = $('input.username');
     var username = ($usernameBox.length > 0) ? $usernameBox.val() : translate.username;
-    password = password.trim();
 
     // Lose 5 points for every character less than 6, plus a 30 point penalty.
     if (password.length &lt; 6) {
