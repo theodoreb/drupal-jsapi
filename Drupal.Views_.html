@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Namespace: contextualToolbar</title>
+    <title>Namespace: Views</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -3577,7 +3577,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Drupal.contextualToolbar.html">Namespace: contextualToolbar</h1>
+        <h1 class="page-title" data-filename="Drupal.Views_.html">Namespace: Views</h1>
         
 
 
@@ -3588,7 +3588,7 @@
     <h2>
         <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span>
     
-    contextualToolbar
+    Views
     </h2>
     
 </header>  
@@ -3637,39 +3637,89 @@
     
     
     
-        <h3 class="subsection-title">Classes</h3>
-        
-        <dl>
-            <dt><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></dt>
-            <dd></dd>
-        </dl>
     
     
     
     
     
-        <h3 class="subsection-title">Members</h3>
+    
+        <h3 class="subsection-title">Methods</h3>
         
         <dl>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".model"><span class="type-signature static">static,nullable</span>Drupal.contextualToolbar.model<span class="type-signature type drupal.contextualtoolbar.statemodel"><a href="Drupal.contextualToolbar.StateModel.html">Drupal.contextualToolbar.StateModel</a></span> </h4>
-    </div>
+        <h4 class="name" id=".getPath">
+            
+            <span class="type-signature static">static</span>Drupal.Views.getPath<span class="signature">(href)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
+        </h4>
     
+        
+        <div class="tag-source">
+            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line84">line 84</a>
+        </div>
+        
+    </div>
+
     
 </dt>
 <dd>
     
+    
     <div class="description">
-        <p>The <a href="Drupal.contextualToolbar.StateModel.html"><code>Drupal.contextualToolbar.StateModel</code></a> instance.</p>
+        <p>Return the Drupal path portion of an href.</p>
     </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>href</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -3699,11 +3749,506 @@
 
     
     
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        string
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".parseQueryString">
+            
+            <span class="type-signature static">static</span>Drupal.Views.parseQueryString<span class="signature">(query)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line22">line 22</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Helper function to parse a querystring.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>query</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        object
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".parseViewArgs">
+            
+            <span class="type-signature static">static</span>Drupal.Views.parseViewArgs<span class="signature">(href, viewPath)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line48">line 48</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Helper function to return a view's arguments based on a path.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>href</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>viewPath</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        object
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".pathPortion">
+            
+            <span class="type-signature static">static</span>Drupal.Views.pathPortion<span class="signature">(href)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line67">line 67</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Strip off the protocol plus domain from an href.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>href</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        string
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
 </dd>
 
         </dl>
-    
-    
     
     
     

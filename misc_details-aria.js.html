@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Namespace: views</title>
+    <title>Source: misc/details-aria.js</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -204,6 +204,8 @@
                 <li data-name="Drupal.behaviors.copyFieldValue"><a href="Drupal.behaviors.html#.copyFieldValue">copyFieldValue</a></li>
             
                 <li data-name="Drupal.behaviors.dateFormat"><a href="Drupal.behaviors.html#.dateFormat">dateFormat</a></li>
+            
+                <li data-name="Drupal.behaviors.detailsAria"><a href="Drupal.behaviors.html#.detailsAria">detailsAria</a></li>
             
                 <li data-name="Drupal.behaviors.dialog"><a href="Drupal.behaviors.html#.dialog">dialog</a></li>
             
@@ -1129,9 +1131,34 @@
             </ul>
         </li>
     
+        <li class="item" data-name="Drupal.views">
+            <span class="title">
+                <a href="Drupal.views.html">Drupal.views</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal.views.instances"><a href="Drupal.views.html#.instances">instances</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="Drupal.Views">
             <span class="title">
-                <a href="Drupal.Views.html">Drupal.Views</a>
+                <a href="Drupal.Views_.html">Drupal.Views</a>
                 
                 <span class="static">static</span>
                 
@@ -1146,38 +1173,13 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views.html#.getPath">getPath</a></li>
+                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views_.html#.getPath">getPath</a></li>
             
-                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views.html#.parseQueryString">parseQueryString</a></li>
+                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views_.html#.parseQueryString">parseQueryString</a></li>
             
-                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views.html#.parseViewArgs">parseViewArgs</a></li>
+                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views_.html#.parseViewArgs">parseViewArgs</a></li>
             
-                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views.html#.pathPortion">pathPortion</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="Drupal.views">
-            <span class="title">
-                <a href="Drupal.views_.html">Drupal.views</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal.views.instances"><a href="Drupal.views_.html#.instances">instances</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
+                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views_.html#.pathPortion">pathPortion</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3575,131 +3577,46 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Drupal.views_.html">Namespace: views</h1>
+        <h1 class="page-title" data-filename="misc_details-aria.js.html">Source: misc/details-aria.js</h1>
         
 
 
+    
+    <section>
+        <article>
+            <pre class="prettyprint source "><code>/**
+ * @file
+ * Add aria attribute handling for details and summary elements.
+ */
 
-<section>
-    
-<header>
-    <h2>
-        <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span>
-    
-    views
-    </h2>
-    
-</header>  
+(function ($, Drupal) {
 
-<article>
-    <div class="container-overview">
-    
-    
-    
-        
-        
-        
-<dl class="details">
-    
-        
-    
-    
-    
+  "use strict";
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
+  /**
+   * Handles `aria-expanded` and `aria-pressed` attributes on details elements.
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.detailsAria = {
+    attach: function () {
+      $('body').once('detailsAria').on('click.detailsAria', 'summary', function (event) {
+        var $summary = $(event.currentTarget);
+        var open = $(event.currentTarget.parentNode).attr('open') === 'open' ? 'false' : 'true';
 
-        
-        
-    
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Classes</h3>
-        
-        <dl>
-            <dt><a href="Drupal.views.ajaxView.html">ajaxView</a></dt>
-            <dd></dd>
-        </dl>
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Members</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id=".instances"><span class="type-signature static">static</span>Drupal.views.instances<span class="type-signature type object.<string, drupal.views.ajaxview>">object.&lt;string, <a href="Drupal.views.ajaxView.html">Drupal.views.ajaxView</a>></span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
+        $summary.attr({
+          'aria-expanded': open,
+          'aria-pressed': open
+        });
+      });
+    }
+  };
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
+})(jQuery, Drupal);
+</code></pre>
+        </article>
+    </section>
 
-    
-    
-</dd>
-
-        </dl>
-    
-    
-    
-    
-    
-    
-    
-</article>
-
-</section>  
 
 
 
@@ -3708,8 +3625,8 @@
         
 
         <footer>
-            <p><strong>For more information about this documentation please see <a target="_blank" href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
-            <p><small>Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a target="_blank" href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
+            <p><strong>For more information about this documentation please see <a href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
+            <p><small>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
         </footer>
     </div>
 </div>
