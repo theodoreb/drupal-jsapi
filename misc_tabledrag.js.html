@@ -4043,7 +4043,7 @@
       self.indentCount = Math.max($item.find('.js-indentation').length, self.indentCount);
     }
     else {
-      $item.find('td:first-of-type').prepend(handle);
+      $item.find('td').eq(0).prepend(handle);
     }
 
     if (Modernizr.touch) {
@@ -4797,7 +4797,7 @@
     var rows = [];
     var child = 0;
 
-    function rowIndentation(el, indentNum) {
+    function rowIndentation(indentNum, el) {
       var self = $(el);
       if (child === 1 &amp;&amp; (indentNum === parentIndentation)) {
         self.addClass('tree-child-first');
