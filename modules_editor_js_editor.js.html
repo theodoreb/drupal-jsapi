@@ -1131,34 +1131,9 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal.views">
-            <span class="title">
-                <a href="Drupal.views.html">Drupal.views</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal.views.instances"><a href="Drupal.views.html#.instances">instances</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal.Views">
             <span class="title">
-                <a href="Drupal.Views_.html">Drupal.Views</a>
+                <a href="Drupal.Views.html">Drupal.Views</a>
                 
                 <span class="static">static</span>
                 
@@ -1173,13 +1148,38 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views_.html#.getPath">getPath</a></li>
+                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views.html#.getPath">getPath</a></li>
             
-                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views_.html#.parseQueryString">parseQueryString</a></li>
+                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views.html#.parseQueryString">parseQueryString</a></li>
             
-                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views_.html#.parseViewArgs">parseViewArgs</a></li>
+                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views.html#.parseViewArgs">parseViewArgs</a></li>
             
-                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views_.html#.pathPortion">pathPortion</a></li>
+                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views.html#.pathPortion">pathPortion</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Drupal.views">
+            <span class="title">
+                <a href="Drupal.views_.html">Drupal.views</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal.views.instances"><a href="Drupal.views_.html#.instances">instances</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
             
             </ul>
             <ul class="events itemMembers">
@@ -1216,6 +1216,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
@@ -3754,13 +3756,11 @@
         // When there is no text editor for this text format, still track changes,
         // because the user has the ability to switch to some text editor, other-
         // wise this code would not be executed.
-        else {
-          $(field).on('change.editor keypress.editor', function () {
-            field.setAttribute('data-editor-value-is-changed', 'true');
-            // Just knowing that the value was changed is enough, stop tracking.
-            $(field).off('.editor');
-          });
-        }
+        $(field).on('change.editor keypress.editor', function () {
+          field.setAttribute('data-editor-value-is-changed', 'true');
+          // Just knowing that the value was changed is enough, stop tracking.
+          $(field).off('.editor');
+        });
 
         // Attach onChange handler to text format selector element.
         if ($this.is('select')) {

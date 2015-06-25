@@ -1131,34 +1131,9 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal.views">
-            <span class="title">
-                <a href="Drupal.views.html">Drupal.views</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal.views.instances"><a href="Drupal.views.html#.instances">instances</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal.Views">
             <span class="title">
-                <a href="Drupal.Views_.html">Drupal.Views</a>
+                <a href="Drupal.Views.html">Drupal.Views</a>
                 
                 <span class="static">static</span>
                 
@@ -1173,13 +1148,38 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views_.html#.getPath">getPath</a></li>
+                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views.html#.getPath">getPath</a></li>
             
-                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views_.html#.parseQueryString">parseQueryString</a></li>
+                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views.html#.parseQueryString">parseQueryString</a></li>
             
-                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views_.html#.parseViewArgs">parseViewArgs</a></li>
+                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views.html#.parseViewArgs">parseViewArgs</a></li>
             
-                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views_.html#.pathPortion">pathPortion</a></li>
+                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views.html#.pathPortion">pathPortion</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="Drupal.views">
+            <span class="title">
+                <a href="Drupal.views_.html">Drupal.views</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal.views.instances"><a href="Drupal.views_.html#.instances">instances</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
             
             </ul>
             <ul class="events itemMembers">
@@ -1216,6 +1216,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
@@ -3914,20 +3916,6 @@
       }
       else if (this.element &amp;&amp; element.form) {
         this.url = this.$form.attr('action');
-
-        // @todo If there's a file input on this form, then jQuery will submit
-        //   the AJAX response with a hidden Iframe rather than the XHR object.
-        //   If the response to the submission is an HTTP redirect, then the
-        //   Iframe will follow it, but the server won't content negotiate it
-        //   correctly, because there won't be an ajax_iframe_upload POST
-        //   variable. Until we figure out a work around to this problem, we
-        //   prevent AJAX-enabling elements that submit to the same URL as the
-        //   form when there's a file input. For example, this means the Delete
-        //   button on the edit form of an Article node doesn't open its
-        //   confirmation form in a dialog.
-        if (this.$form.find(':file').length) {
-          return;
-        }
       }
     }
 
@@ -4040,6 +4028,13 @@
    * @const {string}
    */
   Drupal.ajax.WRAPPER_FORMAT = '_wrapper_format';
+
+  /**
+   * Request parameter to indicate that a request is a Drupal Ajax request.
+   *
+   * @const
+   */
+  Drupal.Ajax.AJAX_REQUEST_PARAMETER = '_drupal_ajax';
 
   /**
    * Execute the ajax request.
@@ -4166,16 +4161,8 @@
       Drupal.detachBehaviors(this.$form.get(0), settings, 'serialize');
     }
 
-    // Prevent duplicate HTML ids in the returned markup.
-    // @see \Drupal\Component\Utility\Html::getUniqueId()
-    var ids = document.querySelectorAll('[id]');
-    var ajaxHtmlIds = [];
-    var il = ids.length;
-    for (var i = 0; i &lt; il; i++) {
-      ajaxHtmlIds.push(ids[i].id);
-    }
-    // Join IDs to minimize request size.
-    options.data.ajax_html_ids = ajaxHtmlIds.join(' ');
+    // Inform Drupal that this is an AJAX request.
+    options.data[Drupal.Ajax.AJAX_REQUEST_PARAMETER] = 1;
 
     // Allow Drupal to return new JavaScript and CSS files to load without
     // returning the ones already loaded.
