@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: MenuVisualView</title>
+    <title>Source: misc/date.js</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -3581,197 +3581,73 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Drupal.toolbar.MenuVisualView.html">Class: MenuVisualView</h1>
+        <h1 class="page-title" data-filename="misc_date.js.html">Source: misc/date.js</h1>
         
 
 
+    
+    <section>
+        <article>
+            <pre class="prettyprint source "><code>/**
+ * @file
+ * Polyfill for HTML5 date input.
+ */
 
-<section>
-    
-<header>
-    <h2>
-        <span class="ancestors"><a href="Drupal.html">Drupal</a><a href="Drupal.toolbar.html">.toolbar</a>.</span>
-    
-    MenuVisualView
-    </h2>
-    
-</header>  
+(function ($, Modernizr, Drupal) {
 
-<article>
-    <div class="container-overview">
-    
-    
-    
-        
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="MenuVisualView">
-            
-            new Drupal.toolbar.MenuVisualView<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="modules_toolbar_js_views_MenuVisualView.js.html">modules/toolbar/js/views/MenuVisualView.js</a>, <a href="modules_toolbar_js_views_MenuVisualView.js.html#line19">line 19</a>
-        </div>
-        
-    </div>
+  "use strict";
 
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Backbone View for collapsible menus.</p>
-    </div>
-    
+  /**
+   * Attach datepicker fallback on date elements.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior. Accepts in `settings.date` an object listing
+   *   elements to process, keyed by the HTML ID of the form element containing
+   *   the human-readable value. Each element is an datepicker settings object.
+   * @prop {Drupal~behaviorDetach} detach
+   *   Detach the behavior destroying datepickers on effected elements.
+   */
+  Drupal.behaviors.date = {
+    attach: function (context, settings) {
+      var $context = $(context);
+      // Skip if date are supported by the browser.
+      if (Modernizr.inputtypes.date === true) {
+        return;
+      }
+      $context.find('input[data-drupal-date-format]').once('datePicker').each(function () {
+        var $input = $(this);
+        var datepickerSettings = {};
+        var dateFormat = $input.data('drupalDateFormat');
+        // The date format is saved in PHP style, we need to convert to jQuery
+        // datepicker.
+        datepickerSettings.dateFormat = dateFormat
+          .replace('Y', 'yy')
+          .replace('m', 'mm')
+          .replace('d', 'dd');
+        // Add min and max date if set on the input.
+        if ($input.attr('min')) {
+          datepickerSettings.minDate = $input.attr('min');
+        }
+        if ($input.attr('max')) {
+          datepickerSettings.maxDate = $input.attr('max');
+        }
+        $input.datepicker(datepickerSettings);
+      });
+    },
+    detach: function (context, settings, trigger) {
+      if (trigger === 'unload') {
+        $(context).find('input[data-drupal-date-format]').findOnce('datePicker').datepicker('destroy');
+      }
+    }
+  };
 
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
+})(jQuery, Modernizr, Drupal);
+</code></pre>
+        </article>
+    </section>
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-    
-    </div>
-    
-    
-        <h3 class="subsection-title">Extends</h3>
-        
-        <ul>
-            <li>Backbone.View</li>
-        </ul>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="render">
-            
-            render<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="modules_toolbar_js_views_MenuVisualView.js.html">modules/toolbar/js/views/MenuVisualView.js</a>, <a href="modules_toolbar_js_views_MenuVisualView.js.html#line26">line 26</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        </dl>
-    
-    
-    
-    
-    
-</article>
-
-</section>  
 
 
 
@@ -3780,8 +3656,8 @@
         
 
         <footer>
-            <p><strong>For more information about this documentation please see <a target="_blank" href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
-            <p><small>Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a target="_blank" href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
+            <p><strong>For more information about this documentation please see <a href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
+            <p><small>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
         </footer>
     </div>
 </div>
