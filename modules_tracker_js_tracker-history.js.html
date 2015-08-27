@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: DrupalBehaviorError</title>
+    <title>Source: modules/tracker/js/tracker-history.js</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -98,6 +98,8 @@
                 <li data-name="Drupal.tableSelect"><a href="Drupal.html#.tableSelect">tableSelect</a></li>
             
                 <li data-name="Drupal.tableSelectRange"><a href="Drupal.html#.tableSelectRange">tableSelectRange</a></li>
+            
+                <li data-name="Drupal.throwError"><a href="Drupal.html#.throwError">throwError</a></li>
             
                 <li data-name="Drupal.url"><a href="Drupal.html#.url">url</a></li>
             
@@ -312,6 +314,8 @@
                 <li data-name="Drupal.behaviors.toolbar"><a href="Drupal.behaviors.html#.toolbar">toolbar</a></li>
             
                 <li data-name="Drupal.behaviors.tour"><a href="Drupal.behaviors.html#.tour">tour</a></li>
+            
+                <li data-name="Drupal.behaviors.trackerHistory"><a href="Drupal.behaviors.html#.trackerHistory">trackerHistory</a></li>
             
                 <li data-name="Drupal.behaviors.verticalTabs"><a href="Drupal.behaviors.html#.verticalTabs">verticalTabs</a></li>
             
@@ -1320,6 +1324,8 @@
             
                 <li data-name="Drupal.AjaxCommands#settings"><a href="Drupal.AjaxCommands.html#settings">settings</a></li>
             
+                <li data-name="Drupal.AjaxCommands#setToolbarSubtrees"><a href="Drupal.AjaxCommands.html#setToolbarSubtrees">setToolbarSubtrees</a></li>
+            
                 <li data-name="Drupal.AjaxCommands#update_build_id"><a href="Drupal.AjaxCommands.html#update_build_id">update_build_id</a></li>
             
                 <li data-name="Drupal.AjaxCommands#viewsHighlight"><a href="Drupal.AjaxCommands.html#viewsHighlight">viewsHighlight</a></li>
@@ -1476,6 +1482,8 @@
                 <li data-name="Drupal.ckeditor.Model#$textarea"><a href="Drupal.ckeditor.Model.html#$textarea">$textarea</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#activeEditorConfig"><a href="Drupal.ckeditor.Model.html#activeEditorConfig">activeEditorConfig</a></li>
+            
+                <li data-name="Drupal.ckeditor.Model#buttonsToFeatures"><a href="Drupal.ckeditor.Model.html#buttonsToFeatures">buttonsToFeatures</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#defaults"><a href="Drupal.ckeditor.Model.html#defaults">defaults</a></li>
             
@@ -3477,35 +3485,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal~DrupalBehaviorError">
-            <span class="title">
-                <a href="Drupal-DrupalBehaviorError.html">Drupal~DrupalBehaviorError</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal~DrupalBehaviorError#event"><a href="Drupal-DrupalBehaviorError.html#event">event</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#list"><a href="Drupal-DrupalBehaviorError.html#list">list</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#message"><a href="Drupal-DrupalBehaviorError.html#message">message</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#name"><a href="Drupal-DrupalBehaviorError.html#name">name</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal~TabbingContext">
             <span class="title">
                 <a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>
@@ -3581,379 +3560,139 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Drupal-DrupalBehaviorError.html">Class: DrupalBehaviorError</h1>
+        <h1 class="page-title" data-filename="modules_tracker_js_tracker-history.js.html">Source: modules/tracker/js/tracker-history.js</h1>
         
 
 
+    
+    <section>
+        <article>
+            <pre class="prettyprint source "><code>/**
+ * Attaches behaviors for the Tracker module's History module integration.
+ *
+ * May only be loaded for authenticated users, with the History module enabled.
+ */
+(function ($, Drupal, window) {
 
-<section>
-    
-<header>
-    <h2>
-        <span class="ancestors"><a href="Drupal.html">Drupal</a>~</span>
-    
-    DrupalBehaviorError
-    </h2>
-    
-</header>  
+  "use strict";
 
-<article>
-    <div class="container-overview">
-    
-    
-    
-        
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="DrupalBehaviorError">
-            
-            new DrupalBehaviorError<span class="signature">(list, event)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line62">line 62</a>
-        </div>
-        
-    </div>
+  /**
+   * Render "new" and "updated" node indicators, as well as "X new" replies links.
+   */
+  Drupal.behaviors.trackerHistory = {
+    attach: function (context) {
+      // Find all "new" comment indicator placeholders newer than 30 days ago that
+      // have not already been read after their last comment timestamp.
+      var nodeIDs = [];
+      var $nodeNewPlaceholders = $(context)
+        .find('[data-history-node-timestamp]')
+        .once('history')
+        .filter(function () {
+          var nodeTimestamp = parseInt(this.getAttribute('data-history-node-timestamp'), 10);
+          var nodeID = this.getAttribute('data-history-node-id');
+          if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
+            nodeIDs.push(nodeID);
+            return true;
+          }
+          else {
+            return false;
+          }
+        });
 
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Custom error type thrown after attach/detach if one or more behaviors
-failed.</p>
-    </div>
-    
+      // Find all "new" comment indicator placeholders newer than 30 days ago that
+      // have not already been read after their last comment timestamp.
+      var $newRepliesPlaceholders = $(context)
+        .find('[data-history-node-last-comment-timestamp]')
+        .once('history')
+        .filter(function () {
+          var lastCommentTimestamp = parseInt(this.getAttribute('data-history-node-last-comment-timestamp'), 10);
+          var nodeTimestamp = parseInt(this.previousSibling.previousSibling.getAttribute('data-history-node-timestamp'), 10);
+          // Discard placeholders that have zero comments.
+          if (lastCommentTimestamp === nodeTimestamp) {
+            return false;
+          }
+          var nodeID = this.previousSibling.previousSibling.getAttribute('data-history-node-id');
+          if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
+            if (nodeIDs.indexOf(nodeID) === -1) {
+              nodeIDs.push(nodeID);
+            }
+            return true;
+          }
+          else {
+            return false;
+          }
+        });
 
-    
-    
-    
-    
-    
-        
+      if ($nodeNewPlaceholders.length === 0 &amp;&amp; $newRepliesPlaceholders.length === 0) {
+        return;
+      }
 
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>list</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
+      // Fetch the node read timestamps from the server.
+      Drupal.history.fetchTimestamps(nodeIDs, function () {
+        processNodeNewIndicators($nodeNewPlaceholders);
+        processNewRepliesIndicators($newRepliesPlaceholders);
+      });
+    }
+  };
 
+  function processNodeNewIndicators($placeholders) {
+    var newNodeString = Drupal.t('new');
+    var updatedNodeString = Drupal.t('updated');
 
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>An array of errors thrown during attach/detach.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
+    $placeholders.each(function (index, placeholder) {
+      var timestamp = parseInt(placeholder.getAttribute('data-history-node-timestamp'), 10);
+      var nodeID = placeholder.getAttribute('data-history-node-id');
+      var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
+      if (timestamp > lastViewTimestamp) {
+        var message = (lastViewTimestamp === 0) ? newNodeString : updatedNodeString;
+        $(placeholder).append('&lt;span class="marker">' + message + '&lt;/span>');
+      }
+    });
+  }
 
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>A string containing either 'attach' or 'detach'.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
+  function processNewRepliesIndicators($placeholders) {
+    // Figure out which placeholders need the "x new" replies links.
+    var placeholdersToUpdate = {};
+    $placeholders.each(function (index, placeholder) {
+      var timestamp = parseInt(placeholder.getAttribute('data-history-node-last-comment-timestamp'), 10);
+      var nodeID = placeholder.previousSibling.previousSibling.getAttribute('data-history-node-id');
+      var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
+      // Queue this placeholder's "X new" replies link to be downloaded from the
+      // server.
+      if (timestamp > lastViewTimestamp) {
+        placeholdersToUpdate[nodeID] = placeholder;
+      }
+    });
 
-    
-    
+    // Perform an AJAX request to retrieve node view timestamps.
+    var nodeIDs = Object.keys(placeholdersToUpdate);
+    if (nodeIDs.length === 0) {
+      return;
+    }
+    $.ajax({
+      url: Drupal.url('comments/render_new_comments_node_links'),
+      type: 'POST',
+      data: {'node_ids[]': nodeIDs},
+      dataType: 'json',
+      success: function (results) {
+        for (var nodeID in results) {
+          if (results.hasOwnProperty(nodeID) &amp;&amp; placeholdersToUpdate.hasOwnProperty(nodeID)) {
+            var url = results[nodeID].first_new_comment_link;
+            var text = Drupal.formatPlural(results[nodeID].new_comment_count, '1 new', '@count new');
+            $(placeholdersToUpdate[nodeID]).append('&lt;br />&lt;a href="' + url + '">' + text + '&lt;/a>');
+          }
+        }
+      }
+    });
+  }
 
-    
+})(jQuery, Drupal, window);
+</code></pre>
+        </article>
+    </section>
 
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-    
-    </div>
-    
-    
-        <h3 class="subsection-title">Extends</h3>
-        
-        <ul>
-            <li>Error</li>
-        </ul>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Members</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="event">event<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Execution phase errors were triggered.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="list">list<span class="type-signature type array.<error>">Array.&lt;Error></span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>All thrown errors.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="message">message<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Final message to send to debuggers.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="name">name<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Setting name helps debuggers.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        </dl>
-    
-    
-    
-    
-    
-    
-    
-</article>
-
-</section>  
 
 
 
@@ -3962,8 +3701,8 @@ failed.</p>
         
 
         <footer>
-            <p><strong>For more information about this documentation please see <a target="_blank" href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
-            <p><small>Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a target="_blank" href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
+            <p><strong>For more information about this documentation please see <a href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
+            <p><small>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
         </footer>
     </div>
 </div>

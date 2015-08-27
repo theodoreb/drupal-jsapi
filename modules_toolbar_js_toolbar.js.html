@@ -99,6 +99,8 @@
             
                 <li data-name="Drupal.tableSelectRange"><a href="Drupal.html#.tableSelectRange">tableSelectRange</a></li>
             
+                <li data-name="Drupal.throwError"><a href="Drupal.html#.throwError">throwError</a></li>
+            
                 <li data-name="Drupal.url"><a href="Drupal.html#.url">url</a></li>
             
             </ul>
@@ -312,6 +314,8 @@
                 <li data-name="Drupal.behaviors.toolbar"><a href="Drupal.behaviors.html#.toolbar">toolbar</a></li>
             
                 <li data-name="Drupal.behaviors.tour"><a href="Drupal.behaviors.html#.tour">tour</a></li>
+            
+                <li data-name="Drupal.behaviors.trackerHistory"><a href="Drupal.behaviors.html#.trackerHistory">trackerHistory</a></li>
             
                 <li data-name="Drupal.behaviors.verticalTabs"><a href="Drupal.behaviors.html#.verticalTabs">verticalTabs</a></li>
             
@@ -1320,6 +1324,8 @@
             
                 <li data-name="Drupal.AjaxCommands#settings"><a href="Drupal.AjaxCommands.html#settings">settings</a></li>
             
+                <li data-name="Drupal.AjaxCommands#setToolbarSubtrees"><a href="Drupal.AjaxCommands.html#setToolbarSubtrees">setToolbarSubtrees</a></li>
+            
                 <li data-name="Drupal.AjaxCommands#update_build_id"><a href="Drupal.AjaxCommands.html#update_build_id">update_build_id</a></li>
             
                 <li data-name="Drupal.AjaxCommands#viewsHighlight"><a href="Drupal.AjaxCommands.html#viewsHighlight">viewsHighlight</a></li>
@@ -1476,6 +1482,8 @@
                 <li data-name="Drupal.ckeditor.Model#$textarea"><a href="Drupal.ckeditor.Model.html#$textarea">$textarea</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#activeEditorConfig"><a href="Drupal.ckeditor.Model.html#activeEditorConfig">activeEditorConfig</a></li>
+            
+                <li data-name="Drupal.ckeditor.Model#buttonsToFeatures"><a href="Drupal.ckeditor.Model.html#buttonsToFeatures">buttonsToFeatures</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#defaults"><a href="Drupal.ckeditor.Model.html#defaults">defaults</a></li>
             
@@ -3477,35 +3485,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal~DrupalBehaviorError">
-            <span class="title">
-                <a href="Drupal-DrupalBehaviorError.html">Drupal~DrupalBehaviorError</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal~DrupalBehaviorError#event"><a href="Drupal-DrupalBehaviorError.html#event">event</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#list"><a href="Drupal-DrupalBehaviorError.html#list">list</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#message"><a href="Drupal-DrupalBehaviorError.html#message">message</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#name"><a href="Drupal-DrupalBehaviorError.html#name">name</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal~TabbingContext">
             <span class="title">
                 <a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>
@@ -3669,7 +3648,8 @@
         // asynchronously.
         Drupal.toolbar.setSubtrees.done(function (subtrees) {
           menuModel.set('subtrees', subtrees);
-          localStorage.setItem('Drupal.toolbar.subtrees', JSON.stringify(subtrees));
+          var theme = drupalSettings.ajaxPageState.theme;
+          localStorage.setItem('Drupal.toolbar.subtrees.' + theme, JSON.stringify(subtrees));
           // Indicate on the toolbarModel that subtrees are now loaded.
           model.set('areSubtreesLoaded', true);
         });
@@ -3720,7 +3700,7 @@
         // not the first 'Home' toolbar tab).
         if (Drupal.toolbar.models.toolbarModel.get('orientation') === 'horizontal' &amp;&amp; Drupal.toolbar.models.toolbarModel.get('activeTab') === null) {
           Drupal.toolbar.models.toolbarModel.set({
-            'activeTab': $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
+            activeTab: $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
           });
         }
       });
@@ -3777,31 +3757,31 @@
       switch (label) {
         case 'toolbar.narrow':
           model.set({
-            'isOriented': mql.matches,
-            'isTrayToggleVisible': false
+            isOriented: mql.matches,
+            isTrayToggleVisible: false
           });
           // If the toolbar doesn't have an explicit orientation yet, or if the
           // narrow media query doesn't match then set the orientation to
           // vertical.
           if (!mql.matches || !model.get('orientation')) {
-            model.set({'orientation': 'vertical'}, {validate: true});
+            model.set({orientation: 'vertical'}, {validate: true});
           }
           break;
 
         case 'toolbar.standard':
           model.set({
-            'isFixed': mql.matches
+            isFixed: mql.matches
           });
           break;
 
         case 'toolbar.wide':
           model.set({
-            'orientation': ((mql.matches) ? 'horizontal' : 'vertical')
+            orientation: ((mql.matches) ? 'horizontal' : 'vertical')
           }, {validate: true});
           // The tray orientation toggle visibility does not need to be
           // validated.
           model.set({
-            'isTrayToggleVisible': mql.matches
+            isTrayToggleVisible: mql.matches
           });
           break;
 
@@ -3821,6 +3801,17 @@
     return '&lt;div class="toolbar-toggle-orientation">&lt;div class="toolbar-lining">' +
       '&lt;button class="toolbar-icon" type="button">&lt;/button>' +
       '&lt;/div>&lt;/div>';
+  };
+
+  /**
+   * Ajax command to set the toolbar subtrees.
+   *
+   * @param {Drupal.Ajax} ajax
+   * @param {object} response
+   * @param {number} [status]
+   */
+  Drupal.AjaxCommands.prototype.setToolbarSubtrees = function (ajax, response, status) {
+    Drupal.toolbar.setSubtrees.resolve(response.subtrees);
   };
 
 }(jQuery, Drupal, drupalSettings));

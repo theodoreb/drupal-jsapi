@@ -99,6 +99,8 @@
             
                 <li data-name="Drupal.tableSelectRange"><a href="Drupal.html#.tableSelectRange">tableSelectRange</a></li>
             
+                <li data-name="Drupal.throwError"><a href="Drupal.html#.throwError">throwError</a></li>
+            
                 <li data-name="Drupal.url"><a href="Drupal.html#.url">url</a></li>
             
             </ul>
@@ -312,6 +314,8 @@
                 <li data-name="Drupal.behaviors.toolbar"><a href="Drupal.behaviors.html#.toolbar">toolbar</a></li>
             
                 <li data-name="Drupal.behaviors.tour"><a href="Drupal.behaviors.html#.tour">tour</a></li>
+            
+                <li data-name="Drupal.behaviors.trackerHistory"><a href="Drupal.behaviors.html#.trackerHistory">trackerHistory</a></li>
             
                 <li data-name="Drupal.behaviors.verticalTabs"><a href="Drupal.behaviors.html#.verticalTabs">verticalTabs</a></li>
             
@@ -1320,6 +1324,8 @@
             
                 <li data-name="Drupal.AjaxCommands#settings"><a href="Drupal.AjaxCommands.html#settings">settings</a></li>
             
+                <li data-name="Drupal.AjaxCommands#setToolbarSubtrees"><a href="Drupal.AjaxCommands.html#setToolbarSubtrees">setToolbarSubtrees</a></li>
+            
                 <li data-name="Drupal.AjaxCommands#update_build_id"><a href="Drupal.AjaxCommands.html#update_build_id">update_build_id</a></li>
             
                 <li data-name="Drupal.AjaxCommands#viewsHighlight"><a href="Drupal.AjaxCommands.html#viewsHighlight">viewsHighlight</a></li>
@@ -1476,6 +1482,8 @@
                 <li data-name="Drupal.ckeditor.Model#$textarea"><a href="Drupal.ckeditor.Model.html#$textarea">$textarea</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#activeEditorConfig"><a href="Drupal.ckeditor.Model.html#activeEditorConfig">activeEditorConfig</a></li>
+            
+                <li data-name="Drupal.ckeditor.Model#buttonsToFeatures"><a href="Drupal.ckeditor.Model.html#buttonsToFeatures">buttonsToFeatures</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#defaults"><a href="Drupal.ckeditor.Model.html#defaults">defaults</a></li>
             
@@ -3477,35 +3485,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal~DrupalBehaviorError">
-            <span class="title">
-                <a href="Drupal-DrupalBehaviorError.html">Drupal~DrupalBehaviorError</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal~DrupalBehaviorError#event"><a href="Drupal-DrupalBehaviorError.html#event">event</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#list"><a href="Drupal-DrupalBehaviorError.html#list">list</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#message"><a href="Drupal-DrupalBehaviorError.html#message">message</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#name"><a href="Drupal-DrupalBehaviorError.html#name">name</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal~TabbingContext">
             <span class="title">
                 <a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>
@@ -3612,7 +3591,7 @@
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line266">line 266</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line270">line 270</a>
         </div>
         
     </div>
@@ -4532,7 +4511,7 @@ included to provide Ajax capabilities.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line609">line 609</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line640">line 640</a>
         </div>
         
     </div>
@@ -4716,7 +4695,7 @@ included to provide Ajax capabilities.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line565">line 565</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line596">line 596</a>
         </div>
         
     </div>
@@ -4902,7 +4881,7 @@ before field data is collected.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line597">line 597</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line628">line 628</a>
         </div>
         
     </div>
@@ -5059,12 +5038,12 @@ before field data is collected.</p>
     <div class="nameContainer">
         <h4 class="name" id="error">
             
-            error<span class="signature">(response, uri)</span>
+            error<span class="signature">(xmlhttprequest, uri, customMessage)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line766">line 766</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line798">line 798</a>
         </div>
         
     </div>
@@ -5106,7 +5085,7 @@ before field data is collected.</p>
 	
         <tr>
             
-                <td class="name"><code>response</code></td>
+                <td class="name"><code>xmlhttprequest</code></td>
             
             
             <td class="type">
@@ -5130,6 +5109,29 @@ before field data is collected.</p>
         <tr>
             
                 <td class="name"><code>uri</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>customMessage</code></td>
             
             
             <td class="type">
@@ -5203,7 +5205,7 @@ before field data is collected.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line516">line 516</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line547">line 547</a>
         </div>
         
     </div>
@@ -5346,7 +5348,7 @@ Ajax object.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line457">line 457</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line488">line 488</a>
         </div>
         
     </div>
@@ -5419,7 +5421,7 @@ an event to respond to.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line736">line 736</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line767">line 767</a>
         </div>
         
     </div>
@@ -5649,7 +5651,7 @@ an event to respond to.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line488">line 488</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line519">line 519</a>
         </div>
         
     </div>
@@ -5794,7 +5796,7 @@ SPACE is often used to activate an element without submitting.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line659">line 659</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line690">line 690</a>
         </div>
         
     </div>
@@ -5865,7 +5867,7 @@ SPACE is often used to activate an element without submitting.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line686">line 686</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line717">line 717</a>
         </div>
         
     </div>
@@ -5936,7 +5938,7 @@ SPACE is often used to activate an element without submitting.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line675">line 675</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line706">line 706</a>
         </div>
         
     </div>
@@ -6007,7 +6009,7 @@ SPACE is often used to activate an element without submitting.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line697">line 697</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line728">line 728</a>
         </div>
         
     </div>

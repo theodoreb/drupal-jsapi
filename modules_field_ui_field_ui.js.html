@@ -99,6 +99,8 @@
             
                 <li data-name="Drupal.tableSelectRange"><a href="Drupal.html#.tableSelectRange">tableSelectRange</a></li>
             
+                <li data-name="Drupal.throwError"><a href="Drupal.html#.throwError">throwError</a></li>
+            
                 <li data-name="Drupal.url"><a href="Drupal.html#.url">url</a></li>
             
             </ul>
@@ -312,6 +314,8 @@
                 <li data-name="Drupal.behaviors.toolbar"><a href="Drupal.behaviors.html#.toolbar">toolbar</a></li>
             
                 <li data-name="Drupal.behaviors.tour"><a href="Drupal.behaviors.html#.tour">tour</a></li>
+            
+                <li data-name="Drupal.behaviors.trackerHistory"><a href="Drupal.behaviors.html#.trackerHistory">trackerHistory</a></li>
             
                 <li data-name="Drupal.behaviors.verticalTabs"><a href="Drupal.behaviors.html#.verticalTabs">verticalTabs</a></li>
             
@@ -1320,6 +1324,8 @@
             
                 <li data-name="Drupal.AjaxCommands#settings"><a href="Drupal.AjaxCommands.html#settings">settings</a></li>
             
+                <li data-name="Drupal.AjaxCommands#setToolbarSubtrees"><a href="Drupal.AjaxCommands.html#setToolbarSubtrees">setToolbarSubtrees</a></li>
+            
                 <li data-name="Drupal.AjaxCommands#update_build_id"><a href="Drupal.AjaxCommands.html#update_build_id">update_build_id</a></li>
             
                 <li data-name="Drupal.AjaxCommands#viewsHighlight"><a href="Drupal.AjaxCommands.html#viewsHighlight">viewsHighlight</a></li>
@@ -1476,6 +1482,8 @@
                 <li data-name="Drupal.ckeditor.Model#$textarea"><a href="Drupal.ckeditor.Model.html#$textarea">$textarea</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#activeEditorConfig"><a href="Drupal.ckeditor.Model.html#activeEditorConfig">activeEditorConfig</a></li>
+            
+                <li data-name="Drupal.ckeditor.Model#buttonsToFeatures"><a href="Drupal.ckeditor.Model.html#buttonsToFeatures">buttonsToFeatures</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#defaults"><a href="Drupal.ckeditor.Model.html#defaults">defaults</a></li>
             
@@ -3477,35 +3485,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal~DrupalBehaviorError">
-            <span class="title">
-                <a href="Drupal-DrupalBehaviorError.html">Drupal~DrupalBehaviorError</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal~DrupalBehaviorError#event"><a href="Drupal-DrupalBehaviorError.html#event">event</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#list"><a href="Drupal-DrupalBehaviorError.html#list">list</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#message"><a href="Drupal-DrupalBehaviorError.html#message">message</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#name"><a href="Drupal-DrupalBehaviorError.html#name">name</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal~TabbingContext">
             <span class="title">
                 <a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>
@@ -3599,20 +3578,24 @@
 
   /**
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Adds behaviors to the field storage add form.
    */
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach: function (context) {
       var $form = $(context).find('[data-drupal-selector="field-ui-field-storage-add-form"]').once('field_ui_add');
       if ($form.length) {
-        // Add a few 'form-required' css classes here. We can not use the Form
-        // API '#required' property because both label elements for "add new"
-        // and "re-use existing" can never be filled and submitted at the same
-        // time. The actual validation will happen server-side.
+        // Add a few 'js-form-required' and 'form-required' css classes here.
+        // We can not use the Form API '#required' property because both label
+        // elements for "add new" and "re-use existing" can never be filled and
+        // submitted at the same time. The actual validation will happen
+        // server-side.
         $form.find(
           '.form-item-label label,' +
           '.form-item-field-name label,' +
           '.form-item-existing-storage-label label')
-          .addClass('form-required');
+          .addClass('js-form-required form-required');
 
         var $newFieldType = $form.find('select[name="new_storage_type"]');
         var $existingStorageName = $form.find('select[name="existing_storage_name"]');
@@ -3646,8 +3629,14 @@
   };
 
   /**
+   * Attaches the fieldUIOverview behavior.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the fieldUIOverview behavior.
+   *
+   * @see Drupal.fieldUIOverview.attach
    */
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach: function (context, settings) {
@@ -3658,6 +3647,8 @@
   };
 
   /**
+   * Namespace for the field UI overview.
+   *
    * @namespace
    */
   Drupal.fieldUIOverview = {
@@ -3666,8 +3657,11 @@
      * Attaches the fieldUIOverview behavior.
      *
      * @param {HTMLTableElement} table
+     *   The table element for the overview.
      * @param {object} rowsData
+     *   The data of the rows in the table.
      * @param {object} rowHandlers
+     *   Handlers to be added to the rows.
      */
     attach: function (table, rowsData, rowHandlers) {
       var tableDrag = Drupal.tableDrag[table.id];
@@ -3833,6 +3827,7 @@
    *   Additional data to be populated in the constructed object.
    *
    * @return {Drupal.fieldUIDisplayOverview.field}
+   *   The field row handler constructed.
    */
   Drupal.fieldUIDisplayOverview.field = function (row, data) {
     this.row = row;
@@ -3853,6 +3848,7 @@
      * Returns the region corresponding to the current form values of the row.
      *
      * @return {string}
+     *   Either 'hidden' or 'content'.
      */
     getRegion: function () {
       return (this.$pluginSelect.val() === 'hidden') ? 'hidden' : 'content';

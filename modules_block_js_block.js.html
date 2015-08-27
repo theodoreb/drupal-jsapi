@@ -99,6 +99,8 @@
             
                 <li data-name="Drupal.tableSelectRange"><a href="Drupal.html#.tableSelectRange">tableSelectRange</a></li>
             
+                <li data-name="Drupal.throwError"><a href="Drupal.html#.throwError">throwError</a></li>
+            
                 <li data-name="Drupal.url"><a href="Drupal.html#.url">url</a></li>
             
             </ul>
@@ -312,6 +314,8 @@
                 <li data-name="Drupal.behaviors.toolbar"><a href="Drupal.behaviors.html#.toolbar">toolbar</a></li>
             
                 <li data-name="Drupal.behaviors.tour"><a href="Drupal.behaviors.html#.tour">tour</a></li>
+            
+                <li data-name="Drupal.behaviors.trackerHistory"><a href="Drupal.behaviors.html#.trackerHistory">trackerHistory</a></li>
             
                 <li data-name="Drupal.behaviors.verticalTabs"><a href="Drupal.behaviors.html#.verticalTabs">verticalTabs</a></li>
             
@@ -1320,6 +1324,8 @@
             
                 <li data-name="Drupal.AjaxCommands#settings"><a href="Drupal.AjaxCommands.html#settings">settings</a></li>
             
+                <li data-name="Drupal.AjaxCommands#setToolbarSubtrees"><a href="Drupal.AjaxCommands.html#setToolbarSubtrees">setToolbarSubtrees</a></li>
+            
                 <li data-name="Drupal.AjaxCommands#update_build_id"><a href="Drupal.AjaxCommands.html#update_build_id">update_build_id</a></li>
             
                 <li data-name="Drupal.AjaxCommands#viewsHighlight"><a href="Drupal.AjaxCommands.html#viewsHighlight">viewsHighlight</a></li>
@@ -1476,6 +1482,8 @@
                 <li data-name="Drupal.ckeditor.Model#$textarea"><a href="Drupal.ckeditor.Model.html#$textarea">$textarea</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#activeEditorConfig"><a href="Drupal.ckeditor.Model.html#activeEditorConfig">activeEditorConfig</a></li>
+            
+                <li data-name="Drupal.ckeditor.Model#buttonsToFeatures"><a href="Drupal.ckeditor.Model.html#buttonsToFeatures">buttonsToFeatures</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#defaults"><a href="Drupal.ckeditor.Model.html#defaults">defaults</a></li>
             
@@ -3477,35 +3485,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal~DrupalBehaviorError">
-            <span class="title">
-                <a href="Drupal-DrupalBehaviorError.html">Drupal~DrupalBehaviorError</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal~DrupalBehaviorError#event"><a href="Drupal-DrupalBehaviorError.html#event">event</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#list"><a href="Drupal-DrupalBehaviorError.html#list">list</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#message"><a href="Drupal-DrupalBehaviorError.html#message">message</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#name"><a href="Drupal-DrupalBehaviorError.html#name">name</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal~TabbingContext">
             <span class="title">
                 <a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>
@@ -3678,35 +3657,57 @@
           // back to from where the user tried to drag it.
           regionField.trigger('change');
         }
-        else if ($rowElement.prev('tr').is('.region-message')) {
+
+        // Update region and weight fields if the region has been changed.
+        if (!regionField.is('.block-region-' + regionName)) {
           var weightField = $rowElement.find('select.block-weight');
           var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
-
-          if (!regionField.is('.block-region-' + regionName)) {
-            regionField.removeClass('block-region-' + oldRegionName).addClass('block-region-' + regionName);
-            weightField.removeClass('block-weight-' + oldRegionName).addClass('block-weight-' + regionName);
-            regionField.val(regionName);
-          }
+          regionField.removeClass('block-region-' + oldRegionName).addClass('block-region-' + regionName);
+          weightField.removeClass('block-weight-' + oldRegionName).addClass('block-weight-' + regionName);
+          regionField.val(regionName);
         }
+
+        updateBlockWeights(table, regionName);
       };
 
       // Add the behavior to each region select list.
-      $(context).find('select.block-region-select').once('block-region-select').each(function () {
-        $(this).on('change', function (event) {
+      $(context).find('select.block-region-select').once('block-region-select')
+        .on('change', function (event) {
           // Make our new row and select field.
           var row = $(this).closest('tr');
           var select = $(this);
-          tableDrag.rowObject = new tableDrag.row(row);
 
           // Find the correct region and insert the row as the last in the region.
           table.find('.region-' + select[0].value + '-message').nextUntil('.region-message').eq(-1).before(row);
 
+          updateBlockWeights(table, select[0].value);
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, row);
           // Remove focus from selectbox.
           select.trigger('blur');
         });
-      });
+
+      /**
+       * Update block weights in the given region.
+       *
+       * @param {jQuery} $table
+       *   Table with draggable items.
+       * @param {string} region
+       *   Machine name of region containing blocks to update.
+       */
+      var updateBlockWeights = function ($table, region) {
+        // Calculate minimum weight.
+        var weight = -Math.round($table.find('.draggable').length / 2);
+        // Update the block weights.
+        $table.find('.region-' + region + '-message').nextUntil('.region-title')
+          .find('select.block-weight').val(function () {
+            // Increment the weight before assigning it to prevent using the
+            // absolute minimum available weight. This way we always have an
+            // unused upper and lower bound, which makes manually setting the
+            // weights easier for users who prefer to do it that way.
+            return ++weight;
+          });
+      };
 
       var checkEmptyRegions = function (table, rowObject) {
         table.find('tr.region-message').each(function () {

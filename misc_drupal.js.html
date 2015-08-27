@@ -99,6 +99,8 @@
             
                 <li data-name="Drupal.tableSelectRange"><a href="Drupal.html#.tableSelectRange">tableSelectRange</a></li>
             
+                <li data-name="Drupal.throwError"><a href="Drupal.html#.throwError">throwError</a></li>
+            
                 <li data-name="Drupal.url"><a href="Drupal.html#.url">url</a></li>
             
             </ul>
@@ -312,6 +314,8 @@
                 <li data-name="Drupal.behaviors.toolbar"><a href="Drupal.behaviors.html#.toolbar">toolbar</a></li>
             
                 <li data-name="Drupal.behaviors.tour"><a href="Drupal.behaviors.html#.tour">tour</a></li>
+            
+                <li data-name="Drupal.behaviors.trackerHistory"><a href="Drupal.behaviors.html#.trackerHistory">trackerHistory</a></li>
             
                 <li data-name="Drupal.behaviors.verticalTabs"><a href="Drupal.behaviors.html#.verticalTabs">verticalTabs</a></li>
             
@@ -1320,6 +1324,8 @@
             
                 <li data-name="Drupal.AjaxCommands#settings"><a href="Drupal.AjaxCommands.html#settings">settings</a></li>
             
+                <li data-name="Drupal.AjaxCommands#setToolbarSubtrees"><a href="Drupal.AjaxCommands.html#setToolbarSubtrees">setToolbarSubtrees</a></li>
+            
                 <li data-name="Drupal.AjaxCommands#update_build_id"><a href="Drupal.AjaxCommands.html#update_build_id">update_build_id</a></li>
             
                 <li data-name="Drupal.AjaxCommands#viewsHighlight"><a href="Drupal.AjaxCommands.html#viewsHighlight">viewsHighlight</a></li>
@@ -1476,6 +1482,8 @@
                 <li data-name="Drupal.ckeditor.Model#$textarea"><a href="Drupal.ckeditor.Model.html#$textarea">$textarea</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#activeEditorConfig"><a href="Drupal.ckeditor.Model.html#activeEditorConfig">activeEditorConfig</a></li>
+            
+                <li data-name="Drupal.ckeditor.Model#buttonsToFeatures"><a href="Drupal.ckeditor.Model.html#buttonsToFeatures">buttonsToFeatures</a></li>
             
                 <li data-name="Drupal.ckeditor.Model#defaults"><a href="Drupal.ckeditor.Model.html#defaults">defaults</a></li>
             
@@ -3477,35 +3485,6 @@
             </ul>
         </li>
     
-        <li class="item" data-name="Drupal~DrupalBehaviorError">
-            <span class="title">
-                <a href="Drupal-DrupalBehaviorError.html">Drupal~DrupalBehaviorError</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal~DrupalBehaviorError#event"><a href="Drupal-DrupalBehaviorError.html#event">event</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#list"><a href="Drupal-DrupalBehaviorError.html#list">list</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#message"><a href="Drupal-DrupalBehaviorError.html#message">message</a></li>
-            
-                <li data-name="Drupal~DrupalBehaviorError#name"><a href="Drupal-DrupalBehaviorError.html#name">name</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
         <li class="item" data-name="Drupal~TabbingContext">
             <span class="title">
                 <a href="Drupal-TabbingContext.html">Drupal~TabbingContext</a>
@@ -3633,61 +3612,17 @@ if (window.jQuery) {
   "use strict";
 
   /**
-   * Custom error type thrown after attach/detach if one or more behaviors
-   * failed.
+   * Helper to rethrow errors asynchronously.
    *
-   * @memberof Drupal
+   * This way Errors bubbles up outside of the original callstack, making it
+   * easier to debug errors in the browser.
    *
-   * @constructor
-   *
-   * @augments Error
-   *
-   * @param {Array} list
-   *   An array of errors thrown during attach/detach.
-   * @param {string} event
-   *   A string containing either 'attach' or 'detach'.
-   *
-   * @inner
+   * @param {Error|string} error
+   *   The error to be thrown.
    */
-  function DrupalBehaviorError(list, event) {
-
-    /**
-     * Setting name helps debuggers.
-     *
-     * @type {string}
-     */
-    this.name = 'DrupalBehaviorError';
-
-    /**
-     * Execution phase errors were triggered.
-     *
-     * @type {string}
-     */
-    this.event = event || 'attach';
-
-    /**
-     * All thrown errors.
-     *
-     * @type {Array.&lt;Error>}
-     */
-    this.list = list;
-    // Makes the list of errors readable.
-    var messageList = [];
-    messageList.push(this.event);
-    var il = this.list.length;
-    for (var i = 0; i &lt; il; i++) {
-      messageList.push(this.list[i].behavior + ': ' + this.list[i].error.message);
-    }
-
-    /**
-     * Final message to send to debuggers.
-     *
-     * @type {string}
-     */
-    this.message = messageList.join(' ; ');
-  }
-
-  DrupalBehaviorError.prototype = new Error();
+  Drupal.throwError = function (error) {
+    setTimeout(function () { throw error; }, 0);
+  };
 
   /**
    * Callback function initializing code run on page load and Ajax requests.
@@ -3776,7 +3711,6 @@ if (window.jQuery) {
   Drupal.attachBehaviors = function (context, settings) {
     context = context || document;
     settings = settings || drupalSettings;
-    var errors = [];
     var behaviors = Drupal.behaviors;
     // Execute all of them.
     for (var i in behaviors) {
@@ -3786,13 +3720,9 @@ if (window.jQuery) {
           behaviors[i].attach(context, settings);
         }
         catch (e) {
-          errors.push({behavior: i, error: e});
+          Drupal.throwError(e);
         }
       }
-    }
-    // Once all behaviors have been processed, inform the user about errors.
-    if (errors.length) {
-      throw new DrupalBehaviorError(errors, 'attach');
     }
   };
 
@@ -3846,7 +3776,6 @@ if (window.jQuery) {
     context = context || document;
     settings = settings || drupalSettings;
     trigger = trigger || 'unload';
-    var errors = [];
     var behaviors = Drupal.behaviors;
     // Execute all of them.
     for (var i in behaviors) {
@@ -3856,13 +3785,9 @@ if (window.jQuery) {
           behaviors[i].detach(context, settings, trigger);
         }
         catch (e) {
-          errors.push({behavior: i, error: e});
+          Drupal.throwError(e);
         }
       }
-    }
-    // Once all behaviors have been processed, inform the user about errors.
-    if (errors.length) {
-      throw new DrupalBehaviorError(errors, 'detach:' + trigger);
     }
   };
 
@@ -4042,6 +3967,81 @@ if (window.jQuery) {
    */
   Drupal.url = function (path) {
     return drupalSettings.path.baseUrl + drupalSettings.path.pathPrefix + path;
+  };
+
+  /**
+   * Returns the passed in URL as an absolute URL.
+   *
+   * @param url
+   *   The URL string to be normalized to an absolute URL.
+   *
+   * @return
+   *   The normalized, absolute URL.
+   *
+   * @see https://github.com/angular/angular.js/blob/v1.4.4/src/ng/urlUtils.js
+   * @see https://grack.com/blog/2009/11/17/absolutizing-url-in-javascript
+   * @see https://github.com/jquery/jquery-ui/blob/1.11.4/ui/tabs.js#L53
+   */
+  Drupal.url.toAbsolute = function (url) {
+    var urlParsingNode = document.createElement('a');
+
+    // Decode the URL first; this is required by IE &lt;= 6. Decoding non-UTF-8
+    // strings may throw an exception.
+    try {
+      url = decodeURIComponent(url);
+    }
+    catch (e) {
+      // Empty.
+    }
+
+    urlParsingNode.setAttribute('href', url);
+
+    // IE &lt;= 7 normalizes the URL when assigned to the anchor node similar to
+    // the other browsers.
+    return urlParsingNode.cloneNode(false).href;
+  };
+
+  /**
+   * Returns true if the URL is within Drupal's base path.
+   *
+   * @param url
+   *   The URL string to be tested.
+   *
+   * @return
+   *   Boolean true if local.
+   *
+   * @see https://github.com/jquery/jquery-ui/blob/1.11.4/ui/tabs.js#L58
+   */
+  Drupal.url.isLocal = function (url) {
+    // Always use browser-derived absolute URLs in the comparison, to avoid
+    // attempts to break out of the base path using directory traversal.
+    var absoluteUrl = Drupal.url.toAbsolute(url);
+    var protocol = location.protocol;
+
+    // Consider URLs that match this site's base URL but use HTTPS instead of HTTP
+    // as local as well.
+    if (protocol === 'http:' &amp;&amp; absoluteUrl.indexOf('https:') === 0) {
+      protocol = 'https:';
+    }
+    var baseUrl = protocol + '//' + location.host + drupalSettings.path.baseUrl.slice(0, -1);
+
+    // Decoding non-UTF-8 strings may throw an exception.
+    try {
+      absoluteUrl = decodeURIComponent(absoluteUrl);
+    }
+    catch (e) {
+      // Empty.
+    }
+    try {
+      baseUrl = decodeURIComponent(baseUrl);
+    }
+    catch (e) {
+      // Empty.
+    }
+
+    // The given URL matches the site's base URL, or has a path under the site's
+    // base URL.
+    return absoluteUrl === baseUrl || absoluteUrl.indexOf(baseUrl + '/') === 0;
   };
 
   /**
