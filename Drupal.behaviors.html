@@ -3867,9 +3867,66 @@ is-active class on any element: a, li…</p>
 </dt>
 <dd>
     
+    <div class="description">
+        <p>Sets summaries about revision and translation of block content.</p>
+    </div>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches summary behaviour block content form tabs.</p>
+<p>  Specifically, it updates summaries to the revision information and the
+  translation options.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -3909,7 +3966,7 @@ is-active class on any element: a, li…</p>
 <dd>
     
     <div class="description">
-        <p>Move a block in the blocks table from one region to another via select list.</p>
+        <p>Move a block in the blocks table between regions via select list.</p>
 <p>This behavior is dependent on the tableDrag behavior, since it uses the
 objects initialized in that behavior to update the row.</p>
     </div>
@@ -3917,6 +3974,57 @@ objects initialized in that behavior to update the row.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches the tableDrag behaviour for blocks in block administration.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -3957,14 +4065,67 @@ objects initialized in that behavior to update the row.</p>
     
     <div class="description">
         <p>Filters the block list by a text input search string.</p>
-<p>Text search input: input.block-filter-text
-Target element:    input.block-filter-text[data-element]
-Source text:       .block-filter-text-source</p>
+<p>The text input will have the selector <code>input.block-filter-text</code>.</p>
+<p>The target element to do searching in will be in the selector
+<code>input.block-filter-text[data-element]</code></p>
+<p>The text source where the text should be found will have the selector
+<code>.block-filter-text-source</code></p>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches the behavior for the block filtering.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -4012,6 +4173,57 @@ Source text:       .block-filter-text-source</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches the behavior for the block placement highlighting.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -4057,6 +4269,57 @@ Source text:       .block-filter-text-source</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches the behavior for the block settings summaries.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -4093,9 +4356,64 @@ Source text:       .block-filter-text-source</p>
 </dt>
 <dd>
     
+    <div class="description">
+        <p>Adds summaries to the book outline form.</p>
+    </div>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches summary behavior to book outline forms.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -4134,9 +4452,87 @@ Source text:       .block-filter-text-source</p>
 </dt>
 <dd>
     
+    <div class="description">
+        <p>Sets config behaviour and creates config views for the CKEditor toolbar.</p>
+    </div>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches admin behaviour to the CKEditor buttons.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>detach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorDetach">Drupal~behaviorDetach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Detaches admin behaviour from the CKEditor buttons on 'unload'.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -4184,6 +4580,57 @@ Source text:       .block-filter-text-source</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches show/hide behaviour to Plugin Settings buttons.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -4229,6 +4676,57 @@ Source text:       .block-filter-text-source</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches summary behaviour to the &quot;drupalimage&quot; settings vertical tab.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -4268,14 +4766,65 @@ Source text:       .block-filter-text-source</p>
     <div class="description">
         <p>Ensures that the &quot;stylescombo&quot; button's metadata remains up-to-date.</p>
 <p>Triggers the CKEditorPluginSettingsChanged event whenever the &quot;stylescombo&quot;
-plugin settings change, to ensure that the corresponding feature metadata is
-immediately updated — i.e. ensure that HTML tags and classes entered here are
-known to be &quot;required&quot;, which may affect filter settings.</p>
+plugin settings change, to ensure that the corresponding feature metadata
+is immediately updated — i.e. ensure that HTML tags and classes entered
+here are known to be &quot;required&quot;, which may affect filter settings.</p>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches admin behaviour to the &quot;stylescombo&quot; button.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -4321,6 +4870,57 @@ known to be &quot;required&quot;, which may affect filter settings.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches summary behaviour to the plugin settings vertical tab.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -4587,12 +5187,63 @@ known to be &quot;required&quot;, which may affect filter settings.</p>
 <dd>
     
     <div class="description">
-        <p>Render &quot;new&quot; comment indicators wherever necessary.</p>
+        <p>Renders &quot;new&quot; comment indicators wherever necessary.</p>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches &quot;new&quot; comment indicators behavior.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -4640,6 +5291,57 @@ known to be &quot;required&quot;, which may affect filter settings.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches content translation behavior.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -4685,6 +5387,57 @@ known to be &quot;required&quot;, which may affect filter settings.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches content translation dependent options to the UI.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -4721,9 +5474,64 @@ known to be &quot;required&quot;, which may affect filter settings.</p>
 </dt>
 <dd>
     
+    <div class="description">
+        <p>Behaviors for setting summaries on content type form.</p>
+    </div>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches summary behaviors on content type edit forms.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -4776,6 +5584,57 @@ known to be &quot;required&quot;, which may affect filter settings.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches the outline behavior to the right context.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -4821,6 +5680,57 @@ known to be &quot;required&quot;, which may affect filter settings.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches contextual toolbar behavior on a contextualToolbar-init event.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -4858,14 +5768,66 @@ known to be &quot;required&quot;, which may affect filter settings.</p>
 <dd>
     
     <div class="description">
-        <p>When a field is filled out, apply its value to other fields that will likely
-use the same value. In the installer this is used to populate the
+        <p>Attaches field copy behavior from input fields to other input fields.</p>
+<p>When a field is filled out, apply its value to other fields that will
+likely use the same value. In the installer this is used to populate the
 administrator email address with the same value as the site email address.</p>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches the field copy behavior to an input field.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -5032,6 +5994,57 @@ administrator email address with the same value as the site email address.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attach behavior for previewing date formats on input elements.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -5302,6 +6315,80 @@ administrator email address with the same value as the site email address.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches an editor to an input element.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>detach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorDetach">Drupal~behaviorDetach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Detaches an editor from an input element.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -5583,12 +6670,86 @@ within the same browser tab.</p>
 <dd>
     
     <div class="description">
-        <p>Attach behaviors to managed file element upload fields.</p>
+        <p>Attach behaviors to file element auto upload.</p>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches triggers for the upload button.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>detach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorDetach">Drupal~behaviorDetach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Detaches auto file upload trigger.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -5636,6 +6797,80 @@ within the same browser tab.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches form submit events.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>detach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorDetach">Drupal~behaviorDetach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Detaches form submit events.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -5673,12 +6908,86 @@ within the same browser tab.</p>
 <dd>
     
     <div class="description">
-        <p>Attach behaviors to links within managed file elements.</p>
+        <p>Attach behaviors to links within managed file elements for preview windows.</p>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches triggers.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>detach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorDetach">Drupal~behaviorDetach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Detaches triggers.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -5718,12 +7027,86 @@ within the same browser tab.</p>
 <dd>
     
     <div class="description">
-        <p>Attach behaviors to managed file element upload fields.</p>
+        <p>Attach behaviors to the file fields passed in the settings.</p>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches validation for file extensions.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>detach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorDetach">Drupal~behaviorDetach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Detaches validation for file extensions.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -6071,6 +7454,57 @@ HTTP standards, so excluded in this implementation.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches behavior for toggling details on the translation update page.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -6117,6 +7551,57 @@ HTTP standards, so excluded in this implementation.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches behavior for preselecting language code based on filename.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -6160,6 +7645,57 @@ HTTP standards, so excluded in this implementation.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Gets filter configuration from filter form input.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -6297,6 +7833,80 @@ HTTP standards, so excluded in this implementation.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches behavior to show the user if translations has changed.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>detach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorDetach">Drupal~behaviorDetach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Detach behavior to show the user if translations has changed.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -6419,9 +8029,64 @@ HTTP standards, so excluded in this implementation.</p>
 </dt>
 <dd>
     
+    <div class="description">
+        <p>Set a summary on the menu link form.</p>
+    </div>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Find the form and call <code>drupalSetSummary</code> on it.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -6469,6 +8134,58 @@ HTTP standards, so excluded in this implementation.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches change and keyup behavior for automatically filling out menu
+  link titles.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -6514,6 +8231,57 @@ HTTP standards, so excluded in this implementation.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attach behavior to language negotiation admin user interface.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -6550,9 +8318,64 @@ HTTP standards, so excluded in this implementation.</p>
 </dt>
 <dd>
     
+    <div class="description">
+        <p>Behaviors for tabs in the node edit form.</p>
+    </div>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches summary behavior for tabs in the node edit form.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -6600,6 +8423,57 @@ HTTP standards, so excluded in this implementation.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches new comment links behavior.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -6637,13 +8511,88 @@ HTTP standards, so excluded in this implementation.</p>
 <dd>
     
     <div class="description">
-        <p>Disabling all links (except local fragment identifiers such as href=&quot;#frag&quot;)
-in node previews to prevent users from leaving the page.</p>
+        <p>Disables all non-relevant links in node previews.</p>
+<p>Destroys links (except local fragment identifiers such as href=&quot;#frag&quot;) in
+node previews to prevent users from leaving the page.</p>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches confirmation prompt for clicking links in node preview mode.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>detach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorDetach">Drupal~behaviorDetach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Detaches confirmation prompt for clicking links in node preview mode.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -6689,6 +8638,57 @@ in node previews to prevent users from leaving the page.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches automatic submit on <code>formUpdated.preview</code> events.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -6737,6 +8737,58 @@ check that its confirmation is correct.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches password strength indicator and other relevant validation to
+  password fields.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -6773,9 +8825,64 @@ check that its confirmation is correct.</p>
 </dt>
 <dd>
     
+    <div class="description">
+        <p>Behaviors for settings summaries on path edit forms.</p>
+    </div>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches summary behavior on path edit forms.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -6821,6 +8928,57 @@ check that its confirmation is correct.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches functionality to the permissions table.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -6954,6 +9112,57 @@ check that its confirmation is correct.</p>
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attach collapse behavior on the test listing page.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -6997,6 +9206,57 @@ check that its confirmation is correct.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches behavior for selecting all tests in a group.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -7045,6 +9305,57 @@ Source text:       .table-filter-text-source</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches the filter behavior the the text input element.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -7411,7 +9722,7 @@ Source text:       .table-filter-text-source, .module-name, .module-description<
 <dd>
     
     <div class="description">
-        <p>Move a block in the blocks table from one region to another via select list.</p>
+        <p>Move a block in the blocks table from one region to another.</p>
 <p>This behavior is dependent on the tableDrag behavior, since it uses the
 objects initialized in that behavior to update the row.</p>
     </div>
@@ -7419,6 +9730,57 @@ objects initialized in that behavior to update the row.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches the drag behavior to a applicable table element.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -7464,6 +9826,57 @@ objects initialized in that behavior to update the row.</p>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attaches auto-hide behavior on <code>text-summary</code> events.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -7554,16 +9967,67 @@ point directly to a resource or toggle the visibility of a tray.</p>
         <p>Attaches the tour's toolbar tab behavior.</p>
 <p>It uses the query string for:</p>
 <ul>
-<li>tour: When ?tour=1 is present, the tour will start automatically
-after the page has loaded.</li>
-<li>tips: Pass ?tips=class in the url to filter the available tips to
-the subset which match the given class.</li>
+<li>tour: When ?tour=1 is present, the tour will start automatically after
+the page has loaded.</li>
+<li>tips: Pass ?tips=class in the url to filter the available tips to the
+subset which match the given class.</li>
 </ul>
     </div>
     
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attach</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Drupal.html#~behaviorAttach">Drupal~behaviorAttach</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>Attach tour functionality on <code>tour</code> events.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     

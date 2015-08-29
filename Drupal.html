@@ -5575,7 +5575,7 @@ bound.</li>
     
         
         <div class="tag-source">
-            <a href="modules_editor_js_editor.js.html">modules/editor/js/editor.js</a>, <a href="modules_editor_js_editor.js.html#line232">line 232</a>
+            <a href="modules_editor_js_editor.js.html">modules/editor/js/editor.js</a>, <a href="modules_editor_js_editor.js.html#line239">line 239</a>
         </div>
         
     </div>
@@ -5725,7 +5725,7 @@ bound.</li>
     
         
         <div class="tag-source">
-            <a href="modules_editor_js_editor.js.html">modules/editor/js/editor.js</a>, <a href="modules_editor_js_editor.js.html#line269">line 269</a>
+            <a href="modules_editor_js_editor.js.html">modules/editor/js/editor.js</a>, <a href="modules_editor_js_editor.js.html#line276">line 276</a>
         </div>
         
     </div>
@@ -6034,7 +6034,7 @@ bound.</li>
     
         
         <div class="tag-source">
-            <a href="modules_user_user.js.html">modules/user/user.js</a>, <a href="modules_user_user.js.html#line111">line 111</a>
+            <a href="modules_user_user.js.html">modules/user/user.js</a>, <a href="modules_user_user.js.html#line118">line 118</a>
         </div>
         
     </div>
@@ -6093,7 +6093,7 @@ bound.</li>
             
             <td class="description last">
                 
-                </td>
+                <p>The password to evaluate.</p></td>
         </tr>
 	
 	
@@ -6116,7 +6116,7 @@ bound.</li>
             
             <td class="description last">
                 
-                </td>
+                <p>An object containing the text to display for each strength level.</p></td>
         </tr>
 	
 	
@@ -6181,7 +6181,7 @@ bound.</li>
                         
                     
             </td>
-            <td class="description last"></td>
+            <td class="description last">An object containing strength, message, indicatorText and indicatorClass.</td>
         </tr>
     
     </tbody>
@@ -6198,12 +6198,12 @@ bound.</li>
     <div class="nameContainer">
         <h4 class="name" id=".FilterHTMLRule">
             
-            <span class="type-signature static">static</span>Drupal.FilterHTMLRule<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Object}</span>
+            <span class="type-signature static">static</span>Drupal.FilterHTMLRule<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="modules_editor_js_editor.admin.js.html">modules/editor/js/editor.admin.js</a>, <a href="modules_editor_js_editor.admin.js.html#line783">line 783</a>
+            <a href="modules_editor_js_editor.admin.js.html">modules/editor/js/editor.admin.js</a>, <a href="modules_editor_js_editor.admin.js.html#line823">line 823</a>
         </div>
         
     </div>
@@ -6304,11 +6304,20 @@ values.</li>
             
             <td class="type">
             
-                        Object
+                        object
                         
                     
             </td>
-            <td class="description last"></td>
+            <td class="description last">An object with the following structure:
+<pre class="prettyprint source"><code>{
+  tags: Array,
+  allow: null,
+  restrictedTags: {
+    tags: Array,
+    allowed: {attributes: Array, styles: Array, classes: Array},
+    forbidden: {attributes: Array, styles: Array, classes: Array}
+  }
+}</code></pre></td>
         </tr>
     
     </tbody>
