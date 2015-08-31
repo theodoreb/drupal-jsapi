@@ -1225,6 +1225,8 @@
             
                 <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
+                <li data-name="Drupal.Ajax.WRAPPER_FORMAT"><a href="Drupal.Ajax.html#.WRAPPER_FORMAT">WRAPPER_FORMAT</a></li>
+            
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
                 <li data-name="Drupal.Ajax#commands"><a href="Drupal.Ajax.html#commands">commands</a></li>
@@ -1233,12 +1235,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3580,7 +3590,8 @@
     
     
         
-            <div class="description"><p>Global Drupal object.</p></div>
+            <div class="description"><p>Global Drupal object.</p>
+<p>All Drupal JavaScript APIs are contained in this namespace.</p></div>
         
         
         
@@ -3800,7 +3811,7 @@
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line215">line 215</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line220">line 220</a>
         </div>
         
     </div>
@@ -4017,7 +4028,7 @@ objects in the <a href="Drupal.html#.ajax#.instances"><code>Drupal.ajax.instance
                         
                     
             </td>
-            <td class="description last"></td>
+            <td class="description last">The created Ajax object.</td>
         </tr>
     
     </tbody>
@@ -4276,12 +4287,12 @@ as one text node.</p>
     <div class="nameContainer">
         <h4 class="name" id=".attachBehaviors">
             
-            <span class="type-signature static">static</span>Drupal.attachBehaviors<span class="signature">(context, settings)</span>
+            <span class="type-signature static">static</span>Drupal.attachBehaviors<span class="signature">(<span class="optional">context</span>, <span class="optional">settings</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line142">line 142</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line159">line 159</a>
         </div>
         
     </div>
@@ -4292,22 +4303,22 @@ as one text node.</p>
     
     
     <div class="description">
-        <p>Attach all registered behaviors to a page element.</p>
+        <p>Defines a behavior to be run during attach and detach phases.</p>
+<p>Attaches all registered behaviors to a page element.</p>
 <p>Behaviors are event-triggered actions that attach to page elements,
 enhancing default non-JavaScript UIs. Behaviors are registered in the
 <a href="Drupal.behaviors.html"><code>Drupal.behaviors</code></a> object using the method 'attach' and optionally
-also 'detach' as follows:</p>
-<p><a href="Drupal.html#.attachBehaviors"><code>Drupal.attachBehaviors</code></a> is added below to the jQuery.ready event and
-therefore runs on initial page load. Developers implementing Ajax in their
-solutions should also call this function after new page content has been
-loaded, feeding in an element to be processed, in order to attach all
+also 'detach'.</p>
+<p><a href="Drupal.html#.attachBehaviors"><code>Drupal.attachBehaviors</code></a> is added below to the <code>jQuery.ready</code> event
+and therefore runs on initial page load. Developers implementing Ajax in
+their solutions should also call this function after new page content has
+been loaded, feeding in an element to be processed, in order to attach all
 behaviors to the new content.</p>
-<p>Behaviors should use
-    <code>var elements = $(context).find(selector).once('behavior-name');</code>
-to ensure the behavior is attached only once to a given element. (Doing so
-enables the reprocessing of given elements, which may be needed on
-occasion despite the ability to limit behavior attachment to a particular
-element.)</p>
+<p>Behaviors should use <code>var elements =
+$(context).find(selector).once('behavior-name');</code> to ensure the behavior is
+attached only once to a given element. (Doing so enables the reprocessing
+of given elements, which may be needed on occasion despite the ability to
+limit behavior attachment to a particular element.)</p>
     </div>
     
 
@@ -4328,6 +4339,8 @@ element.)</p>
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -4344,18 +4357,33 @@ element.)</p>
             <td class="type">
             
                 
-<span class="param-type">Element</span>
+<span class="param-type">HTMLDocument</span>
+|
+
+<span class="param-type">HTMLElement</span>
 
 
             
             </td>
             
             
+                <td class="default">
+                
+                    document
+                
+                </td>
+            
             
             <td class="description last">
                 
-                <p>An element to attach behaviors to. If none is given, the document
-  element is used.</p></td>
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>An element to attach behaviors to.</p></td>
         </tr>
 	
 	
@@ -4375,11 +4403,24 @@ element.)</p>
             </td>
             
             
+                <td class="default">
+                
+                    drupalSettings
+                
+                </td>
+            
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 <p>An object containing settings for the current context. If none is given,
-  the global drupalSettings object is used.</p></td>
+  the global <a href="global.html#drupalSettings"><code>drupalSettings</code></a> object is used.</p></td>
         </tr>
 	
 	
@@ -4454,10 +4495,10 @@ element.)</p>
     
     <pre class="prettyprint"><code>Drupal.behaviors.behaviorName = {
   attach: function (context, settings) {
-    ...
+    // ...
   },
   detach: function (context, settings, trigger) {
-    ...
+    // ...
   }
 };</code></pre>
     
@@ -4476,7 +4517,7 @@ element.)</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line250">line 250</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line268">line 268</a>
         </div>
         
     </div>
@@ -4487,7 +4528,7 @@ element.)</p>
     
     
     <div class="description">
-        <p>Encode special characters in a plain-text string for display as HTML.</p>
+        <p>Encodes special characters in a plain-text string for display as HTML.</p>
     </div>
     
 
@@ -4621,7 +4662,7 @@ element.)</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line234">line 234</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line252">line 252</a>
         </div>
         
     </div>
@@ -4632,7 +4673,7 @@ element.)</p>
     
     
     <div class="description">
-        <p>Helper to test document width for mobile configurations.</p>
+        <p>Tests the document width for mobile configurations.</p>
     </div>
     
 
@@ -4694,7 +4735,7 @@ element.)</p>
                         
                     
                 
-                </td>
+                <p>Value of the width to check for.</p></td>
         </tr>
 	
 	
@@ -4761,7 +4802,8 @@ element.)</p>
                         
                     
             </td>
-            <td class="description last"></td>
+            <td class="description last">true if the document's <code>clientWidth</code> is bigger than <code>width</code>, returns
+  false otherwise.</td>
         </tr>
     
     </tbody>
@@ -4977,12 +5019,12 @@ conditions.</p>
     <div class="nameContainer">
         <h4 class="name" id=".detachBehaviors">
             
-            <span class="type-signature static">static</span>Drupal.detachBehaviors<span class="signature">(context, settings, trigger)</span>
+            <span class="type-signature static">static</span>Drupal.detachBehaviors<span class="signature">(<span class="optional">context</span>, <span class="optional">settings</span>, <span class="optional">trigger</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line206">line 206</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line221">line 221</a>
         </div>
         
     </div>
@@ -4993,14 +5035,13 @@ conditions.</p>
     
     
     <div class="description">
-        <p>Detach registered behaviors from a page element.</p>
-<p>Developers implementing AHAH/Ajax in their solutions should call this
-function before page content is about to be removed, feeding in an element
-to be processed, in order to allow special behaviors to detach from the
-content.</p>
-<p>Such implementations should use .findOnce() and .removeOnce() to find
-elements with their corresponding Drupal.behaviors.behaviorName.attach
-implementation, i.e. .removeOnce('behaviorName'), to ensure the behavior
+        <p>Detaches registered behaviors from a page element.</p>
+<p>Developers implementing Ajax in their solutions should call this function
+before page content is about to be removed, feeding in an element to be
+processed, in order to allow special behaviors to detach from the content.</p>
+<p>Such implementations should use <code>.findOnce()</code> and <code>.removeOnce()</code> to find
+elements with their corresponding <code>Drupal.behaviors.behaviorName.attach</code>
+implementation, i.e. <code>.removeOnce('behaviorName')</code>, to ensure the behavior
 is detached only from previously processed elements.</p>
     </div>
     
@@ -5022,6 +5063,8 @@ is detached only from previously processed elements.</p>
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -5038,18 +5081,33 @@ is detached only from previously processed elements.</p>
             <td class="type">
             
                 
-<span class="param-type">Element</span>
+<span class="param-type">HTMLDocument</span>
+|
+
+<span class="param-type">HTMLElement</span>
 
 
             
             </td>
             
             
+                <td class="default">
+                
+                    document
+                
+                </td>
+            
             
             <td class="description last">
                 
-                <p>An element to detach behaviors from. If none is given, the document
-  element is used.</p></td>
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>An element to detach behaviors from.</p></td>
         </tr>
 	
 	
@@ -5069,11 +5127,24 @@ is detached only from previously processed elements.</p>
             </td>
             
             
+                <td class="default">
+                
+                    drupalSettings
+                
+                </td>
+            
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 <p>An object containing settings for the current context. If none given,
-  the global drupalSettings object is used.</p></td>
+  the global <a href="global.html#drupalSettings"><code>drupalSettings</code></a> object is used.</p></td>
         </tr>
 	
 	
@@ -5093,14 +5164,27 @@ is detached only from previously processed elements.</p>
             </td>
             
             
+                <td class="default">
+                
+                    'unload'
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
                 
                 <p>A string containing what's causing the behaviors to be detached. The
   possible triggers are:</p>
 <ul>
-<li>unload: (default) The context element is being removed from the DOM.</li>
-<li>move: The element is about to be moved within the DOM (for example,
+<li><code>'unload'</code>: The context element is being removed from the DOM.</li>
+<li><code>'move'</code>: The element is about to be moved within the DOM (for example,
 during a tabledrag row swap). After the move is completed,
 <a href="Drupal.html#.attachBehaviors"><code>Drupal.attachBehaviors</code></a> is called, so that the behavior can undo
 whatever it did in response to the move. Many behaviors won't need to
@@ -5108,7 +5192,7 @@ do anything simply in response to the element being moved, but because
 IFRAME elements reload their &quot;src&quot; when being moved within the DOM,
 behaviors bound to IFRAME elements (like WYSIWYG editors) may need to
 take some action.</li>
-<li>serialize: When an Ajax form is submitted, this is called with the
+<li><code>'serialize'</code>: When an Ajax form is submitted, this is called with the
 form as the context. This provides every behavior within the form an
 opportunity to ensure that the field elements have correct content
 in them before the form is serialized. The canonical use-case is so
@@ -5888,7 +5972,7 @@ bound.</li>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line540">line 540</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line562">line 562</a>
         </div>
         
     </div>
@@ -6012,7 +6096,7 @@ bound.</li>
                         
                     
             </td>
-            <td class="description last"></td>
+            <td class="description last">The encoded path.</td>
         </tr>
     
     </tbody>
@@ -6389,7 +6473,7 @@ attribute that begins with "data-").</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line511">line 511</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line532">line 532</a>
         </div>
         
     </div>
@@ -6400,7 +6484,7 @@ attribute that begins with "data-").</p>
     
     
     <div class="description">
-        <p>Format a string containing a count of items.</p>
+        <p>Formats a string containing a count of items.</p>
 <p>This function ensures that the string is pluralized correctly. Since
 <a href="Drupal.html#.t"><code>Drupal.t</code></a> is called by this function, make sure not to pass
 already-localized strings to it.</p>
@@ -6669,7 +6753,7 @@ function for more details.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line278">line 278</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line296">line 296</a>
         </div>
         
     </div>
@@ -6680,7 +6764,7 @@ function for more details.</p>
     
     
     <div class="description">
-        <p>Replace placeholders with sanitized values in a string.</p>
+        <p>Replaces placeholders with sanitized values in a string.</p>
     </div>
     
 
@@ -6754,11 +6838,11 @@ function for more details.</p>
   array are replaced with the corresponding value. Based on the first
   character of the key, the value is escaped and/or themed:</p>
 <ul>
-<li>!variable: inserted as is</li>
-<li>@variable: escape plain text to HTML (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</code></a>)</li>
-<li>%variable: escape text and theme as a placeholder for user-submitted
-content (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</code></a> +
-<a href="Drupal.theme.html"><code>Drupal.theme</code></a>('placeholder'))</li>
+<li><code>'!variable'</code>: inserted as is.</li>
+<li><code>'@variable'</code>: escape plain text to HTML (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</code></a>).</li>
+<li><code>'%variable'</code>: escape text and theme as a placeholder for user-
+submitted content (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</code></a> +
+<code><a href="Drupal.theme.html"><code>Drupal.theme</code></a>('placeholder')</code>).</li>
 </ul></td>
         </tr>
 	
@@ -6924,7 +7008,7 @@ content (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</code></a> +
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line322">line 322</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line340">line 340</a>
         </div>
         
     </div>
@@ -6935,7 +7019,7 @@ content (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</code></a> +
     
     
     <div class="description">
-        <p>Replace substring.</p>
+        <p>Replaces substring.</p>
 <p>The longest keys will be tried first. Once a substring has been replaced,
 its new value will not be searched again.</p>
     </div>
@@ -7033,7 +7117,7 @@ its new value will not be searched again.</p>
             
             <td class="description last">
                 
-                <p>Array of keys from the &quot;args&quot;.  Internal use only.</p></td>
+                <p>Array of keys from <code>args</code>. Internal use only.</p></td>
         </tr>
 	
 	
@@ -7098,7 +7182,7 @@ its new value will not be searched again.</p>
                         
                     
             </td>
-            <td class="description last">Returns the replaced string.</td>
+            <td class="description last">The replaced string.</td>
         </tr>
     
     </tbody>
@@ -7120,7 +7204,7 @@ its new value will not be searched again.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line376">line 376</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line396">line 396</a>
         </div>
         
     </div>
@@ -7131,7 +7215,7 @@ its new value will not be searched again.</p>
     
     
     <div class="description">
-        <p>Translate strings to the page language or a given language.</p>
+        <p>Translates strings to the page language, or a given language.</p>
 <p>See the documentation of the server-side t() function for further details.</p>
     </div>
     
@@ -7246,7 +7330,7 @@ its new value will not be searched again.</p>
                         
                     
                 
-                
+                <p>Additional options for translation.</p>
                 
 
 <table class="params">
@@ -7371,7 +7455,8 @@ its new value will not be searched again.</p>
                         
                     
             </td>
-            <td class="description last">The translated string.</td>
+            <td class="description last">The formatted string.
+  The translated string.</td>
         </tr>
     
     </tbody>
@@ -7622,7 +7707,7 @@ its new value will not be searched again.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line54">line 54</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line66">line 66</a>
         </div>
         
     </div>
@@ -7743,7 +7828,7 @@ easier to debug errors in the browser.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line399">line 399</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line420">line 420</a>
         </div>
         
     </div>
@@ -7866,7 +7951,7 @@ easier to debug errors in the browser.</p>
                         
                     
             </td>
-            <td class="description last"></td>
+            <td class="description last">The full URL.</td>
         </tr>
     
     </tbody>
@@ -7941,7 +8026,7 @@ easier to debug errors in the browser.</p>
             
             
             
-            <td class="description last"><p>Function run on page load and after an AJAX call.</p></td>
+            <td class="description last"><p>Function run on page load and after an Ajax call.</p></td>
         </tr>
 	
 	
@@ -8009,7 +8094,7 @@ easier to debug errors in the browser.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line58">line 58</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line70">line 70</a>
         </div>
         
     </div>
@@ -8020,7 +8105,8 @@ easier to debug errors in the browser.</p>
     
     
     <div class="description">
-        <p>Callback function initializing code run on page load and Ajax requests.</p>
+        <p>Custom error thrown after attach/detach if one or more behaviors failed.
+Initializes the JavaScript behaviors for page loads and Ajax requests.</p>
     </div>
     
 
@@ -8057,6 +8143,9 @@ easier to debug errors in the browser.</p>
             <td class="type">
             
                 
+<span class="param-type">HTMLDocument</span>
+|
+
 <span class="param-type">HTMLElement</span>
 
 
@@ -8067,7 +8156,12 @@ easier to debug errors in the browser.</p>
             
             <td class="description last">
                 
-                </td>
+                    
+                    
+                        
+                    
+                
+                <p>An element to detach behaviors from.</p></td>
         </tr>
 	
 	
@@ -8090,7 +8184,14 @@ easier to debug errors in the browser.</p>
             
             <td class="description last">
                 
-                </td>
+                    
+                    
+                        <span class="nullable">nullable</span>
+                    
+                        
+                    
+                
+                <p>An object containing settings for the current context. It is rarely used.</p></td>
         </tr>
 	
 	
@@ -8155,7 +8256,7 @@ easier to debug errors in the browser.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line69">line 69</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line84">line 84</a>
         </div>
         
     </div>
@@ -8166,7 +8267,7 @@ easier to debug errors in the browser.</p>
     
     
     <div class="description">
-        <p>Callback function for reverting and cleaning up behavior initialization.</p>
+        <p>Reverts and cleans up JavaScript behavior initialization.</p>
     </div>
     
 
@@ -8203,6 +8304,9 @@ easier to debug errors in the browser.</p>
             <td class="type">
             
                 
+<span class="param-type">HTMLDocument</span>
+|
+
 <span class="param-type">HTMLElement</span>
 
 
@@ -8213,7 +8317,7 @@ easier to debug errors in the browser.</p>
             
             <td class="description last">
                 
-                </td>
+                <p>An element to attach behaviors to.</p></td>
         </tr>
 	
 	
@@ -8236,7 +8340,7 @@ easier to debug errors in the browser.</p>
             
             <td class="description last">
                 
-                </td>
+                <p>An object containing settings for the current context.</p></td>
         </tr>
 	
 	
@@ -8259,7 +8363,7 @@ easier to debug errors in the browser.</p>
             
             <td class="description last">
                 
-                <p>One of 'unload', 'serialize' or 'move'.</p></td>
+                <p>One of <code>'unload'</code>, <code>'move'</code>, or <code>'serialize'</code>.</p></td>
         </tr>
 	
 	

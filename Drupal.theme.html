@@ -1225,6 +1225,8 @@
             
                 <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
+                <li data-name="Drupal.Ajax.WRAPPER_FORMAT"><a href="Drupal.Ajax.html#.WRAPPER_FORMAT">WRAPPER_FORMAT</a></li>
+            
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
                 <li data-name="Drupal.Ajax#commands"><a href="Drupal.Ajax.html#commands">commands</a></li>
@@ -1233,12 +1235,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3582,14 +3592,11 @@
     
     
         
-            <div class="description"><p>Generate the themed representation of a Drupal object.</p>
+            <div class="description"><p>Generates the themed representation of a Drupal object.</p>
 <p>All requests for themed output must go through this function. It examines
 the request and routes it to the appropriate theme function. If the current
 theme does not provide an override function, the generic theme function is
-called.</p>
-<p>For example, to retrieve the HTML for text that should be emphasized and
-displayed as a placeholder inside a sentence, call
-<code>Drupal.theme('placeholder', text)</code>.</p></div>
+called.</p></div>
         
         
         
@@ -3618,6 +3625,17 @@ displayed as a placeholder inside a sentence, call
 </dl>
 
         
+        
+            <h3>Example</h3>
+            
+        <p class="code-caption">To retrieve the HTML for text that should be emphasized and
+displayed as a placeholder inside a sentence.</p>
+    
+
+    
+    <pre class="prettyprint"><code>Drupal.theme('placeholder', text);</code></pre>
+    
+
         
     
     </div>
@@ -4445,7 +4463,7 @@ displayed as a placeholder inside a sentence, call
     
         
         <div class="tag-source">
-            <a href="modules_filter_filter.filter_html.admin.js.html">modules/filter/filter.filter_html.admin.js</a>, <a href="modules_filter_filter.filter_html.admin.js.html#line192">line 192</a>
+            <a href="modules_filter_filter.filter_html.admin.js.html">modules/filter/filter.filter_html.admin.js</a>, <a href="modules_filter_filter.filter_html.admin.js.html#line197">line 197</a>
         </div>
         
     </div>
@@ -4890,7 +4908,7 @@ displayed as a placeholder inside a sentence, call
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line583">line 583</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line606">line 606</a>
         </div>
         
     </div>
@@ -6821,7 +6839,7 @@ modal.</p>
     
         
         <div class="tag-source">
-            <a href="modules_views_ui_js_ajax.js.html">modules/views_ui/js/ajax.js</a>, <a href="modules_views_ui_js_ajax.js.html#line76">line 76</a>
+            <a href="modules_views_ui_js_ajax.js.html">modules/views_ui/js/ajax.js</a>, <a href="modules_views_ui_js_ajax.js.html#line97">line 97</a>
         </div>
         
     </div>
@@ -6899,7 +6917,7 @@ modal.</p>
                         
                     
             </td>
-            <td class="description last"></td>
+            <td class="description last">An array of messages. Always empty array, to get rid of the messages.</td>
         </tr>
     
     </tbody>
@@ -7113,7 +7131,7 @@ modal.</p>
     
         
         <div class="tag-source">
-            <a href="modules_toolbar_js_toolbar.menu.js.html">modules/toolbar/js/toolbar.menu.js</a>, <a href="modules_toolbar_js_toolbar.menu.js.html#line189">line 189</a>
+            <a href="modules_toolbar_js_toolbar.menu.js.html">modules/toolbar/js/toolbar.menu.js</a>, <a href="modules_toolbar_js_toolbar.menu.js.html#line193">line 193</a>
         </div>
         
     </div>
@@ -7171,7 +7189,7 @@ modal.</p>
             
             <td class="description last">
                 
-                
+                <p>Options for the button.</p>
                 
 
 <table class="params">
@@ -7210,7 +7228,7 @@ modal.</p>
             
             <td class="description last">
                 
-                </td>
+                <p>Class to set on the button.</p></td>
         </tr>
 	
 	
@@ -7233,7 +7251,7 @@ modal.</p>
             
             <td class="description last">
                 
-                </td>
+                <p>Action for the button.</p></td>
         </tr>
 	
 	
@@ -7256,7 +7274,7 @@ modal.</p>
             
             <td class="description last">
                 
-                </td>
+                <p>Used as label for the button.</p></td>
         </tr>
 	
 	
@@ -7349,7 +7367,7 @@ modal.</p>
     
         
         <div class="tag-source">
-            <a href="modules_toolbar_js_toolbar.js.html">modules/toolbar/js/toolbar.js</a>, <a href="modules_toolbar_js_toolbar.js.html#line231">line 231</a>
+            <a href="modules_toolbar_js_toolbar.js.html">modules/toolbar/js/toolbar.js</a>, <a href="modules_toolbar_js_toolbar.js.html#line237">line 237</a>
         </div>
         
     </div>

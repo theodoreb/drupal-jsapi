@@ -1225,6 +1225,8 @@
             
                 <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
+                <li data-name="Drupal.Ajax.WRAPPER_FORMAT"><a href="Drupal.Ajax.html#.WRAPPER_FORMAT">WRAPPER_FORMAT</a></li>
+            
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
                 <li data-name="Drupal.Ajax#commands"><a href="Drupal.Ajax.html#commands">commands</a></li>
@@ -1233,12 +1235,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3577,10 +3587,12 @@
   "use strict";
 
   /**
-   * Attaches the AJAX behavior to Views exposed filter forms and key View
-   * links.
+   * Attaches the AJAX behavior to exposed filters forms and key View links.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches ajaxView functionality to relevant elements.
    */
   Drupal.behaviors.ViewsAjaxView = {};
   Drupal.behaviors.ViewsAjaxView.attach = function () {
@@ -3610,7 +3622,9 @@
    * @constructor
    *
    * @param {object} settings
+   *   Settings object for the ajax view.
    * @param {string} settings.view_dom_id
+   *   The DOM id of the view.
    */
   Drupal.views.ajaxView = function (settings) {
     var selector = '.js-view-dom-id-' + settings.view_dom_id;
@@ -3711,8 +3725,10 @@
   /**
    * Attach the ajax behavior to a singe link.
    *
-   * @param {string} id
+   * @param {string} [id]
+   *   The ID of the link.
    * @param {HTMLElement} link
+   *   The link element.
    */
   Drupal.views.ajaxView.prototype.attachPagerLinkAjax = function (id, link) {
     var $link = $(link);
@@ -3737,10 +3753,14 @@
   };
 
   /**
+   * Views scroll to top ajax command.
    *
    * @param {Drupal.Ajax} [ajax]
+   *   A {@link Drupal.ajax} object.
    * @param {object} response
+   *   Ajax response.
    * @param {string} response.selector
+   *   Selector to use.
    */
   Drupal.AjaxCommands.prototype.viewsScrollTop = function (ajax, response) {
     // Scroll to the top of the view. This will allow users

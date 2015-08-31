@@ -1225,6 +1225,8 @@
             
                 <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
+                <li data-name="Drupal.Ajax.WRAPPER_FORMAT"><a href="Drupal.Ajax.html#.WRAPPER_FORMAT">WRAPPER_FORMAT</a></li>
+            
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
                 <li data-name="Drupal.Ajax#commands"><a href="Drupal.Ajax.html#commands">commands</a></li>
@@ -1233,12 +1235,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3586,7 +3596,9 @@
      * @augments Backbone.View
      *
      * @param {object} options
+     *   Options for the view.
      * @param {object} options.strings
+     *   Various strings to use in the view.
      */
     initialize: function (options) {
       this.strings = options.strings;
@@ -3599,6 +3611,7 @@
      * Announces an orientation change.
      *
      * @param {Drupal.toolbar.ToolbarModel} model
+     *   The toolbar model in question.
      * @param {string} orientation
      *   The new value of the orientation attribute in the model.
      */
@@ -3612,6 +3625,7 @@
      * Announces a changed active tray.
      *
      * @param {Drupal.toolbar.ToolbarModel} model
+     *   The toolbar model in question.
      * @param {HTMLElement} tray
      *   The new value of the tray attribute in the model.
      */
