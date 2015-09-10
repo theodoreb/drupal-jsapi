@@ -1225,8 +1225,6 @@
             
                 <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
-                <li data-name="Drupal.Ajax.WRAPPER_FORMAT"><a href="Drupal.Ajax.html#.WRAPPER_FORMAT">WRAPPER_FORMAT</a></li>
-            
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
                 <li data-name="Drupal.Ajax#commands"><a href="Drupal.Ajax.html#commands">commands</a></li>
@@ -1235,20 +1233,12 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
-                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
-            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
-            
-                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
-            
-            <span class="subtitle">Typedefs</span>
-            
-                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3663,6 +3653,7 @@
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
+        updateLastPlaced(table, this);
       };
 
       // Add a handler so when a row is dropped, update fields dropped into
@@ -3711,9 +3702,27 @@
           updateBlockWeights(table, select[0].value);
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, row);
+          // Update last placed block indication.
+          updateLastPlaced(table, row);
+          // Show unsaved changes warning.
+          if (!tableDrag.changed) {
+            $(Drupal.theme('tableDragChangedWarning')).insertBefore(tableDrag.table).hide().fadeIn('slow');
+            tableDrag.changed = true;
+          }
           // Remove focus from selectbox.
           select.trigger('blur');
         });
+
+      var updateLastPlaced = function ($table, rowObject) {
+        // Remove the color-success class from new block if applicable.
+        $table.find('.color-success').removeClass('color-success');
+
+        var $rowObject = $(rowObject);
+        if (!$rowObject.is('.drag-previous')) {
+          $table.find('.drag-previous').removeClass('drag-previous');
+          $rowObject.addClass('drag-previous');
+        }
+      };
 
       /**
        * Update block weights in the given region.

@@ -1225,8 +1225,6 @@
             
                 <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
-                <li data-name="Drupal.Ajax.WRAPPER_FORMAT"><a href="Drupal.Ajax.html#.WRAPPER_FORMAT">WRAPPER_FORMAT</a></li>
-            
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
                 <li data-name="Drupal.Ajax#commands"><a href="Drupal.Ajax.html#commands">commands</a></li>
@@ -1235,20 +1233,12 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
-                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
-            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
-            
-                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
-            
-            <span class="subtitle">Typedefs</span>
-            
-                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3601,7 +3591,7 @@
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line309">line 309</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line270">line 270</a>
         </div>
         
     </div>
@@ -3715,7 +3705,7 @@ included to provide Ajax capabilities.</p>
             <td class="type">
             
                 
-<span class="param-type"><a href="Drupal.Ajax.html#~element_settings">Drupal.Ajax~element_settings</a></span>
+<span class="param-type">object</span>
 
 
             
@@ -3730,7 +3720,118 @@ included to provide Ajax capabilities.</p>
                         
                     
                 
-                <p>Settings for this Ajax object.</p></td>
+                
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                <p>Target of the Ajax request.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Event bound to settings.element which will trigger the Ajax request.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                <p>Name of the jQuery method used to insert new content in the targeted
+  element.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -3797,7 +3898,7 @@ included to provide Ajax capabilities.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".AJAX_REQUEST_PARAMETER"><span class="type-signature static">static,constant</span>Drupal.Ajax.AJAX_REQUEST_PARAMETER<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id=".AJAX_REQUEST_PARAMETER"><span class="type-signature static">static,constant</span>Drupal.Ajax.AJAX_REQUEST_PARAMETER</h4>
     </div>
     
     
@@ -3825,59 +3926,6 @@ included to provide Ajax capabilities.</p>
     
     
     
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>_drupal_ajax</li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id=".WRAPPER_FORMAT"><span class="type-signature static">static,constant</span>Drupal.Ajax.WRAPPER_FORMAT<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>URL query attribute to indicate the wrapper used to render a request.</p>
-<p>The wrapper format determines how the HTML is wrapped, for example in a
-modal dialog.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>_wrapper_format</li></ul></dd>
     
     
     
@@ -4018,48 +4066,7 @@ modal dialog.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="element_settings">element_settings<span class="type-signature type drupal.ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">Drupal.Ajax~element_settings</a></span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="instanceIndex">instanceIndex<span class="type-signature type bool">bool</span> <span class="type-signature type number">number</span> </h4>
+        <h4 class="name" id="element_settings">element_settings<span class="type-signature type object">object</span> </h4>
     </div>
     
     
@@ -4108,7 +4115,7 @@ modal dialog.</p>
 <dd>
     
     <div class="description">
-        <p>Options for the jQuery.ajax function.</p>
+        <p>Options for the ajaxSubmit function.</p>
     </div>
     
     
@@ -4131,8 +4138,6 @@ modal dialog.</p>
 		
 		
 		
-		
-		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -4159,12 +4164,8 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                </td>
             
-            
-            <td class="description last"><p>Ajax URL to be called.</p></td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -4186,12 +4187,8 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                </td>
             
-            
-            <td class="description last"><p>Ajax payload.</p></td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -4213,13 +4210,8 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                </td>
             
-            
-            <td class="description last"><p>Implement jQuery beforeSerialize function to call
-  <a href="Drupal.Ajax.html#beforeSerialize"><code>Drupal.Ajax#beforeSerialize</code></a>.</p></td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -4241,13 +4233,8 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                </td>
             
-            
-            <td class="description last"><p>Implement jQuery beforeSubmit function to call
-  <a href="Drupal.Ajax.html#beforeSubmit"><code>Drupal.Ajax#beforeSubmit</code></a>.</p></td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -4269,13 +4256,8 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                </td>
             
-            
-            <td class="description last"><p>Implement jQuery beforeSend function to call
-  <a href="Drupal.Ajax.html#beforeSend"><code>Drupal.Ajax#beforeSend</code></a>.</p></td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -4297,13 +4279,8 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                </td>
             
-            
-            <td class="description last"><p>Implement jQuery success function to call
-  <a href="Drupal.Ajax.html#success"><code>Drupal.Ajax#success</code></a>.</p></td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -4325,13 +4302,8 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                </td>
             
-            
-            <td class="description last"><p>Implement jQuery success function to clean up ajax state and trigger an
-  error if needed.</p></td>
+            <td class="description last"></td>
         </tr>
 	
 	
@@ -4353,14 +4325,78 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                    'json'
-                
-                </td>
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>accepts</code></td>
             
             
-            <td class="description last"><p>Type of the response expected.</p></td>
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">
+                <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>json</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -4382,65 +4418,14 @@ modal dialog.</p>
             
             
             
-                <td class="default">
-                
-                    'POST'
-                
-                </td>
             
-            
-            <td class="description last"><p>HTTP method to use for the Ajax request.</p></td>
+            <td class="description last"></td>
         </tr>
 	
 	
 	</tbody>
 </table></dl>
         
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="url">url<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Processed Ajax URL.</p>
-    </div>
-    
-    
-    
-<dl class="details">
     
         
     
@@ -4526,7 +4511,7 @@ modal dialog.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line714">line 714</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line640">line 640</a>
         </div>
         
     </div>
@@ -4584,7 +4569,7 @@ modal dialog.</p>
             
             <td class="description last">
                 
-                <p>Native Ajax object.</p></td>
+                </td>
         </tr>
 	
 	
@@ -4607,7 +4592,52 @@ modal dialog.</p>
             
             <td class="description last">
                 
-                <p>jQuery.ajax options.</p></td>
+                
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>extraData</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -4660,12 +4690,12 @@ modal dialog.</p>
     <div class="nameContainer">
         <h4 class="name" id="beforeSerialize">
             
-            beforeSerialize<span class="signature">(<span class="optional">element</span>, options)</span>
+            beforeSerialize<span class="signature">(element, options)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line666">line 666</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line596">line 596</a>
         </div>
         
     </div>
@@ -4715,7 +4745,7 @@ before field data is collected.</p>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">HTMLElement</span>
 
 
             
@@ -4725,14 +4755,7 @@ before field data is collected.</p>
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>Ajax object's <code>element_settings</code>.</p></td>
+                </td>
         </tr>
 	
 	
@@ -4755,12 +4778,52 @@ before field data is collected.</p>
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
                 
-                <p>jQuery.ajax options.</p></td>
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
         </tr>
 	
 	
@@ -4818,7 +4881,7 @@ before field data is collected.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line701">line 701</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line628">line 628</a>
         </div>
         
     </div>
@@ -4866,7 +4929,7 @@ before field data is collected.</p>
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;object></span>
+<span class="param-type">object</span>
 
 
             
@@ -4876,7 +4939,7 @@ before field data is collected.</p>
             
             <td class="description last">
                 
-                <p>Processed form values.</p></td>
+                </td>
         </tr>
 	
 	
@@ -4889,7 +4952,7 @@ before field data is collected.</p>
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#jQuery">jQuery</a></span>
+<span class="param-type">HTMLElement</span>
 
 
             
@@ -4899,7 +4962,7 @@ before field data is collected.</p>
             
             <td class="description last">
                 
-                <p>The form node as a jQuery object.</p></td>
+                </td>
         </tr>
 	
 	
@@ -4922,7 +4985,7 @@ before field data is collected.</p>
             
             <td class="description last">
                 
-                <p>jQuery.ajax options.</p></td>
+                </td>
         </tr>
 	
 	
@@ -4975,12 +5038,12 @@ before field data is collected.</p>
     <div class="nameContainer">
         <h4 class="name" id="error">
             
-            error<span class="signature">(xmlhttprequest, uri, <span class="optional">customMessage</span>)</span>
+            error<span class="signature">(xmlhttprequest, uri, customMessage)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line882">line 882</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line798">line 798</a>
         </div>
         
     </div>
@@ -5038,12 +5101,7 @@ before field data is collected.</p>
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
-                
-                <p>Native XMLHttpRequest object.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5066,12 +5124,7 @@ before field data is collected.</p>
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
-                
-                <p>Ajax Request URI.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5094,14 +5147,7 @@ before field data is collected.</p>
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>Extra message to print with the Ajax error.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5159,7 +5205,7 @@ before field data is collected.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line616">line 616</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line547">line 547</a>
         </div>
         
     </div>
@@ -5221,7 +5267,7 @@ Ajax object.</p>
             
             <td class="description last">
                 
-                <p>Element the event was triggered on.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5244,7 +5290,7 @@ Ajax object.</p>
             
             <td class="description last">
                 
-                <p>Triggered event.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5302,7 +5348,7 @@ Ajax object.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line553">line 553</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line488">line 488</a>
         </div>
         
     </div>
@@ -5375,7 +5421,7 @@ an event to respond to.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line848">line 848</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line767">line 767</a>
         </div>
         
     </div>
@@ -5433,7 +5479,7 @@ an event to respond to.</p>
             
             <td class="description last">
                 
-                <p>Drupal Ajax response.</p>
+                
                 
 
 <table class="params">
@@ -5479,7 +5525,7 @@ an event to respond to.</p>
                         
                     
                 
-                <p>Override the default value of <a href="Drupal.Ajax.html#element_settings"><code>Drupal.Ajax#element_settings</code></a>.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5512,7 +5558,7 @@ an event to respond to.</p>
                         
                     
                 
-                <p>Override the default value of <a href="Drupal.Ajax.html#element_settings"><code>Drupal.Ajax#element_settings</code></a>.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5583,8 +5629,7 @@ an event to respond to.</p>
                         
                     
             </td>
-            <td class="description last">Returns an object with <code>showEffect</code>, <code>hideEffect</code> and <code>showSpeed</code>
-  properties.</td>
+            <td class="description last"></td>
         </tr>
     
     </tbody>
@@ -5606,7 +5651,7 @@ an event to respond to.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line586">line 586</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line519">line 519</a>
         </div>
         
     </div>
@@ -5670,7 +5715,7 @@ SPACE is often used to activate an element without submitting.</p>
             
             <td class="description last">
                 
-                <p>Element the event was triggered on.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5693,7 +5738,7 @@ SPACE is often used to activate an element without submitting.</p>
             
             <td class="description last">
                 
-                <p>Triggered event.</p></td>
+                </td>
         </tr>
 	
 	
@@ -5751,7 +5796,7 @@ SPACE is often used to activate an element without submitting.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line764">line 764</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line690">line 690</a>
         </div>
         
     </div>
@@ -5822,7 +5867,7 @@ SPACE is often used to activate an element without submitting.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line791">line 791</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line717">line 717</a>
         </div>
         
     </div>
@@ -5893,7 +5938,7 @@ SPACE is often used to activate an element without submitting.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line780">line 780</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line706">line 706</a>
         </div>
         
     </div>
@@ -5964,7 +6009,7 @@ SPACE is often used to activate an element without submitting.</p>
     
         
         <div class="tag-source">
-            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line804">line 804</a>
+            <a href="misc_ajax.js.html">misc/ajax.js</a>, <a href="misc_ajax.js.html#line728">line 728</a>
         </div>
         
     </div>
@@ -6022,7 +6067,7 @@ SPACE is often used to activate an element without submitting.</p>
             
             <td class="description last">
                 
-                <p>Drupal Ajax response.</p></td>
+                </td>
         </tr>
 	
 	
@@ -6045,7 +6090,7 @@ SPACE is often used to activate an element without submitting.</p>
             
             <td class="description last">
                 
-                <p>XMLHttpRequest status.</p></td>
+                </td>
         </tr>
 	
 	
@@ -6095,686 +6140,6 @@ SPACE is often used to activate an element without submitting.</p>
         </dl>
     
     
-    
-        <h3 class="subsection-title">Type Definitions</h3>
-        
-        <dl>
-                
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="~element_settings">element_settings<span class="type-signature type object">object</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Settings for an Ajax object.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-        <h5 class="subsection-title">Properties:</h5>
-        
-        <dl>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Argument</th>
-		
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>Target of the Ajax request.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                    &lt;nullable><br>
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>Event bound to settings.element which will trigger the Ajax request.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>keypress</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-            
-            <td class="description last"><p>Triggers a request on keypress events.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>selector</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    
-                
-                    &lt;nullable><br>
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>jQuery selector targeting the element to bind events to or used with
-  <a href="Drupal.AjaxCommands.html"><code>Drupal.AjaxCommands</code></a>.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>effect</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    'none'
-                
-                </td>
-            
-            
-            <td class="description last"><p>Name of the jQuery method to use for displaying new Ajax content.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>speed</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    'none'
-                
-                </td>
-            
-            
-            <td class="description last"><p>Speed with which to apply the effect.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>method</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>Name of the jQuery method used to insert new content in the targeted
-  element.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>progress</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>Settings for the display of a user-friendly loader.</p>
-                <h6>Properties</h6>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Argument</th>
-		
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    'throbber'
-                
-                </td>
-            
-            
-            <td class="description last"><p>Type of progress element, core provides <code>'bar'</code>, <code>'throbber'</code> and
-  <code>'fullscreen'</code>.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>message</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    Drupal.t('Please wait...')
-                
-                </td>
-            
-            
-            <td class="description last"><p>Custom message to be used with the bar indicator.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>submit</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>Extra data to be sent with the Ajax request.</p>
-                <h6>Properties</h6>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Argument</th>
-		
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>js</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-            
-            <td class="description last"><p>Allows the PHP side to know this comes from an Ajax request.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>dialog</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>Options for <a href="Drupal.html#.dialog"><code>Drupal.dialog</code></a>.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>dialogType</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>One of <code>'modal'</code> or <code>'dialog'</code>.</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>prevent</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last"><p>List of events on which to stop default action and stop propagation.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table></dl>
-        
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-            </dl>
     
     
     

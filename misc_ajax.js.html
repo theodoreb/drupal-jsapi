@@ -1225,8 +1225,6 @@
             
                 <li data-name="Drupal.Ajax.AJAX_REQUEST_PARAMETER"><a href="Drupal.Ajax.html#.AJAX_REQUEST_PARAMETER">AJAX_REQUEST_PARAMETER</a></li>
             
-                <li data-name="Drupal.Ajax.WRAPPER_FORMAT"><a href="Drupal.Ajax.html#.WRAPPER_FORMAT">WRAPPER_FORMAT</a></li>
-            
                 <li data-name="Drupal.Ajax#$form"><a href="Drupal.Ajax.html#$form">$form</a></li>
             
                 <li data-name="Drupal.Ajax#commands"><a href="Drupal.Ajax.html#commands">commands</a></li>
@@ -1235,20 +1233,12 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
-                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
-            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
-            
-                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
-            
-            <span class="subtitle">Typedefs</span>
-            
-                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3598,10 +3588,6 @@
    * Attaches the Ajax behavior to each Ajax form element.
    *
    * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Initializes Ajax objects defined in {@link drupalSettings} or with
-   *   special HTML classes.
    */
   Drupal.behaviors.AJAX = {
     attach: function (context, settings) {
@@ -3792,7 +3778,6 @@
    *   event listeners will be bound.
    *
    * @return {Drupal.Ajax}
-   *   The created Ajax object.
    *
    * @see Drupal.AjaxCommands
    */
@@ -3826,46 +3811,6 @@
   Drupal.ajax.instances = [];
 
   /**
-   * Settings for an Ajax object.
-   *
-   * @typedef {object} Drupal.Ajax~element_settings
-   *
-   * @prop {string} url
-   *   Target of the Ajax request.
-   * @prop {?string} [event]
-   *   Event bound to settings.element which will trigger the Ajax request.
-   * @prop {bool} [keypress=true]
-   *   Triggers a request on keypress events.
-   * @prop {?string} selector
-   *   jQuery selector targeting the element to bind events to or used with
-   *   {@link Drupal.AjaxCommands}.
-   * @prop {string} [effect='none']
-   *   Name of the jQuery method to use for displaying new Ajax content.
-   * @prop {string|number} [speed='none']
-   *   Speed with which to apply the effect.
-   * @prop {string} [method]
-   *   Name of the jQuery method used to insert new content in the targeted
-   *   element.
-   * @prop {object} [progress]
-   *   Settings for the display of a user-friendly loader.
-   * @prop {string} [progress.type='throbber']
-   *   Type of progress element, core provides `'bar'`, `'throbber'` and
-   *   `'fullscreen'`.
-   * @prop {string} [progress.message=Drupal.t('Please wait...')]
-   *   Custom message to be used with the bar indicator.
-   * @prop {object} [submit]
-   *   Extra data to be sent with the Ajax request.
-   * @prop {bool} [submit.js=true]
-   *   Allows the PHP side to know this comes from an Ajax request.
-   * @prop {object} [dialog]
-   *   Options for {@link Drupal.dialog}.
-   * @prop {string} [dialogType]
-   *   One of `'modal'` or `'dialog'`.
-   * @prop {string} [prevent]
-   *   List of events on which to stop default action and stop propagation.
-   */
-
-  /**
    * Ajax constructor.
    *
    * The Ajax request returns an array of commands encoded in JSON, which is
@@ -3882,8 +3827,14 @@
    * @param {HTMLElement} [element]
    *   Element parameter of {@link Drupal.Ajax} constructor, element on which
    *   event listeners will be bound.
-   * @param {Drupal.Ajax~element_settings} element_settings
-   *   Settings for this Ajax object.
+   * @param {object} element_settings
+   * @param {string} element_settings.url
+   *   Target of the Ajax request.
+   * @param {string} [element_settings.event]
+   *   Event bound to settings.element which will trigger the Ajax request.
+   * @param {string} [element_settings.method]
+   *   Name of the jQuery method used to insert new content in the targeted
+   *   element.
    */
   Drupal.Ajax = function (base, element, element_settings) {
     var defaults = {
@@ -3908,10 +3859,6 @@
      * @type {Drupal.AjaxCommands}
      */
     this.commands = new Drupal.AjaxCommands();
-
-    /**
-     * @type {bool|number}
-     */
     this.instanceIndex = false;
 
     // @todo Remove this after refactoring the PHP code to:
@@ -3932,7 +3879,7 @@
     this.element = element;
 
     /**
-     * @type {Drupal.Ajax~element_settings}
+     * @type {object}
      */
     this.element_settings = element_settings;
 
@@ -3965,12 +3912,6 @@
     // 3. /nojs? - Followed by a query (e.g. path/nojs?destination=foobar).
     // 4. /nojs# - Followed by a fragment (e.g.: path/nojs#myfragment).
     var originalUrl = this.url;
-
-    /**
-     * Processed Ajax URL.
-     *
-     * @type {string}
-     */
     this.url = this.url.replace(/\/nojs(\/|$|\?|#)/g, '/ajax$1');
     // If the 'nojs' version of the URL is trusted, also trust the 'ajax'
     // version.
@@ -3983,35 +3924,23 @@
     var ajax = this;
 
     /**
-     * Options for the jQuery.ajax function.
+     * Options for the ajaxSubmit function.
      *
      * @name Drupal.Ajax#options
      *
      * @type {object}
      *
      * @prop {string} url
-     *   Ajax URL to be called.
      * @prop {object} data
-     *   Ajax payload.
      * @prop {function} beforeSerialize
-     *   Implement jQuery beforeSerialize function to call
-     *   {@link Drupal.Ajax#beforeSerialize}.
      * @prop {function} beforeSubmit
-     *   Implement jQuery beforeSubmit function to call
-     *   {@link Drupal.Ajax#beforeSubmit}.
      * @prop {function} beforeSend
-     *   Implement jQuery beforeSend function to call
-     *   {@link Drupal.Ajax#beforeSend}.
      * @prop {function} success
-     *   Implement jQuery success function to call
-     *   {@link Drupal.Ajax#success}.
      * @prop {function} complete
-     *   Implement jQuery success function to clean up ajax state and trigger an
-     *   error if needed.
-     * @prop {string} dataType='json'
-     *   Type of the response expected.
-     * @prop {string} type='POST'
-     *   HTTP method to use for the Ajax request.
+     * @prop {string} dataType
+     * @prop {object} accepts
+     * @prop {string} accepts.json
+     * @prop {string} type
      */
     ajax.options = {
       url: ajax.url,
@@ -4075,7 +4004,7 @@
     else {
       ajax.options.url += '&amp;';
     }
-    ajax.options.url += Drupal.Ajax.WRAPPER_FORMAT + '=drupal_' + (element_settings.dialogType || 'ajax');
+    ajax.options.url += Drupal.ajax.WRAPPER_FORMAT + '=drupal_' + (element_settings.dialogType || 'ajax');
 
     // Bind the ajaxSubmit function to the element event.
     $(ajax.element).on(element_settings.event, function (event) {
@@ -4109,17 +4038,13 @@
    * modal dialog.
    *
    * @const {string}
-   *
-   * @default
    */
-  Drupal.Ajax.WRAPPER_FORMAT = '_wrapper_format';
+  Drupal.ajax.WRAPPER_FORMAT = '_wrapper_format';
 
   /**
    * Request parameter to indicate that a request is a Drupal Ajax request.
    *
-   * @const {string}
-   *
-   * @default
+   * @const
    */
   Drupal.Ajax.AJAX_REQUEST_PARAMETER = '_drupal_ajax';
 
@@ -4158,9 +4083,7 @@
    * SPACE is often used to activate an element without submitting.
    *
    * @param {HTMLElement} element
-   *   Element the event was triggered on.
    * @param {jQuery.Event} event
-   *   Triggered event.
    */
   Drupal.Ajax.prototype.keypressResponse = function (element, event) {
     // Create a synonym for this to reduce code confusion.
@@ -4188,9 +4111,7 @@
    * Ajax object.
    *
    * @param {HTMLElement} element
-   *   Element the event was triggered on.
    * @param {jQuery.Event} event
-   *   Triggered event.
    */
   Drupal.Ajax.prototype.eventResponse = function (element, event) {
     event.preventDefault();
@@ -4237,10 +4158,9 @@
    * Runs before the beforeSend() handler (see below), and unlike that one, runs
    * before field data is collected.
    *
-   * @param {object} [element]
-   *   Ajax object's `element_settings`.
+   * @param {HTMLElement} element
    * @param {object} options
-   *   jQuery.ajax options.
+   * @param {object} options.data
    */
   Drupal.Ajax.prototype.beforeSerialize = function (element, options) {
     // Allow detaching behaviors to update field values before collecting them.
@@ -4270,12 +4190,9 @@
   /**
    * Modify form values prior to form submission.
    *
-   * @param {Array.&lt;object>} form_values
-   *   Processed form values.
-   * @param {jQuery} element
-   *   The form node as a jQuery object.
+   * @param {object} form_values
+   * @param {HTMLElement} element
    * @param {object} options
-   *   jQuery.ajax options.
    */
   Drupal.Ajax.prototype.beforeSubmit = function (form_values, element, options) {
     // This function is left empty to make it simple to override for modules
@@ -4286,9 +4203,8 @@
    * Prepare the Ajax request before it is sent.
    *
    * @param {XMLHttpRequest} xmlhttprequest
-   *   Native Ajax object.
    * @param {object} options
-   *   jQuery.ajax options.
+   * @param {object} options.extraData
    */
   Drupal.Ajax.prototype.beforeSend = function (xmlhttprequest, options) {
     // For forms without file inputs, the jQuery Form plugin serializes the
@@ -4376,9 +4292,7 @@
    * Handler for the form redirection completion.
    *
    * @param {Array.&lt;Drupal.AjaxCommands~commandDefinition>} response
-   *   Drupal Ajax response.
    * @param {number} status
-   *   XMLHttpRequest status.
    */
   Drupal.Ajax.prototype.success = function (response, status) {
     // Remove the progress element.
@@ -4414,15 +4328,10 @@
    * Build an effect object to apply an effect when adding new HTML.
    *
    * @param {object} response
-   *   Drupal Ajax response.
    * @param {string} [response.effect]
-   *   Override the default value of {@link Drupal.Ajax#element_settings}.
    * @param {string|number} [response.speed]
-   *   Override the default value of {@link Drupal.Ajax#element_settings}.
    *
    * @return {object}
-   *   Returns an object with `showEffect`, `hideEffect` and `showSpeed`
-   *   properties.
    */
   Drupal.Ajax.prototype.getEffect = function (response) {
     var type = response.effect || this.effect;
@@ -4452,11 +4361,8 @@
    * Handler for the form redirection error.
    *
    * @param {object} xmlhttprequest
-   *   Native XMLHttpRequest object.
    * @param {string} uri
-   *   Ajax Request URI.
-   * @param {string} [customMessage]
-   *   Extra message to print with the Ajax error.
+   * @param {string} customMessage
    */
   Drupal.Ajax.prototype.error = function (xmlhttprequest, uri, customMessage) {
     // Remove the progress element.
