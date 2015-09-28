@@ -285,6 +285,8 @@
             
                 <li data-name="Drupal.behaviors.quickedit"><a href="Drupal.behaviors.html#.quickedit">quickedit</a></li>
             
+                <li data-name="Drupal.behaviors.responsiveImageAJAX"><a href="Drupal.behaviors.html#.responsiveImageAJAX">responsiveImageAJAX</a></li>
+            
                 <li data-name="Drupal.behaviors.setTimezone"><a href="Drupal.behaviors.html#.setTimezone">setTimezone</a></li>
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
@@ -3604,12 +3606,6 @@
       // for end users.
       var label = $('label[for=' + element.getAttribute('id') + ']').html();
       format.editorSettings.title = Drupal.t("Rich Text Editor, !label field", {'!label': label});
-
-      // CKEditor initializes itself in a read-only state if the 'disabled'
-      // attribute is set. It does not respect the 'readonly' attribute,
-      // however, so we set the 'readOnly' configuration property manually in
-      // that case, for the CKEditor instance that's about to be created.
-      format.editorSettings.readOnly = element.hasAttribute('readonly');
 
       return !!CKEDITOR.replace(element, format.editorSettings);
     },

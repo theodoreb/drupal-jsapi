@@ -285,6 +285,8 @@
             
                 <li data-name="Drupal.behaviors.quickedit"><a href="Drupal.behaviors.html#.quickedit">quickedit</a></li>
             
+                <li data-name="Drupal.behaviors.responsiveImageAJAX"><a href="Drupal.behaviors.html#.responsiveImageAJAX">responsiveImageAJAX</a></li>
+            
                 <li data-name="Drupal.behaviors.setTimezone"><a href="Drupal.behaviors.html#.setTimezone">setTimezone</a></li>
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
@@ -4176,7 +4178,8 @@
   $(document).on('state:required', function (e) {
     if (e.trigger) {
       if (e.value) {
-        var $label = $(e.target).attr({'required': 'required', 'aria-required': 'aria-required'}).closest('.js-form-item, .js-form-wrapper').find('label');
+        var label = 'label' + (e.target.id ? '[for=' + e.target.id + ']' : '');
+        var $label = $(e.target).attr({'required': 'required', 'aria-required': 'aria-required'}).closest('.js-form-item, .js-form-wrapper').find(label);
         // Avoids duplicate required markers on initialization.
         if (!$label.hasClass('js-form-required').length) {
           $label.addClass('js-form-required form-required');

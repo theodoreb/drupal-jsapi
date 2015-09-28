@@ -285,6 +285,8 @@
             
                 <li data-name="Drupal.behaviors.quickedit"><a href="Drupal.behaviors.html#.quickedit">quickedit</a></li>
             
+                <li data-name="Drupal.behaviors.responsiveImageAJAX"><a href="Drupal.behaviors.html#.responsiveImageAJAX">responsiveImageAJAX</a></li>
+            
                 <li data-name="Drupal.behaviors.setTimezone"><a href="Drupal.behaviors.html#.setTimezone">setTimezone</a></li>
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
@@ -3726,15 +3728,15 @@
       }
     }
 
-    // Bind event handlers.
-    $(document)
-      .on('click.toolbar', '.toolbar-box', toggleClickHandler)
-      .on('click.toolbar', '.toolbar-box a', linkClickHandler);
-
     // Return the jQuery object.
     return this.each(function (selector) {
       var $menu = $(this).once('toolbar-menu');
       if ($menu.length) {
+        // Bind event handlers.
+        $menu
+          .on('click.toolbar', '.toolbar-box', toggleClickHandler)
+          .on('click.toolbar', '.toolbar-box a', linkClickHandler);
+
         $menu.addClass('root');
         initItems($menu);
         markListLevels($menu);
