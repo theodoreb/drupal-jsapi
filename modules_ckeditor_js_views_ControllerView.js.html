@@ -65,8 +65,6 @@
             
                 <li data-name="Drupal.checkPlain"><a href="Drupal.html#.checkPlain">checkPlain</a></li>
             
-                <li data-name="Drupal.checkWidthBreakpoint"><a href="Drupal.html#.checkWidthBreakpoint">checkWidthBreakpoint</a></li>
-            
                 <li data-name="Drupal.debounce"><a href="Drupal.html#.debounce">debounce</a></li>
             
                 <li data-name="Drupal.detachBehaviors"><a href="Drupal.html#.detachBehaviors">detachBehaviors</a></li>
@@ -324,8 +322,6 @@
                 <li data-name="Drupal.behaviors.viewsAjax"><a href="Drupal.behaviors.html#.viewsAjax">viewsAjax</a></li>
             
                 <li data-name="Drupal.behaviors.ViewsAjaxView"><a href="Drupal.behaviors.html#.ViewsAjaxView">ViewsAjaxView</a></li>
-            
-                <li data-name="Drupal.behaviors.viewsContextualLinks"><a href="Drupal.behaviors.html#.viewsContextualLinks">viewsContextualLinks</a></li>
             
                 <li data-name="Drupal.behaviors.viewsFilterConfigSelectAll"><a href="Drupal.behaviors.html#.viewsFilterConfigSelectAll">viewsFilterConfigSelectAll</a></li>
             
@@ -3410,8 +3406,6 @@
             
                 <li data-name="Drupal.viewsUi.OptionsSearch#$form"><a href="Drupal.viewsUi.OptionsSearch.html#$form">$form</a></li>
             
-                <li data-name="Drupal.viewsUi.OptionsSearch#$searchBox"><a href="Drupal.viewsUi.OptionsSearch.html#$searchBox">$searchBox</a></li>
-            
                 <li data-name="Drupal.viewsUi.OptionsSearch#options"><a href="Drupal.viewsUi.OptionsSearch.html#options">options</a></li>
             
             </ul>
@@ -3424,7 +3418,7 @@
             
                 <li data-name="Drupal.viewsUi.OptionsSearch#getOptions"><a href="Drupal.viewsUi.OptionsSearch.html#getOptions">getOptions</a></li>
             
-                <li data-name="Drupal.viewsUi.OptionsSearch#handleKeyup"><a href="Drupal.viewsUi.OptionsSearch.html#handleKeyup">handleKeyup</a></li>
+                <li data-name="Drupal.viewsUi.OptionsSearch#handleFilter"><a href="Drupal.viewsUi.OptionsSearch.html#handleFilter">handleFilter</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3792,6 +3786,11 @@
       // the feature that was just added or removed. Not every feature has
       // such metadata.
       var featureName = this.model.get('buttonsToFeatures')[button.toLowerCase()];
+      // Features without an associated command do not have a 'feature name' by
+      // default, so we use the lowercased button name instead.
+      if (!featureName) {
+        featureName = button.toLowerCase();
+      }
       var featuresMetadata = this.model.get('featuresMetadata');
       if (!featuresMetadata[featureName]) {
         featuresMetadata[featureName] = new Drupal.EditorFeature(featureName);
@@ -3872,7 +3871,6 @@
     broadcastConfigurationChanges: function ($ckeditorToolbar) {
       var view = this;
       var hiddenEditorConfig = this.model.get('hiddenEditorConfig');
-      var featuresMetadata = this.model.get('featuresMetadata');
       var getFeatureForButton = this.getFeatureForButton.bind(this);
       var getCKEditorFeatures = this.getCKEditorFeatures.bind(this);
       $ckeditorToolbar
@@ -3906,6 +3904,7 @@
           getCKEditorFeatures(hiddenEditorConfig, function (features) {
             // Trigger a standardized text editor configuration event for each
             // feature that was modified by the configuration changes.
+            var featuresMetadata = view.model.get('featuresMetadata');
             for (var name in features) {
               if (features.hasOwnProperty(name)) {
                 var feature = features[name];

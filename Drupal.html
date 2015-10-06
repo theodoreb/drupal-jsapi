@@ -65,8 +65,6 @@
             
                 <li data-name="Drupal.checkPlain"><a href="Drupal.html#.checkPlain">checkPlain</a></li>
             
-                <li data-name="Drupal.checkWidthBreakpoint"><a href="Drupal.html#.checkWidthBreakpoint">checkWidthBreakpoint</a></li>
-            
                 <li data-name="Drupal.debounce"><a href="Drupal.html#.debounce">debounce</a></li>
             
                 <li data-name="Drupal.detachBehaviors"><a href="Drupal.html#.detachBehaviors">detachBehaviors</a></li>
@@ -324,8 +322,6 @@
                 <li data-name="Drupal.behaviors.viewsAjax"><a href="Drupal.behaviors.html#.viewsAjax">viewsAjax</a></li>
             
                 <li data-name="Drupal.behaviors.ViewsAjaxView"><a href="Drupal.behaviors.html#.ViewsAjaxView">ViewsAjaxView</a></li>
-            
-                <li data-name="Drupal.behaviors.viewsContextualLinks"><a href="Drupal.behaviors.html#.viewsContextualLinks">viewsContextualLinks</a></li>
             
                 <li data-name="Drupal.behaviors.viewsFilterConfigSelectAll"><a href="Drupal.behaviors.html#.viewsFilterConfigSelectAll">viewsFilterConfigSelectAll</a></li>
             
@@ -3410,8 +3406,6 @@
             
                 <li data-name="Drupal.viewsUi.OptionsSearch#$form"><a href="Drupal.viewsUi.OptionsSearch.html#$form">$form</a></li>
             
-                <li data-name="Drupal.viewsUi.OptionsSearch#$searchBox"><a href="Drupal.viewsUi.OptionsSearch.html#$searchBox">$searchBox</a></li>
-            
                 <li data-name="Drupal.viewsUi.OptionsSearch#options"><a href="Drupal.viewsUi.OptionsSearch.html#options">options</a></li>
             
             </ul>
@@ -3424,7 +3418,7 @@
             
                 <li data-name="Drupal.viewsUi.OptionsSearch#getOptions"><a href="Drupal.viewsUi.OptionsSearch.html#getOptions">getOptions</a></li>
             
-                <li data-name="Drupal.viewsUi.OptionsSearch#handleKeyup"><a href="Drupal.viewsUi.OptionsSearch.html#handleKeyup">handleKeyup</a></li>
+                <li data-name="Drupal.viewsUi.OptionsSearch#handleFilter"><a href="Drupal.viewsUi.OptionsSearch.html#handleFilter">handleFilter</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -4509,7 +4503,7 @@ limit behavior attachment to a particular element.)</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line268">line 268</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line251">line 251</a>
         </div>
         
     </div>
@@ -4633,169 +4627,6 @@ limit behavior attachment to a particular element.)</p>
                     
             </td>
             <td class="description last">The encoded string.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id=".checkWidthBreakpoint">
-            
-            <span class="type-signature static">static</span>Drupal.checkWidthBreakpoint<span class="signature">(<span class="optional">width</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line252">line 252</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Tests the document width for mobile configurations.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    640
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                <p>Value of the width to check for.</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>Temporary solution for the mobile initiative.</li><ul></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        bool
-                        
-                    
-            </td>
-            <td class="description last">true if the document's <code>clientWidth</code> is bigger than <code>width</code>, returns
-  false otherwise.</td>
         </tr>
     
     </tbody>
@@ -5964,7 +5795,7 @@ bound.</li>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line562">line 562</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line545">line 545</a>
         </div>
         
     </div>
@@ -6465,7 +6296,7 @@ attribute that begins with "data-").</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line532">line 532</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line515">line 515</a>
         </div>
         
     </div>
@@ -6745,7 +6576,7 @@ function for more details.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line296">line 296</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line279">line 279</a>
         </div>
         
     </div>
@@ -7000,7 +6831,7 @@ submitted content (<a href="Drupal.html#.checkPlain"><code>Drupal.checkPlain</co
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line340">line 340</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line323">line 323</a>
         </div>
         
     </div>
@@ -7196,7 +7027,7 @@ its new value will not be searched again.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line396">line 396</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line379">line 379</a>
         </div>
         
     </div>
@@ -7820,7 +7651,7 @@ easier to debug errors in the browser.</p>
     
         
         <div class="tag-source">
-            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line420">line 420</a>
+            <a href="misc_drupal.js.html">misc/drupal.js</a>, <a href="misc_drupal.js.html#line403">line 403</a>
         </div>
         
     </div>

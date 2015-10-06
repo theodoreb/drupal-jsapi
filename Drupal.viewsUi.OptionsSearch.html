@@ -65,8 +65,6 @@
             
                 <li data-name="Drupal.checkPlain"><a href="Drupal.html#.checkPlain">checkPlain</a></li>
             
-                <li data-name="Drupal.checkWidthBreakpoint"><a href="Drupal.html#.checkWidthBreakpoint">checkWidthBreakpoint</a></li>
-            
                 <li data-name="Drupal.debounce"><a href="Drupal.html#.debounce">debounce</a></li>
             
                 <li data-name="Drupal.detachBehaviors"><a href="Drupal.html#.detachBehaviors">detachBehaviors</a></li>
@@ -324,8 +322,6 @@
                 <li data-name="Drupal.behaviors.viewsAjax"><a href="Drupal.behaviors.html#.viewsAjax">viewsAjax</a></li>
             
                 <li data-name="Drupal.behaviors.ViewsAjaxView"><a href="Drupal.behaviors.html#.ViewsAjaxView">ViewsAjaxView</a></li>
-            
-                <li data-name="Drupal.behaviors.viewsContextualLinks"><a href="Drupal.behaviors.html#.viewsContextualLinks">viewsContextualLinks</a></li>
             
                 <li data-name="Drupal.behaviors.viewsFilterConfigSelectAll"><a href="Drupal.behaviors.html#.viewsFilterConfigSelectAll">viewsFilterConfigSelectAll</a></li>
             
@@ -3410,8 +3406,6 @@
             
                 <li data-name="Drupal.viewsUi.OptionsSearch#$form"><a href="Drupal.viewsUi.OptionsSearch.html#$form">$form</a></li>
             
-                <li data-name="Drupal.viewsUi.OptionsSearch#$searchBox"><a href="Drupal.viewsUi.OptionsSearch.html#$searchBox">$searchBox</a></li>
-            
                 <li data-name="Drupal.viewsUi.OptionsSearch#options"><a href="Drupal.viewsUi.OptionsSearch.html#options">options</a></li>
             
             </ul>
@@ -3424,7 +3418,7 @@
             
                 <li data-name="Drupal.viewsUi.OptionsSearch#getOptions"><a href="Drupal.viewsUi.OptionsSearch.html#getOptions">getOptions</a></li>
             
-                <li data-name="Drupal.viewsUi.OptionsSearch#handleKeyup"><a href="Drupal.viewsUi.OptionsSearch.html#handleKeyup">handleKeyup</a></li>
+                <li data-name="Drupal.viewsUi.OptionsSearch#handleFilter"><a href="Drupal.viewsUi.OptionsSearch.html#handleFilter">handleFilter</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3762,51 +3756,6 @@ options containing &quot;taxonomy&quot; in their label.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="$searchBox">$searchBox</h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Add a keyup handler to the search box.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
         <h4 class="name" id="options">options</h4>
     </div>
     
@@ -3866,7 +3815,7 @@ in memory, so we have as little overhead as possible at keyup time.</p>
     
         
         <div class="tag-source">
-            <a href="modules_views_ui_js_views-admin.js.html">modules/views_ui/js/views-admin.js</a>, <a href="modules_views_ui_js_views-admin.js.html#line480">line 480</a>
+            <a href="modules_views_ui_js_views-admin.js.html">modules/views_ui/js/views-admin.js</a>, <a href="modules_views_ui_js_views-admin.js.html#line485">line 485</a>
         </div>
         
     </div>
@@ -4005,14 +3954,14 @@ in memory, so we have as little overhead as possible at keyup time.</p>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="handleKeyup">
+        <h4 class="name" id="handleFilter">
             
-            handleKeyup<span class="signature">(event)</span>
+            handleFilter<span class="signature">(event)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="modules_views_ui_js_views-admin.js.html">modules/views_ui/js/views-admin.js</a>, <a href="modules_views_ui_js_views-admin.js.html#line509">line 509</a>
+            <a href="modules_views_ui_js_views-admin.js.html">modules/views_ui/js/views-admin.js</a>, <a href="modules_views_ui_js_views-admin.js.html#line514">line 514</a>
         </div>
         
     </div>
@@ -4023,7 +3972,7 @@ in memory, so we have as little overhead as possible at keyup time.</p>
     
     
     <div class="description">
-        <p>Keyup handler for the search box that hides or shows the relevant
+        <p>Filter handler for the search box and type select that hides or shows the relevant
 options.</p>
     </div>
     
@@ -4071,7 +4020,7 @@ options.</p>
             
             <td class="description last">
                 
-                <p>The keyup event.</p></td>
+                <p>The formUpdated event.</p></td>
         </tr>
 	
 	
