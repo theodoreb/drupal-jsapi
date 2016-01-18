@@ -3812,7 +3812,7 @@
           var i = inputs.length;
           if (inputs.length) {
             var toggleClick = true;
-            var lock = $('&lt;button class="color-palette__lock link">' + Drupal.t('Unlock') + '&lt;/button>').on('click', function (e) {
+            var lock = $('&lt;button class="color-palette__lock">' + Drupal.t('Unlock') + '&lt;/button>').on('click', function (e) {
               e.preventDefault();
               if (toggleClick) {
                 $(this).addClass('is-unlocked').html(Drupal.t('Lock'));
