@@ -289,7 +289,13 @@
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
             
+                <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
+            
                 <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
                 <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
@@ -1231,12 +1237,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3576,6 +3590,9 @@
    * Process elements with the .dropbutton class on page load.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches dropButton behaviors.
    */
   Drupal.behaviors.dropButton = {
     attach: function (context, settings) {
@@ -3601,6 +3618,7 @@
    * @function Drupal.DropButton~dropbuttonClickHandler
    *
    * @param {jQuery.Event} e
+   *   The event triggered.
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
@@ -3755,6 +3773,7 @@
 
     /**
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     focusOut: function (e) {
       this.hoverOut.call(this, e);
@@ -3762,6 +3781,7 @@
 
     /**
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     focusIn: function (e) {
       this.hoverIn.call(this, e);
@@ -3774,6 +3794,7 @@
      * A toggle is an interactive element often bound to a click handler.
      *
      * @param {object} options
+     *   Options object.
      * @param {string} [options.title]
      *   The HTML anchor title attribute and text for the inner span element.
      *

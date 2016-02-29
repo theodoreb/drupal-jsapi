@@ -289,7 +289,13 @@
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
             
+                <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
+            
                 <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
                 <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
@@ -1231,12 +1237,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3650,25 +3664,25 @@
 
     // Add the ajax to exposed forms.
     this.$exposed_form = $('form#views-exposed-form-' + settings.view_name.replace(/_/g, '-') + '-' + settings.view_display_id.replace(/_/g, '-'));
-    this.$exposed_form.once('exposed-form').each(jQuery.proxy(this.attachExposedFormAjax, this));
+    this.$exposed_form.once('exposed-form').each($.proxy(this.attachExposedFormAjax, this));
 
     // Add the ajax to pagers.
     this.$view
       // Don't attach to nested views. Doing so would attach multiple behaviors
       // to a given element.
-      .filter(jQuery.proxy(this.filterNestedViews, this))
-      .once('ajax-pager').each(jQuery.proxy(this.attachPagerAjax, this));
+      .filter($.proxy(this.filterNestedViews, this))
+      .once('ajax-pager').each($.proxy(this.attachPagerAjax, this));
 
     // Add a trigger to update this view specifically. In order to trigger a
     // refresh use the following code.
     //
     // @code
-    // jQuery('.view-name').trigger('RefreshView');
+    // $('.view-name').trigger('RefreshView');
     // @endcode
     var self_settings = $.extend({}, this.element_settings, {
       event: 'RefreshView',
       base: this.selector,
-      element: this.$view
+      element: this.$view.get(0)
     });
     this.refreshViewAjax = Drupal.ajax(self_settings);
   };
@@ -3705,7 +3719,7 @@
    */
   Drupal.views.ajaxView.prototype.attachPagerAjax = function () {
     this.$view.find('ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a')
-      .each(jQuery.proxy(this.attachPagerLinkAjax, this));
+      .each($.proxy(this.attachPagerLinkAjax, this));
   };
 
   /**
@@ -3733,7 +3747,7 @@
     var self_settings = $.extend({}, this.element_settings, {
       submit: viewData,
       base: false,
-      element: $link
+      element: link
     });
     this.pagerAjax = Drupal.ajax(self_settings);
   };

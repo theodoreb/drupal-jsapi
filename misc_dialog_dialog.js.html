@@ -289,7 +289,13 @@
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
             
+                <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
+            
                 <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
                 <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
@@ -1231,12 +1237,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3596,6 +3610,7 @@
     // `jQuery(event.target).remove()` as well, to remove the dialog on
     // closing.
     close: function (event) {
+      Drupal.dialog(event.target).close();
       Drupal.detachBehaviors(event.target, null, 'unload');
     }
   };
@@ -3619,12 +3634,27 @@
    * Polyfill HTML5 dialog element with jQueryUI.
    *
    * @param {HTMLElement} element
+   *   The element that holds the dialog.
    * @param {object} options
    *   jQuery UI options to be passed to the dialog.
    *
    * @return {Drupal.dialog~dialogDefinition}
+   *   The dialog instance.
    */
   Drupal.dialog = function (element, options) {
+    var undef;
+    var $element = $(element);
+    var dialog = {
+      open: false,
+      returnValue: undef,
+      show: function () {
+        openDialog({modal: false});
+      },
+      showModal: function () {
+        openDialog({modal: true});
+      },
+      close: closeDialog
+    };
 
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
@@ -3642,20 +3672,6 @@
       dialog.open = false;
       $(window).trigger('dialog:afterclose', [dialog, $element]);
     }
-
-    var undef;
-    var $element = $(element);
-    var dialog = {
-      open: false,
-      returnValue: undef,
-      show: function () {
-        openDialog({modal: false});
-      },
-      showModal: function () {
-        openDialog({modal: true});
-      },
-      close: closeDialog
-    };
 
     return dialog;
   };

@@ -289,7 +289,13 @@
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
             
+                <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
+            
                 <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
                 <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
@@ -1231,12 +1237,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3576,6 +3590,9 @@
    * Attach the tableResponsive function to {@link Drupal.behaviors}.
    *
    * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches tableResponsive functionality.
    */
   Drupal.behaviors.tableResponsive = {
     attach: function (context, settings) {
@@ -3602,6 +3619,7 @@
    * @constructor Drupal.TableResponsive
    *
    * @param {HTMLElement} table
+   *   The table element to initialize the responsive table on.
    */
   function TableResponsive(table) {
     this.table = table;
@@ -3647,6 +3665,7 @@
 
     /**
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     eventhandlerEvaluateColumnVisibility: function (e) {
       var pegged = parseInt(this.$link.data('pegged'), 10);
@@ -3670,6 +3689,7 @@
      * Columns are classed with either 'priority-low' or 'priority-medium'.
      *
      * @param {jQuery.Event} e
+     *   The event triggered.
      */
     eventhandlerToggleColumns: function (e) {
       e.preventDefault();

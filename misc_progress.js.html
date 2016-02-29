@@ -289,7 +289,13 @@
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
             
+                <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
+            
                 <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
+            
+                <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
                 <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
@@ -1231,12 +1237,20 @@
             
                 <li data-name="Drupal.Ajax#element_settings"><a href="Drupal.Ajax.html#element_settings">element_settings</a></li>
             
+                <li data-name="Drupal.Ajax#instanceIndex"><a href="Drupal.Ajax.html#instanceIndex">instanceIndex</a></li>
+            
                 <li data-name="Drupal.Ajax#options"><a href="Drupal.Ajax.html#options">options</a></li>
+            
+                <li data-name="Drupal.Ajax#url"><a href="Drupal.Ajax.html#url">url</a></li>
             
                 <li data-name="Drupal.Ajax#wrapper"><a href="Drupal.Ajax.html#wrapper">wrapper</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li data-name="Drupal.Ajax~element_settings"><a href="Drupal.Ajax.html#~element_settings">element_settings</a></li>
             
             </ul>
             <ul class="methods itemMembers">
@@ -3576,6 +3590,7 @@
    * Theme function for the progress bar.
    *
    * @param {string} id
+   *   The id for the progress bar.
    *
    * @return {string}
    *   The HTML for the progress bar.
@@ -3603,9 +3618,13 @@
    * @constructor
    *
    * @param {string} id
+   *   The id for the progressbar.
    * @param {function} updateCallback
+   *   Callback to run on update.
    * @param {string} method
+   *   HTTP method to use.
    * @param {function} errorCallback
+   *   Callback to call on error.
    */
   Drupal.ProgressBar = function (id, updateCallback, method, errorCallback) {
     this.id = id;
@@ -3626,8 +3645,11 @@
      * Set the percentage and status message for the progressbar.
      *
      * @param {number} percentage
+     *   The progress percentage.
      * @param {string} message
+     *   The message to show the user.
      * @param {string} label
+     *   The text for the progressbar label.
      */
     setProgress: function (percentage, message, label) {
       if (percentage >= 0 &amp;&amp; percentage &lt;= 100) {
@@ -3645,7 +3667,9 @@
      * Start monitoring progress via Ajax.
      *
      * @param {string} uri
+     *   The URI to use for monitoring.
      * @param {number} delay
+     *   The delay for calling the monitoring URI.
      */
     startMonitoring: function (uri, delay) {
       this.delay = delay;
@@ -3709,6 +3733,7 @@
      * Display errors on the page.
      *
      * @param {string} string
+     *   The error message to show the user.
      */
     displayError: function (string) {
       var error = $('&lt;div class="messages messages--error">&lt;/div>').html(string);
