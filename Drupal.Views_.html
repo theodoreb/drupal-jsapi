@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Namespace: filterConfiguration</title>
+    <title>Namespace: Views</title>
     
     
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
@@ -3568,7 +3568,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="Drupal.filterConfiguration.html">Namespace: filterConfiguration</h1>
+        <h1 class="page-title" data-filename="Drupal.Views_.html">Namespace: Views</h1>
         
 
 
@@ -3579,7 +3579,7 @@
     <h2>
         <span class="ancestors"><a href="Drupal.html">Drupal</a>.</span>
     
-    filterConfiguration
+    Views
     </h2>
     
 </header>  
@@ -3590,9 +3590,6 @@
     
     
         
-            <div class="description"><p>Tracks the configuration of all text filters in <a href="Drupal.FilterStatus.html"><code>Drupal.FilterStatus</code></a>
-objects for <a href="Drupal.editorConfiguration.html#.featureIsAllowedByFilters"><code>Drupal.editorConfiguration.featureIsAllowedByFilters</code></a>.</p></div>
-        
         
         
 <dl class="details">
@@ -3633,63 +3630,7 @@ objects for <a href="Drupal.editorConfiguration.html#.featureIsAllowedByFilters"
     
     
     
-        <h3 class="subsection-title">Namespaces</h3>
-        
-        <dl>
-            <dt><a href="namespaces.html#Drupal.filterConfiguration.liveSettingParsers"><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></a></dt>
-            <dd></dd>
-        </dl>
     
-    
-    
-        <h3 class="subsection-title">Members</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id=".statuses"><span class="type-signature static">static</span>Drupal.filterConfiguration.statuses<span class="type-signature type object.<string, drupal.filterstatus>">Object.&lt;string, <a href="Drupal.FilterStatus.html">Drupal.FilterStatus</a>></span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Drupal.FilterStatus objects, keyed by filter ID.</p>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        </dl>
     
     
     
@@ -3699,14 +3640,14 @@ objects for <a href="Drupal.editorConfiguration.html#.featureIsAllowedByFilters"
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id=".update">
+        <h4 class="name" id=".getPath">
             
-            <span class="type-signature static">static</span>Drupal.filterConfiguration.update<span class="signature">()</span>
+            <span class="type-signature static">static</span>Drupal.Views.getPath<span class="signature">(href)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="modules_editor_js_editor.admin.js.html">modules/editor/js/editor.admin.js</a>, <a href="modules_editor_js_editor.admin.js.html#line891">line 891</a>
+            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line92">line 92</a>
         </div>
         
     </div>
@@ -3717,12 +3658,7 @@ objects for <a href="Drupal.editorConfiguration.html#.featureIsAllowedByFilters"
     
     
     <div class="description">
-        <p>Updates all <a href="Drupal.FilterStatus.html"><code>Drupal.FilterStatus</code></a> objects to reflect current state.</p>
-<p>Automatically checks whether a filter is currently enabled or not. To
-support more finegrained.</p>
-<p>If a filter implements a live setting parser, then that will be used to
-keep the HTML rules for the <a href="Drupal.FilterStatus.html"><code>Drupal.FilterStatus</code></a> object
-up-to-date.</p>
+        <p>Return the Drupal path portion of an href.</p>
     </div>
     
 
@@ -3730,6 +3666,51 @@ up-to-date.</p>
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>href</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The href to check.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -3766,6 +3747,493 @@ up-to-date.</p>
     
     
     
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        string
+                        
+                    
+            </td>
+            <td class="description last">An internal path.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".parseQueryString">
+            
+            <span class="type-signature static">static</span>Drupal.Views.parseQueryString<span class="signature">(query)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line24">line 24</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Helper function to parse a querystring.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>query</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The querystring to parse.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        object
+                        
+                    
+            </td>
+            <td class="description last">A map of query parameters.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".parseViewArgs">
+            
+            <span class="type-signature static">static</span>Drupal.Views.parseViewArgs<span class="signature">(href, viewPath)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line53">line 53</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Helper function to return a view's arguments based on a path.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>href</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The href to check.</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>viewPath</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The views path to check.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        object
+                        
+                    
+            </td>
+            <td class="description last">An object containing <code>view_args</code> and <code>view_path</code>.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".pathPortion">
+            
+            <span class="type-signature static">static</span>Drupal.Views.pathPortion<span class="signature">(href)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="modules_views_js_base.js.html">modules/views/js/base.js</a>, <a href="modules_views_js_base.js.html#line73">line 73</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Strip off the protocol plus domain from an href.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>href</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>The href to strip.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        string
+                        
+                    
+            </td>
+            <td class="description last">The href without the protocol and domain.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
     
     
     

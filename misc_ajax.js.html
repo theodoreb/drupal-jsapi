@@ -177,6 +177,8 @@
             
                 <li data-name="Drupal.behaviors.ckeditorDrupalImageSettingsSummary"><a href="Drupal.behaviors.html#.ckeditorDrupalImageSettingsSummary">ckeditorDrupalImageSettingsSummary</a></li>
             
+                <li data-name="Drupal.behaviors.ckeditorLanguageSettingsSummary"><a href="Drupal.behaviors.html#.ckeditorLanguageSettingsSummary">ckeditorLanguageSettingsSummary</a></li>
+            
                 <li data-name="Drupal.behaviors.ckeditorStylesComboSettings"><a href="Drupal.behaviors.html#.ckeditorStylesComboSettings">ckeditorStylesComboSettings</a></li>
             
                 <li data-name="Drupal.behaviors.ckeditorStylesComboSettingsSummary"><a href="Drupal.behaviors.html#.ckeditorStylesComboSettingsSummary">ckeditorStylesComboSettingsSummary</a></li>
@@ -289,13 +291,7 @@
             
                 <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
             
-                <li data-name="Drupal.behaviors.simpleTestGroupCollapse"><a href="Drupal.behaviors.html#.simpleTestGroupCollapse">simpleTestGroupCollapse</a></li>
-            
                 <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
-            
-                <li data-name="Drupal.behaviors.simpleTestSelectAll"><a href="Drupal.behaviors.html#.simpleTestSelectAll">simpleTestSelectAll</a></li>
-            
-                <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
                 <li data-name="Drupal.behaviors.simpletestTableFilterByText"><a href="Drupal.behaviors.html#.simpletestTableFilterByText">simpletestTableFilterByText</a></li>
             
@@ -1141,9 +1137,34 @@
             </ul>
         </li>
     
+        <li class="item" data-name="Drupal.views">
+            <span class="title">
+                <a href="Drupal.views.html">Drupal.views</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="Drupal.views.instances"><a href="Drupal.views.html#.instances">instances</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="Drupal.Views">
             <span class="title">
-                <a href="Drupal.Views.html">Drupal.Views</a>
+                <a href="Drupal.Views_.html">Drupal.Views</a>
                 
                 <span class="static">static</span>
                 
@@ -1158,38 +1179,13 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views.html#.getPath">getPath</a></li>
+                <li data-name="Drupal.Views.getPath"><a href="Drupal.Views_.html#.getPath">getPath</a></li>
             
-                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views.html#.parseQueryString">parseQueryString</a></li>
+                <li data-name="Drupal.Views.parseQueryString"><a href="Drupal.Views_.html#.parseQueryString">parseQueryString</a></li>
             
-                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views.html#.parseViewArgs">parseViewArgs</a></li>
+                <li data-name="Drupal.Views.parseViewArgs"><a href="Drupal.Views_.html#.parseViewArgs">parseViewArgs</a></li>
             
-                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views.html#.pathPortion">pathPortion</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="Drupal.views">
-            <span class="title">
-                <a href="Drupal.views_.html">Drupal.views</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Drupal.views.instances"><a href="Drupal.views_.html#.instances">instances</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
+                <li data-name="Drupal.Views.pathPortion"><a href="Drupal.Views_.html#.pathPortion">pathPortion</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1345,6 +1341,8 @@
                 <li data-name="Drupal.AjaxCommands#viewsReplaceTitle"><a href="Drupal.AjaxCommands.html#viewsReplaceTitle">viewsReplaceTitle</a></li>
             
                 <li data-name="Drupal.AjaxCommands#viewsScrollTop"><a href="Drupal.AjaxCommands.html#viewsScrollTop">viewsScrollTop</a></li>
+            
+                <li data-name="Drupal.AjaxCommands#viewsSetForm"><a href="Drupal.AjaxCommands.html#viewsSetForm">viewsSetForm</a></li>
             
                 <li data-name="Drupal.AjaxCommands#viewsShowButtons"><a href="Drupal.AjaxCommands.html#viewsShowButtons">viewsShowButtons</a></li>
             
@@ -4614,11 +4612,11 @@
       // been sufficiently tested whether attachBehaviors() can be successfully
       // called with a context object that includes top-level text nodes.
       // However, to give developers full control of the HTML appearing in the
-      // page, and to enable Ajax content to be inserted in places where DIV
-      // elements are not allowed (e.g., within TABLE, TR, and SPAN parents),
-      // we check if the new content satisfies the requirement of a single
-      // top-level element, and only use the container DIV created above when
-      // it doesn't. For more information, please see
+      // page, and to enable Ajax content to be inserted in places where &lt;div>
+      // elements are not allowed (e.g., within &lt;table>, &lt;tr>, and &lt;span>
+      // parents), we check if the new content satisfies the requirement
+      // of a single top-level element, and only use the container &lt;div> created
+      // above when it doesn't. For more information, please see
       // https://www.drupal.org/node/736066.
       if ($new_content.length !== 1 || $new_content.get(0).nodeType !== 1) {
         $new_content = $new_content_wrapped;
@@ -4789,7 +4787,7 @@
         // Ajax behavior.
         if (instance.selector) {
           var selector = instance.selector.replace('#', '');
-          if (selector in ajaxSettings) {
+          if (ajaxSettings &amp;&amp; selector in ajaxSettings) {
             delete ajaxSettings[selector];
           }
         }
@@ -4931,7 +4929,7 @@
 
         <footer>
             <p><strong>For more information about this documentation please see <a href="https://www.drupal.org/node/2182153">Drupal issue #2182153: Document Drupal JavaScript using JSDoc</a>.</strong></p>
-            <p><small>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> using <a href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
+            <p><small>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> using <a href="https://github.com/davidshimjs/jaguarjs-jsdoc">jaguarjs-jsdoc</a> theme.</small></p>
         </footer>
     </div>
 </div>
