@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/settings_tray/js/settings_tray.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/settings_tray/js/settings_tray.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Drupal's Settings Tray library.
+ *
+ * @private
+ */
+
+(($, Drupal) => {
+  const blockConfigureSelector = '[data-settings-tray-edit]';
+  const toggleEditSelector = '[data-drupal-settingstray="toggle"]';
+  const itemsToToggleSelector =
+    '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-settingstray="editable"] a, [data-drupal-settingstray="editable"] button';
+  const contextualItemsSelector =
+    '[data-contextual-id] a, [data-contextual-id] button';
+  const quickEditItemSelector = '[data-quickedit-entity-id]';
+
+  /**
+   * Prevent default click events except contextual links.
+   *
+   * In edit mode the default action of click events is suppressed.
+   *
+   * @param {jQuery.Event} event
+   *   The click event.
+   */
+  function preventClick(event) {
+    // Do not prevent contextual links.
+    if ($(event.target).closest('.contextual-links').length) {
+      return;
+    }
+    event.preventDefault();
+  }
+
+  /**
+   * Close any active toolbar tray before entering edit mode.
+   */
+  function closeToolbarTrays() {
+    $(Drupal.toolbar.models.toolbarModel.get('activeTab')).trigger('click');
+  }
+
+  /**
+   * Disables the QuickEdit module editor if open.
+   */
+  function disableQuickEdit() {
+    $('.quickedit-toolbar button.action-cancel').trigger('click');
+  }
+
+  /**
+   * Closes/removes off-canvas.
+   */
+  function closeOffCanvas() {
+    $('.ui-dialog-off-canvas .ui-dialog-titlebar-close').trigger('click');
+  }
+
+  /**
+   * Gets all items that should be toggled with class during edit mode.
+   *
+   * @return {jQuery}
+   *   Items that should be toggled.
+   */
+  function getItemsToToggle() {
+    return $(itemsToToggleSelector).not(contextualItemsSelector);
+  }
+
+  /**
+   * Helper to switch edit mode state.
+   *
+   * @param {boolean} editMode
+   *   True enable edit mode, false disable edit mode.
+   */
+  function setEditModeState(editMode) {
+    if (!document.querySelector('[data-off-canvas-main-canvas]')) {
+      throw new Error(
+        'data-off-canvas-main-canvas is missing from settings-tray-page-wrapper.html.twig',
+      );
+    }
+    editMode = !!editMode;
+    const $editButton = $(toggleEditSelector);
+    let $editables;
+    // Turn on edit mode.
+    if (editMode) {
+      $editButton.text(Drupal.t('Editing'));
+      closeToolbarTrays();
+
+      $editables = $('[data-drupal-settingstray="editable"]').once(
+        'settingstray',
+      );
+      if ($editables.length) {
+        // Use event capture to prevent clicks on links.
+        document
+          .querySelector('[data-off-canvas-main-canvas]')
+          .addEventListener('click', preventClick, true);
+        /**
+         * When a click occurs try and find the settings-tray edit link
+         * and click it.
+         */
+        $editables
+          .not(contextualItemsSelector)
+          .on('click.settingstray', (e) => {
+            // Contextual links are allowed to function in Edit mode.
+            if (
+              $(e.target).closest('.contextual').length ||
+              !localStorage.getItem('Drupal.contextualToolbar.isViewing')
+            ) {
+              return;
+            }
+            $(e.currentTarget).find(blockConfigureSelector).trigger('click');
+            disableQuickEdit();
+          });
+        $(quickEditItemSelector)
+          .not(contextualItemsSelector)
+          .on('click.settingstray', (e) => {
+            /**
+             * For all non-contextual links or the contextual QuickEdit link
+             * close the off-canvas dialog.
+             */
+            if (
+              !$(e.target).parent().hasClass('contextual') ||
+              $(e.target).parent().hasClass('quickedit')
+            ) {
+              closeOffCanvas();
+            }
+            // Do not trigger if target is quick edit link to avoid loop.
+            if (
+              $(e.target).parent().hasClass('contextual') ||
+              $(e.target).parent().hasClass('quickedit')
+            ) {
+              return;
+            }
+            $(e.currentTarget).find('li.quickedit a').trigger('click');
+          });
+      }
+    }
+    // Disable edit mode.
+    else {
+      $editables = $('[data-drupal-settingstray="editable"]').removeOnce(
+        'settingstray',
+      );
+      if ($editables.length) {
+        document
+          .querySelector('[data-off-canvas-main-canvas]')
+          .removeEventListener('click', preventClick, true);
+        $editables.off('.settingstray');
+        $(quickEditItemSelector).off('.settingstray');
+      }
+
+      $editButton.text(Drupal.t('Edit'));
+      closeOffCanvas();
+      disableQuickEdit();
+    }
+    getItemsToToggle().toggleClass('js-settings-tray-edit-mode', editMode);
+    $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
+  }
+
+  /**
+   * Helper to check the state of the settings-tray mode.
+   *
+   * @todo don't use a class for this.
+   *
+   * @return {boolean}
+   *   State of the settings-tray edit mode.
+   */
+  function isInEditMode() {
+    return $('#toolbar-bar').hasClass('js-settings-tray-edit-mode');
+  }
+
+  /**
+   * Helper to toggle Edit mode.
+   */
+  function toggleEditMode() {
+    setEditModeState(!isInEditMode());
+  }
+
+  /**
+   * Prepares Ajax links to work with off-canvas and Settings Tray module.
+   */
+  function prepareAjaxLinks() {
+    // Find all Ajax instances that use the 'off_canvas' renderer.
+    Drupal.ajax.instances
+      /**
+       * If there is an element and the renderer is 'off_canvas' then we want
+       * to add our changes.
+       */
+      .filter(
+        (instance) =>
+          instance &amp;&amp;
+          $(instance.element).attr('data-dialog-renderer') === 'off_canvas',
+      )
+      /**
+       * Loop through all Ajax instances that use the 'off_canvas' renderer to
+       * set active editable ID.
+       */
+      .forEach((instance) => {
+        // Check to make sure existing dialogOptions aren't overridden.
+        if (!instance.options.data.hasOwnProperty('dialogOptions')) {
+          instance.options.data.dialogOptions = {};
+        }
+        instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(
+          instance.element,
+        )
+          .parents('.settings-tray-editable')
+          .attr('id');
+        instance.progress = { type: 'fullscreen' };
+      });
+  }
+
+  /**
+   * Reacts to contextual links being added.
+   *
+   * @param {jQuery.Event} event
+   *   The `drupalContextualLinkAdded` event.
+   * @param {object} data
+   *   An object containing the data relevant to the event.
+   *
+   * @listens event:drupalContextualLinkAdded
+   */
+  $(document).on('drupalContextualLinkAdded', (event, data) => {
+    /**
+     * When contextual links are add we need to set extra properties on the
+     * instances in Drupal.ajax.instances for them to work with Edit Mode.
+     */
+    prepareAjaxLinks();
+
+    // When the first contextual link is added to the page set Edit Mode.
+    $('body')
+      .once('settings_tray.edit_mode_init')
+      .each(() => {
+        const editMode =
+          localStorage.getItem('Drupal.contextualToolbar.isViewing') ===
+          'false';
+        if (editMode) {
+          setEditModeState(true);
+        }
+      });
+
+    /**
+     * Bind a listener to all 'Quick edit' links for blocks. Click "Edit"
+     * button in toolbar to force Contextual Edit which starts Settings Tray
+     * edit mode also.
+     */
+    data.$el.find(blockConfigureSelector).on('click.settingstray', () => {
+      if (!isInEditMode()) {
+        $(toggleEditSelector).trigger('click').trigger('click.settings_tray');
+      }
+      /**
+       * Always disable QuickEdit regardless of whether "EditMode" was just
+       * enabled.
+       */
+      disableQuickEdit();
+    });
+  });
+
+  $(document).on('keyup.settingstray', (e) => {
+    if (isInEditMode() &amp;&amp; e.keyCode === 27) {
+      Drupal.announce(Drupal.t('Exited edit mode.'));
+      toggleEditMode();
+    }
+  });
+
+  /**
+   * Toggle the js-settings-tray-edit-mode class on items that we want to
+   * disable while in edit mode.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Toggle the js-settings-tray-edit-mode class.
+   */
+  Drupal.behaviors.toggleEditMode = {
+    attach() {
+      $(toggleEditSelector)
+        .once('settingstray')
+        .on('click.settingstray', toggleEditMode);
+    },
+  };
+
+  // Manage Active editable class on opening and closing of the dialog.
+  $(window).on({
+    'dialog:beforecreate': (event, dialog, $element, settings) => {
+      if ($element.is('#drupal-off-canvas')) {
+        $('body .settings-tray-active-editable').removeClass(
+          'settings-tray-active-editable',
+        );
+        const $activeElement = $(`#${settings.settingsTrayActiveEditableId}`);
+        if ($activeElement.length) {
+          $activeElement.addClass('settings-tray-active-editable');
+        }
+      }
+    },
+    'dialog:beforeclose': (event, dialog, $element) => {
+      if ($element.is('#drupal-off-canvas')) {
+        $('body .settings-tray-active-editable').removeClass(
+          'settings-tray-active-editable',
+        );
+      }
+    },
+  });
+})(jQuery, Drupal);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

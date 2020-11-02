@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/ckeditor/js/views/AuralView.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/ckeditor/js/views/AuralView.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * A Backbone View that provides the aural view of CKEditor toolbar
+ * configuration.
+ */
+
+(function (Drupal, Backbone, $) {
+  Drupal.ckeditor.AuralView = Backbone.View.extend(
+    /** @lends Drupal.ckeditor.AuralView# */ {
+      /**
+       * @type {object}
+       */
+      events: {
+        'click .ckeditor-buttons a': 'announceButtonHelp',
+        'click .ckeditor-multiple-buttons a': 'announceSeparatorHelp',
+        'focus .ckeditor-button a': 'onFocus',
+        'focus .ckeditor-button-separator a': 'onFocus',
+        'focus .ckeditor-toolbar-group': 'onFocus',
+      },
+
+      /**
+       * Backbone View for CKEditor toolbar configuration; aural UX (output only).
+       *
+       * @constructs
+       *
+       * @augments Backbone.View
+       */
+      initialize() {
+        // Announce the button and group positions when the model is no longer
+        // dirty.
+        this.listenTo(this.model, 'change:isDirty', this.announceMove);
+      },
+
+      /**
+       * Calls announce on buttons and groups when their position is changed.
+       *
+       * @param {Drupal.ckeditor.ConfigurationModel} model
+       *   The ckeditor configuration model.
+       * @param {bool} isDirty
+       *   A model attribute that indicates if the changed toolbar configuration
+       *   has been stored or not.
+       */
+      announceMove(model, isDirty) {
+        // Announce the position of a button or group after the model has been
+        // updated.
+        if (!isDirty) {
+          const item = document.activeElement || null;
+          if (item) {
+            const $item = $(item);
+            if ($item.hasClass('ckeditor-toolbar-group')) {
+              this.announceButtonGroupPosition($item);
+            } else if ($item.parent().hasClass('ckeditor-button')) {
+              this.announceButtonPosition($item.parent());
+            }
+          }
+        }
+      },
+
+      /**
+       * Handles the focus event of elements in the active and available toolbars.
+       *
+       * @param {jQuery.Event} event
+       *   The focus event that was triggered.
+       */
+      onFocus(event) {
+        event.stopPropagation();
+
+        const $originalTarget = $(event.target);
+        const $currentTarget = $(event.currentTarget);
+        const $parent = $currentTarget.parent();
+        if (
+          $parent.hasClass('ckeditor-button') ||
+          $parent.hasClass('ckeditor-button-separator')
+        ) {
+          this.announceButtonPosition($currentTarget.parent());
+        } else if (
+          $originalTarget.attr('role') !== 'button' &amp;&amp;
+          $currentTarget.hasClass('ckeditor-toolbar-group')
+        ) {
+          this.announceButtonGroupPosition($currentTarget);
+        }
+      },
+
+      /**
+       * Announces the current position of a button group.
+       *
+       * @param {jQuery} $group
+       *   A jQuery set that contains an li element that wraps a group of buttons.
+       */
+      announceButtonGroupPosition($group) {
+        const $groups = $group.parent().children();
+        const $row = $group.closest('.ckeditor-row');
+        const $rows = $row.parent().children();
+        const position = $groups.index($group) + 1;
+        const positionCount = $groups.not('.placeholder').length;
+        const row = $rows.index($row) + 1;
+        const rowCount = $rows.not('.placeholder').length;
+        let text = Drupal.t(
+          '@groupName button group in position @position of @positionCount in row @row of @rowCount.',
+          {
+            '@groupName': $group.attr(
+              'data-drupal-ckeditor-toolbar-group-name',
+            ),
+            '@position': position,
+            '@positionCount': positionCount,
+            '@row': row,
+            '@rowCount': rowCount,
+          },
+        );
+        // If this position is the first in the last row then tell the user that
+        // pressing the down arrow key will create a new row.
+        if (position === 1 &amp;&amp; row === rowCount) {
+          text += '\n';
+          text += Drupal.t('Press the down arrow key to create a new row.');
+        }
+        Drupal.announce(text, 'assertive');
+      },
+
+      /**
+       * Announces current button position.
+       *
+       * @param {jQuery} $button
+       *   A jQuery set that contains an li element that wraps a button.
+       */
+      announceButtonPosition($button) {
+        const $row = $button.closest('.ckeditor-row');
+        const $rows = $row.parent().children();
+        const $buttons = $button.closest('.ckeditor-buttons').children();
+        const $group = $button.closest('.ckeditor-toolbar-group');
+        const $groups = $group.parent().children();
+        const groupPosition = $groups.index($group) + 1;
+        const groupPositionCount = $groups.not('.placeholder').length;
+        const position = $buttons.index($button) + 1;
+        const positionCount = $buttons.length;
+        const row = $rows.index($row) + 1;
+        const rowCount = $rows.not('.placeholder').length;
+        // The name of the button separator is 'button separator' and its type
+        // is 'separator', so we do not want to print the type of this item,
+        // otherwise the UA will speak 'button separator separator'.
+        const type =
+          $button.attr('data-drupal-ckeditor-type') === 'separator'
+            ? ''
+            : Drupal.t('button');
+        let text;
+        // The button is located in the available button set.
+        if ($button.closest('.ckeditor-toolbar-disabled').length > 0) {
+          text = Drupal.t('@name @type.', {
+            '@name': $button.children().attr('aria-label'),
+            '@type': type,
+          });
+          text += `\n${Drupal.t('Press the down arrow key to activate.')}`;
+
+          Drupal.announce(text, 'assertive');
+        }
+        // The button is in the active toolbar.
+        else if ($group.not('.placeholder').length === 1) {
+          text = Drupal.t(
+            '@name @type in position @position of @positionCount in @groupName button group in row @row of @rowCount.',
+            {
+              '@name': $button.children().attr('aria-label'),
+              '@type': type,
+              '@position': position,
+              '@positionCount': positionCount,
+              '@groupName': $group.attr(
+                'data-drupal-ckeditor-toolbar-group-name',
+              ),
+              '@row': row,
+              '@rowCount': rowCount,
+            },
+          );
+          // If this position is the first in the last row then tell the user that
+          // pressing the down arrow key will create a new row.
+          if (groupPosition === 1 &amp;&amp; position === 1 &amp;&amp; row === rowCount) {
+            text += '\n';
+            text += Drupal.t(
+              'Press the down arrow key to create a new button group in a new row.',
+            );
+          }
+          // If this position is the last one in this row then tell the user that
+          // moving the button to the next group will create a new group.
+          if (
+            groupPosition === groupPositionCount &amp;&amp;
+            position === positionCount
+          ) {
+            text += '\n';
+            text += Drupal.t(
+              'This is the last group. Move the button forward to create a new group.',
+            );
+          }
+          Drupal.announce(text, 'assertive');
+        }
+      },
+
+      /**
+       * Provides help information when a button is clicked.
+       *
+       * @param {jQuery.Event} event
+       *   The click event for the button click.
+       */
+      announceButtonHelp(event) {
+        const $link = $(event.currentTarget);
+        const $button = $link.parent();
+        const enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
+        let message;
+
+        if (enabled) {
+          message = Drupal.t('The "@name" button is currently enabled.', {
+            '@name': $link.attr('aria-label'),
+          });
+          message += `\n${Drupal.t(
+            'Use the keyboard arrow keys to change the position of this button.',
+          )}`;
+          message += `\n${Drupal.t(
+            'Press the up arrow key on the top row to disable the button.',
+          )}`;
+        } else {
+          message = Drupal.t('The "@name" button is currently disabled.', {
+            '@name': $link.attr('aria-label'),
+          });
+          message += `\n${Drupal.t(
+            'Use the down arrow key to move this button into the active toolbar.',
+          )}`;
+        }
+        Drupal.announce(message);
+        event.preventDefault();
+      },
+
+      /**
+       * Provides help information when a separator is clicked.
+       *
+       * @param {jQuery.Event} event
+       *   The click event for the separator click.
+       */
+      announceSeparatorHelp(event) {
+        const $link = $(event.currentTarget);
+        const $button = $link.parent();
+        const enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
+        let message;
+
+        if (enabled) {
+          message = Drupal.t('This @name is currently enabled.', {
+            '@name': $link.attr('aria-label'),
+          });
+          message += `\n${Drupal.t(
+            'Use the keyboard arrow keys to change the position of this separator.',
+          )}`;
+        } else {
+          message = Drupal.t(
+            'Separators are used to visually split individual buttons.',
+          );
+          message += `\n${Drupal.t('This @name is currently disabled.', {
+            '@name': $link.attr('aria-label'),
+          })}`;
+          message += `\n${Drupal.t(
+            'Use the down arrow key to move this separator into the active toolbar.',
+          )}`;
+          message += `\n${Drupal.t(
+            'You may add multiple separators to each button group.',
+          )}`;
+        }
+        Drupal.announce(message);
+        event.preventDefault();
+      },
+    },
+  );
+})(Drupal, Backbone, jQuery);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

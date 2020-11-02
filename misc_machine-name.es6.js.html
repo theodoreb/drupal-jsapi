@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: misc/machine-name.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: misc/machine-name.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Machine name functionality.
+ */
+
+(function ($, Drupal, drupalSettings) {
+  /**
+   * Attach the machine-readable name form element behavior.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches machine-name behaviors.
+   */
+  Drupal.behaviors.machineName = {
+    /**
+     * Attaches the behavior.
+     *
+     * @param {Element} context
+     *   The context for attaching the behavior.
+     * @param {object} settings
+     *   Settings object.
+     * @param {object} settings.machineName
+     *   A list of elements to process, keyed by the HTML ID of the form
+     *   element containing the human-readable value. Each element is an object
+     *   defining the following properties:
+     *   - target: The HTML ID of the machine name form element.
+     *   - suffix: The HTML ID of a container to show the machine name preview
+     *     in (usually a field suffix after the human-readable name
+     *     form element).
+     *   - label: The label to show for the machine name preview.
+     *   - replace_pattern: A regular expression (without modifiers) matching
+     *     disallowed characters in the machine name; e.g., '[^a-z0-9]+'.
+     *   - replace: A character to replace disallowed characters with; e.g.,
+     *     '_' or '-'.
+     *   - standalone: Whether the preview should stay in its own element
+     *     rather than the suffix of the source element.
+     *   - field_prefix: The #field_prefix of the form element.
+     *   - field_suffix: The #field_suffix of the form element.
+     */
+    attach(context, settings) {
+      const self = this;
+      const $context = $(context);
+      let timeout = null;
+      let xhr = null;
+
+      function clickEditHandler(e) {
+        const data = e.data;
+        data.$wrapper.removeClass('visually-hidden');
+        data.$target.trigger('focus');
+        data.$suffix.hide();
+        data.$source.off('.machineName');
+      }
+
+      function machineNameHandler(e) {
+        const data = e.data;
+        const options = data.options;
+        const baseValue = $(e.target).val();
+
+        const rx = new RegExp(options.replace_pattern, 'g');
+        const expected = baseValue
+          .toLowerCase()
+          .replace(rx, options.replace)
+          .substr(0, options.maxlength);
+
+        // Abort the last pending request because the label has changed and it
+        // is no longer valid.
+        if (xhr &amp;&amp; xhr.readystate !== 4) {
+          xhr.abort();
+          xhr = null;
+        }
+
+        // Wait 300 milliseconds for Ajax request since the last event to update
+        // the machine name i.e., after the user has stopped typing.
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        if (baseValue.toLowerCase() !== expected) {
+          timeout = setTimeout(() => {
+            xhr = self.transliterate(baseValue, options).done((machine) => {
+              self.showMachineName(machine.substr(0, options.maxlength), data);
+            });
+          }, 300);
+        } else {
+          self.showMachineName(expected, data);
+        }
+      }
+
+      Object.keys(settings.machineName).forEach((sourceId) => {
+        const options = settings.machineName[sourceId];
+
+        const $source = $context
+          .find(sourceId)
+          .addClass('machine-name-source')
+          .once('machine-name');
+        const $target = $context
+          .find(options.target)
+          .addClass('machine-name-target');
+        const $suffix = $context.find(options.suffix);
+        const $wrapper = $target.closest('.js-form-item');
+        // All elements have to exist.
+        if (
+          !$source.length ||
+          !$target.length ||
+          !$suffix.length ||
+          !$wrapper.length
+        ) {
+          return;
+        }
+        // Skip processing upon a form validation error on the machine name.
+        if ($target.hasClass('error')) {
+          return;
+        }
+        // Figure out the maximum length for the machine name.
+        options.maxlength = $target.attr('maxlength');
+        // Hide the form item container of the machine name form element.
+        $wrapper.addClass('visually-hidden');
+        // Initial machine name from the target field default value.
+        const machine = $target.val();
+        // Append the machine name preview to the source field.
+        const $preview = $(
+          `&lt;span class="machine-name-value">${
+            options.field_prefix
+          }${Drupal.checkPlain(machine)}${options.field_suffix}&lt;/span>`,
+        );
+        $suffix.empty();
+        if (options.label) {
+          $suffix.append(
+            `&lt;span class="machine-name-label">${options.label}: &lt;/span>`,
+          );
+        }
+        $suffix.append($preview);
+
+        // If the machine name cannot be edited, stop further processing.
+        if ($target.is(':disabled')) {
+          return;
+        }
+
+        const eventData = {
+          $source,
+          $target,
+          $suffix,
+          $wrapper,
+          $preview,
+          options,
+        };
+
+        // If no initial value, determine machine name based on the
+        // human-readable form element value.
+        if (machine === '' &amp;&amp; $source.val() !== '') {
+          self.transliterate($source.val(), options).done((machineName) => {
+            self.showMachineName(
+              machineName.substr(0, options.maxlength),
+              eventData,
+            );
+          });
+        }
+
+        // If it is editable, append an edit link.
+        const $link = $(
+          `&lt;span class="admin-link">&lt;button type="button" class="link">${Drupal.t(
+            'Edit',
+          )}&lt;/button>&lt;/span>`,
+        ).on('click', eventData, clickEditHandler);
+        $suffix.append($link);
+
+        // Preview the machine name in realtime when the human-readable name
+        // changes, but only if there is no machine name yet; i.e., only upon
+        // initial creation, not when editing.
+        if ($target.val() === '') {
+          $source
+            .on('formUpdated.machineName', eventData, machineNameHandler)
+            // Initialize machine name preview.
+            .trigger('formUpdated.machineName');
+        }
+
+        // Add a listener for an invalid event on the machine name input
+        // to show its container and focus it.
+        $target.on('invalid', eventData, clickEditHandler);
+      });
+    },
+
+    showMachineName(machine, data) {
+      const settings = data.options;
+      // Set the machine name to the transliterated value.
+      if (machine !== '') {
+        if (machine !== settings.replace) {
+          data.$target.val(machine);
+          data.$preview.html(
+            settings.field_prefix +
+              Drupal.checkPlain(machine) +
+              settings.field_suffix,
+          );
+        }
+        data.$suffix.show();
+      } else {
+        data.$suffix.hide();
+        data.$target.val(machine);
+        data.$preview.empty();
+      }
+    },
+
+    /**
+     * Transliterate a human-readable name to a machine name.
+     *
+     * @param {string} source
+     *   A string to transliterate.
+     * @param {object} settings
+     *   The machine name settings for the corresponding field.
+     * @param {string} settings.replace_pattern
+     *   A regular expression (without modifiers) matching disallowed characters
+     *   in the machine name; e.g., '[^a-z0-9]+'.
+     * @param {string} settings.replace_token
+     *   A token to validate the regular expression.
+     * @param {string} settings.replace
+     *   A character to replace disallowed characters with; e.g., '_' or '-'.
+     * @param {number} settings.maxlength
+     *   The maximum length of the machine name.
+     *
+     * @return {jQuery}
+     *   The transliterated source string.
+     */
+    transliterate(source, settings) {
+      return $.get(Drupal.url('machine_name/transliterate'), {
+        text: source,
+        langcode: drupalSettings.langcode,
+        replace_pattern: settings.replace_pattern,
+        replace_token: settings.replace_token,
+        replace: settings.replace,
+        lowercase: true,
+      });
+    },
+  };
+})(jQuery, Drupal, drupalSettings);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/image/js/editors/image.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/image/js/editors/image.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Drag+drop based in-place editor for images.
+ */
+
+(function ($, _, Drupal) {
+  Drupal.quickedit.editors.image = Drupal.quickedit.EditorView.extend(
+    /** @lends Drupal.quickedit.editors.image# */ {
+      /**
+       * @constructs
+       *
+       * @augments Drupal.quickedit.EditorView
+       *
+       * @param {object} options
+       *   Options for the image editor.
+       */
+      initialize(options) {
+        Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
+        // Set our original value to our current HTML (for reverting).
+        this.model.set('originalValue', this.$el.html().trim());
+        // $.val() callback function for copying input from our custom form to
+        // the Quick Edit Field Form.
+        this.model.set('currentValue', function (index, value) {
+          const matches = $(this)
+            .attr('name')
+            .match(/(alt|title)]$/);
+          if (matches) {
+            const name = matches[1];
+            const $toolgroup = $(
+              `#${options.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`,
+            );
+            const $input = $toolgroup.find(
+              `.quickedit-image-field-info input[name="${name}"]`,
+            );
+            if ($input.length) {
+              return $input.val();
+            }
+          }
+        });
+      },
+
+      /**
+       * {@inheritdoc}
+       *
+       * @param {Drupal.quickedit.FieldModel} fieldModel
+       *   The field model that holds the state.
+       * @param {string} state
+       *   The state to change to.
+       * @param {object} options
+       *   State options, if needed by the state change.
+       */
+      stateChange(fieldModel, state, options) {
+        const from = fieldModel.previous('state');
+        switch (state) {
+          case 'inactive':
+            break;
+
+          case 'candidate':
+            if (from !== 'inactive') {
+              this.$el.find('.quickedit-image-dropzone').remove();
+              this.$el.removeClass('quickedit-image-element');
+            }
+            if (from === 'invalid') {
+              this.removeValidationErrors();
+            }
+            break;
+
+          case 'highlighted':
+            break;
+
+          case 'activating':
+            // Defer updating the field model until the current state change has
+            // propagated, to not trigger a nested state change event.
+            _.defer(() => {
+              fieldModel.set('state', 'active');
+            });
+            break;
+
+          case 'active': {
+            const self = this;
+
+            // Indicate that this element is being edited by Quick Edit Image.
+            this.$el.addClass('quickedit-image-element');
+
+            // Render our initial dropzone element. Once the user reverts changes
+            // or saves a new image, this element is removed.
+            const $dropzone = this.renderDropzone(
+              'upload',
+              Drupal.t('Drop file here or click to upload'),
+            );
+
+            $dropzone.on('dragenter', function (e) {
+              $(this).addClass('hover');
+            });
+            $dropzone.on('dragleave', function (e) {
+              $(this).removeClass('hover');
+            });
+
+            $dropzone.on('drop', function (e) {
+              // Only respond when a file is dropped (could be another element).
+              if (
+                e.originalEvent.dataTransfer &amp;&amp;
+                e.originalEvent.dataTransfer.files.length
+              ) {
+                $(this).removeClass('hover');
+                self.uploadImage(e.originalEvent.dataTransfer.files[0]);
+              }
+            });
+
+            $dropzone.on('click', (e) => {
+              // Create an &lt;input> element without appending it to the DOM, and
+              // trigger a click event. This is the easiest way to arbitrarily
+              // open the browser's upload dialog.
+              $('&lt;input type="file">')
+                .trigger('click')
+                .on('change', function () {
+                  if (this.files.length) {
+                    self.uploadImage(this.files[0]);
+                  }
+                });
+            });
+
+            // Prevent the browser's default behavior when dragging files onto
+            // the document (usually opens them in the same tab).
+            $dropzone.on('dragover dragenter dragleave drop click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            });
+
+            this.renderToolbar(fieldModel);
+            break;
+          }
+
+          case 'changed':
+            break;
+
+          case 'saving':
+            if (from === 'invalid') {
+              this.removeValidationErrors();
+            }
+
+            this.save(options);
+            break;
+
+          case 'saved':
+            break;
+
+          case 'invalid':
+            this.showValidationErrors();
+            break;
+        }
+      },
+
+      /**
+       * Validates/uploads a given file.
+       *
+       * @param {File} file
+       *   The file to upload.
+       */
+      uploadImage(file) {
+        // Indicate loading by adding a special class to our icon.
+        this.renderDropzone(
+          'upload loading',
+          Drupal.t('Uploading &lt;i>@file&lt;/i>…', { '@file': file.name }),
+        );
+
+        // Build a valid URL for our endpoint.
+        const fieldID = this.fieldModel.get('fieldID');
+        const url = Drupal.quickedit.util.buildUrl(
+          fieldID,
+          Drupal.url(
+            'quickedit/image/upload/!entity_type/!id/!field_name/!langcode/!view_mode',
+          ),
+        );
+
+        // Construct form data that our endpoint can consume.
+        const data = new FormData();
+        data.append('files[image]', file);
+
+        // Construct a POST request to our endpoint.
+        const self = this;
+        this.ajax({
+          type: 'POST',
+          url,
+          data,
+          success(response) {
+            const $el = $(self.fieldModel.get('el'));
+            // Indicate that the field has changed - this enables the
+            // "Save" button.
+            self.fieldModel.set('state', 'changed');
+            self.fieldModel.get('entity').set('inTempStore', true);
+            self.removeValidationErrors();
+
+            // Replace our html with the new image. If we replaced our entire
+            // element with data.html, we would have to implement complicated logic
+            // like what's in Drupal.quickedit.AppView.renderUpdatedField.
+            const $content = $(response.html)
+              .closest('[data-quickedit-field-id]')
+              .children();
+            $el.empty().append($content);
+          },
+        });
+      },
+
+      /**
+       * Utility function to make an AJAX request to the server.
+       *
+       * In addition to formatting the correct request, this also handles error
+       * codes and messages by displaying them visually inline with the image.
+       *
+       * Drupal.ajax is not called here as the Form API is unused by this
+       * in-place editor, and our JSON requests/responses try to be
+       * editor-agnostic. Ideally similar logic and routes could be used by
+       * modules like CKEditor for drag+drop file uploads as well.
+       *
+       * @param {object} options
+       *   Ajax options.
+       * @param {string} options.type
+       *   The type of request (i.e. GET, POST, PUT, DELETE, etc.)
+       * @param {string} options.url
+       *   The URL for the request.
+       * @param {*} options.data
+       *   The data to send to the server.
+       * @param {function} options.success
+       *   A callback function used when a request is successful, without errors.
+       */
+      ajax(options) {
+        const defaultOptions = {
+          context: this,
+          dataType: 'json',
+          cache: false,
+          contentType: false,
+          processData: false,
+          error() {
+            this.renderDropzone(
+              'error',
+              Drupal.t('A server error has occurred.'),
+            );
+          },
+        };
+
+        const ajaxOptions = $.extend(defaultOptions, options);
+        const successCallback = ajaxOptions.success;
+
+        // Handle the success callback.
+        ajaxOptions.success = function (response) {
+          if (response.main_error) {
+            this.renderDropzone('error', response.main_error);
+            if (response.errors.length) {
+              this.model.set('validationErrors', response.errors);
+            }
+            this.showValidationErrors();
+          } else {
+            successCallback(response);
+          }
+        };
+
+        $.ajax(ajaxOptions);
+      },
+
+      /**
+       * Renders our toolbar form for editing metadata.
+       *
+       * @param {Drupal.quickedit.FieldModel} fieldModel
+       *   The current Field Model.
+       */
+      renderToolbar(fieldModel) {
+        const $toolgroup = $(
+          `#${fieldModel.toolbarView.getMainWysiwygToolgroupId()}`,
+        );
+        let $toolbar = $toolgroup.find('.quickedit-image-field-info');
+        if ($toolbar.length === 0) {
+          // Perform an AJAX request for extra image info (alt/title).
+          const fieldID = fieldModel.get('fieldID');
+          const url = Drupal.quickedit.util.buildUrl(
+            fieldID,
+            Drupal.url(
+              'quickedit/image/info/!entity_type/!id/!field_name/!langcode/!view_mode',
+            ),
+          );
+          const self = this;
+          self.ajax({
+            type: 'GET',
+            url,
+            success(response) {
+              $toolbar = $(Drupal.theme.quickeditImageToolbar(response));
+              $toolgroup.append($toolbar);
+              $toolbar.on('keyup paste', () => {
+                fieldModel.set('state', 'changed');
+              });
+              // Re-position the toolbar, which could have changed size.
+              fieldModel.get('entity').toolbarView.position();
+            },
+          });
+        }
+      },
+
+      /**
+       * Renders our dropzone element.
+       *
+       * @param {string} state
+       *   The current state of our editor. Only used for visual styling.
+       * @param {string} text
+       *   The text to display in the dropzone area.
+       *
+       * @return {jQuery}
+       *   The rendered dropzone.
+       */
+      renderDropzone(state, text) {
+        let $dropzone = this.$el.find('.quickedit-image-dropzone');
+        // If the element already exists, modify its contents.
+        if ($dropzone.length) {
+          $dropzone
+            .removeClass('upload error hover loading')
+            .addClass(`.quickedit-image-dropzone ${state}`)
+            .children('.quickedit-image-text')
+            .html(text);
+        } else {
+          $dropzone = $(
+            Drupal.theme('quickeditImageDropzone', {
+              state,
+              text,
+            }),
+          );
+          this.$el.append($dropzone);
+        }
+
+        return $dropzone;
+      },
+
+      /**
+       * {@inheritdoc}
+       */
+      revert() {
+        this.$el.html(this.model.get('originalValue'));
+      },
+
+      /**
+       * {@inheritdoc}
+       */
+      getQuickEditUISettings() {
+        return {
+          padding: false,
+          unifiedToolbar: true,
+          fullWidthToolbar: true,
+          popup: false,
+        };
+      },
+
+      /**
+       * {@inheritdoc}
+       */
+      showValidationErrors() {
+        const errors = Drupal.theme('quickeditImageErrors', {
+          errors: this.model.get('validationErrors'),
+        });
+        $(`#${this.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`).append(
+          errors,
+        );
+        this.getEditedElement().addClass('quickedit-validation-error');
+        // Re-position the toolbar, which could have changed size.
+        this.fieldModel.get('entity').toolbarView.position();
+      },
+
+      /**
+       * {@inheritdoc}
+       */
+      removeValidationErrors() {
+        $(`#${this.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`)
+          .find('.quickedit-image-errors')
+          .remove();
+        this.getEditedElement().removeClass('quickedit-validation-error');
+      },
+    },
+  );
+})(jQuery, _, Drupal);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

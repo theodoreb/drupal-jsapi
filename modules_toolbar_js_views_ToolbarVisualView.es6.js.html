@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/toolbar/js/views/ToolbarVisualView.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/toolbar/js/views/ToolbarVisualView.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * A Backbone view for the toolbar element. Listens to mouse &amp; touch.
+ */
+
+(function ($, Drupal, drupalSettings, Backbone) {
+  Drupal.toolbar.ToolbarVisualView = Backbone.View.extend(
+    /** @lends Drupal.toolbar.ToolbarVisualView# */ {
+      /**
+       * Event map for the `ToolbarVisualView`.
+       *
+       * @return {object}
+       *   A map of events.
+       */
+      events() {
+        // Prevents delay and simulated mouse events.
+        const touchEndToClick = function (event) {
+          event.preventDefault();
+          event.target.click();
+        };
+
+        return {
+          'click .toolbar-bar .toolbar-tab .trigger': 'onTabClick',
+          'click .toolbar-toggle-orientation button':
+            'onOrientationToggleClick',
+          'touchend .toolbar-bar .toolbar-tab .trigger': touchEndToClick,
+          'touchend .toolbar-toggle-orientation button': touchEndToClick,
+        };
+      },
+
+      /**
+       * Backbone view for the toolbar element. Listens to mouse &amp; touch.
+       *
+       * @constructs
+       *
+       * @augments Backbone.View
+       *
+       * @param {object} options
+       *   Options for the view object.
+       * @param {object} options.strings
+       *   Various strings to use in the view.
+       */
+      initialize(options) {
+        this.strings = options.strings;
+
+        this.listenTo(
+          this.model,
+          'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
+          this.render,
+        );
+        this.listenTo(this.model, 'change:mqMatches', this.onMediaQueryChange);
+        this.listenTo(this.model, 'change:offsets', this.adjustPlacement);
+        this.listenTo(
+          this.model,
+          'change:activeTab change:orientation change:isOriented',
+          this.updateToolbarHeight,
+        );
+
+        // Add the tray orientation toggles.
+        this.$el
+          .find('.toolbar-tray .toolbar-lining')
+          .append(Drupal.theme('toolbarOrientationToggle'));
+
+        // Trigger an activeTab change so that listening scripts can respond on
+        // page load. This will call render.
+        this.model.trigger('change:activeTab');
+      },
+
+      /**
+       * Update the toolbar element height.
+       *
+       * @constructs
+       *
+       * @augments Backbone.View
+       */
+      updateToolbarHeight() {
+        const toolbarTabOuterHeight =
+          $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
+        const toolbarTrayHorizontalOuterHeight =
+          $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
+        this.model.set(
+          'height',
+          toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight,
+        );
+
+        $('body').css({
+          'padding-top': this.model.get('height'),
+        });
+
+        this.triggerDisplace();
+      },
+
+      // Trigger a recalculation of viewport displacing elements. Use setTimeout
+      // to ensure this recalculation happens after changes to visual elements
+      // have processed.
+      triggerDisplace() {
+        _.defer(() => {
+          Drupal.displace(true);
+        });
+      },
+
+      /**
+       * {@inheritdoc}
+       *
+       * @return {Drupal.toolbar.ToolbarVisualView}
+       *   The `ToolbarVisualView` instance.
+       */
+      render() {
+        this.updateTabs();
+        this.updateTrayOrientation();
+        this.updateBarAttributes();
+
+        $('body').removeClass('toolbar-loading');
+
+        // Load the subtrees if the orientation of the toolbar is changed to
+        // vertical. This condition responds to the case that the toolbar switches
+        // from horizontal to vertical orientation. The toolbar starts in a
+        // vertical orientation by default and then switches to horizontal during
+        // initialization if the media query conditions are met. Simply checking
+        // that the orientation is vertical here would result in the subtrees
+        // always being loaded, even when the toolbar initialization ultimately
+        // results in a horizontal orientation.
+        //
+        // @see Drupal.behaviors.toolbar.attach() where admin menu subtrees
+        // loading is invoked during initialization after media query conditions
+        // have been processed.
+        if (
+          this.model.changed.orientation === 'vertical' ||
+          this.model.changed.activeTab
+        ) {
+          this.loadSubtrees();
+        }
+
+        return this;
+      },
+
+      /**
+       * Responds to a toolbar tab click.
+       *
+       * @param {jQuery.Event} event
+       *   The event triggered.
+       */
+      onTabClick(event) {
+        // If this tab has a tray associated with it, it is considered an
+        // activatable tab.
+        if (event.currentTarget.hasAttribute('data-toolbar-tray')) {
+          const activeTab = this.model.get('activeTab');
+          const clickedTab = event.currentTarget;
+
+          // Set the event target as the active item if it is not already.
+          this.model.set(
+            'activeTab',
+            !activeTab || clickedTab !== activeTab ? clickedTab : null,
+          );
+
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      },
+
+      /**
+       * Toggles the orientation of a toolbar tray.
+       *
+       * @param {jQuery.Event} event
+       *   The event triggered.
+       */
+      onOrientationToggleClick(event) {
+        const orientation = this.model.get('orientation');
+        // Determine the toggle-to orientation.
+        const antiOrientation =
+          orientation === 'vertical' ? 'horizontal' : 'vertical';
+        const locked = antiOrientation === 'vertical';
+        // Remember the locked state.
+        if (locked) {
+          localStorage.setItem('Drupal.toolbar.trayVerticalLocked', 'true');
+        } else {
+          localStorage.removeItem('Drupal.toolbar.trayVerticalLocked');
+        }
+        // Update the model.
+        this.model.set(
+          {
+            locked,
+            orientation: antiOrientation,
+          },
+          {
+            validate: true,
+            override: true,
+          },
+        );
+
+        event.preventDefault();
+        event.stopPropagation();
+      },
+
+      /**
+       * Updates the display of the tabs: toggles a tab and the associated tray.
+       */
+      updateTabs() {
+        const $tab = $(this.model.get('activeTab'));
+        // Deactivate the previous tab.
+        $(this.model.previous('activeTab'))
+          .removeClass('is-active')
+          .prop('aria-pressed', false);
+        // Deactivate the previous tray.
+        $(this.model.previous('activeTray')).removeClass('is-active');
+
+        // Activate the selected tab.
+        if ($tab.length > 0) {
+          $tab
+            .addClass('is-active')
+            // Mark the tab as pressed.
+            .prop('aria-pressed', true);
+          const name = $tab.attr('data-toolbar-tray');
+          // Store the active tab name or remove the setting.
+          const id = $tab.get(0).id;
+          if (id) {
+            localStorage.setItem(
+              'Drupal.toolbar.activeTabID',
+              JSON.stringify(id),
+            );
+          }
+          // Activate the associated tray.
+          const $tray = this.$el.find(
+            `[data-toolbar-tray="${name}"].toolbar-tray`,
+          );
+          if ($tray.length) {
+            $tray.addClass('is-active');
+            this.model.set('activeTray', $tray.get(0));
+          } else {
+            // There is no active tray.
+            this.model.set('activeTray', null);
+          }
+        } else {
+          // There is no active tray.
+          this.model.set('activeTray', null);
+          localStorage.removeItem('Drupal.toolbar.activeTabID');
+        }
+      },
+
+      /**
+       * Update the attributes of the toolbar bar element.
+       */
+      updateBarAttributes() {
+        const isOriented = this.model.get('isOriented');
+        if (isOriented) {
+          this.$el.find('.toolbar-bar').attr('data-offset-top', '');
+        } else {
+          this.$el.find('.toolbar-bar').removeAttr('data-offset-top');
+        }
+        // Toggle between a basic vertical view and a more sophisticated
+        // horizontal and vertical display of the toolbar bar and trays.
+        this.$el.toggleClass('toolbar-oriented', isOriented);
+      },
+
+      /**
+       * Updates the orientation of the active tray if necessary.
+       */
+      updateTrayOrientation() {
+        const orientation = this.model.get('orientation');
+
+        // The antiOrientation is used to render the view of action buttons like
+        // the tray orientation toggle.
+        const antiOrientation =
+          orientation === 'vertical' ? 'horizontal' : 'vertical';
+
+        // Toggle toolbar's parent classes before other toolbar classes to avoid
+        // potential flicker and re-rendering.
+        $('body')
+          .toggleClass('toolbar-vertical', orientation === 'vertical')
+          .toggleClass('toolbar-horizontal', orientation === 'horizontal');
+
+        const removeClass =
+          antiOrientation === 'horizontal'
+            ? 'toolbar-tray-horizontal'
+            : 'toolbar-tray-vertical';
+        const $trays = this.$el
+          .find('.toolbar-tray')
+          .removeClass(removeClass)
+          .addClass(`toolbar-tray-${orientation}`);
+
+        // Update the tray orientation toggle button.
+        const iconClass = `toolbar-icon-toggle-${orientation}`;
+        const iconAntiClass = `toolbar-icon-toggle-${antiOrientation}`;
+        const $orientationToggle = this.$el
+          .find('.toolbar-toggle-orientation')
+          .toggle(this.model.get('isTrayToggleVisible'));
+        $orientationToggle
+          .find('button')
+          .val(antiOrientation)
+          .attr('title', this.strings[antiOrientation])
+          .text(this.strings[antiOrientation])
+          .removeClass(iconClass)
+          .addClass(iconAntiClass);
+
+        // Update data offset attributes for the trays.
+        const dir = document.documentElement.dir;
+        const edge = dir === 'rtl' ? 'right' : 'left';
+        // Remove data-offset attributes from the trays so they can be refreshed.
+        $trays.removeAttr('data-offset-left data-offset-right data-offset-top');
+        // If an active vertical tray exists, mark it as an offset element.
+        $trays
+          .filter('.toolbar-tray-vertical.is-active')
+          .attr(`data-offset-${edge}`, '');
+        // If an active horizontal tray exists, mark it as an offset element.
+        $trays
+          .filter('.toolbar-tray-horizontal.is-active')
+          .attr('data-offset-top', '');
+      },
+
+      /**
+       * Sets the tops of the trays so that they align with the bottom of the bar.
+       */
+      adjustPlacement() {
+        const $trays = this.$el.find('.toolbar-tray');
+        if (!this.model.get('isOriented')) {
+          $trays
+            .removeClass('toolbar-tray-horizontal')
+            .addClass('toolbar-tray-vertical');
+        }
+      },
+
+      /**
+       * Calls the endpoint URI that builds an AJAX command with the rendered
+       * subtrees.
+       *
+       * The rendered admin menu subtrees HTML is cached on the client in
+       * localStorage until the cache of the admin menu subtrees on the server-
+       * side is invalidated. The subtreesHash is stored in localStorage as well
+       * and compared to the subtreesHash in drupalSettings to determine when the
+       * admin menu subtrees cache has been invalidated.
+       */
+      loadSubtrees() {
+        const $activeTab = $(this.model.get('activeTab'));
+        const orientation = this.model.get('orientation');
+        // Only load and render the admin menu subtrees if:
+        //   (1) They have not been loaded yet.
+        //   (2) The active tab is the administration menu tab, indicated by the
+        //       presence of the data-drupal-subtrees attribute.
+        //   (3) The orientation of the tray is vertical.
+        if (
+          !this.model.get('areSubtreesLoaded') &amp;&amp;
+          typeof $activeTab.data('drupal-subtrees') !== 'undefined' &amp;&amp;
+          orientation === 'vertical'
+        ) {
+          const subtreesHash = drupalSettings.toolbar.subtreesHash;
+          const theme = drupalSettings.ajaxPageState.theme;
+          const endpoint = Drupal.url(`toolbar/subtrees/${subtreesHash}`);
+          const cachedSubtreesHash = localStorage.getItem(
+            `Drupal.toolbar.subtreesHash.${theme}`,
+          );
+          const cachedSubtrees = JSON.parse(
+            localStorage.getItem(`Drupal.toolbar.subtrees.${theme}`),
+          );
+          const isVertical = this.model.get('orientation') === 'vertical';
+          // If we have the subtrees in localStorage and the subtree hash has not
+          // changed, then use the cached data.
+          if (
+            isVertical &amp;&amp;
+            subtreesHash === cachedSubtreesHash &amp;&amp;
+            cachedSubtrees
+          ) {
+            Drupal.toolbar.setSubtrees.resolve(cachedSubtrees);
+          }
+          // Only make the call to get the subtrees if the orientation of the
+          // toolbar is vertical.
+          else if (isVertical) {
+            // Remove the cached menu information.
+            localStorage.removeItem(`Drupal.toolbar.subtreesHash.${theme}`);
+            localStorage.removeItem(`Drupal.toolbar.subtrees.${theme}`);
+            // The AJAX response's command will trigger the resolve method of the
+            // Drupal.toolbar.setSubtrees Promise.
+            Drupal.ajax({ url: endpoint }).execute();
+            // Cache the hash for the subtrees locally.
+            localStorage.setItem(
+              `Drupal.toolbar.subtreesHash.${theme}`,
+              subtreesHash,
+            );
+          }
+        }
+      },
+    },
+  );
+})(jQuery, Drupal, drupalSettings, Backbone);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

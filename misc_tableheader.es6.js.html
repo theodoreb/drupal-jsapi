@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: misc/tableheader.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: misc/tableheader.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Sticky table headers.
+ */
+
+(function ($, Drupal, displace) {
+  /**
+   * Constructor for the tableHeader object. Provides sticky table headers.
+   *
+   * TableHeader will make the current table header stick to the top of the page
+   * if the table is very long.
+   *
+   * @constructor Drupal.TableHeader
+   *
+   * @param {HTMLElement} table
+   *   DOM object for the table to add a sticky header to.
+   *
+   * @listens event:columnschange
+   */
+  function TableHeader(table) {
+    const $table = $(table);
+
+    /**
+     * @name Drupal.TableHeader#$originalTable
+     *
+     * @type {HTMLElement}
+     */
+    this.$originalTable = $table;
+
+    /**
+     * @type {jQuery}
+     */
+    this.$originalHeader = $table.children('thead');
+
+    /**
+     * @type {jQuery}
+     */
+    this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
+
+    /**
+     * @type {null|bool}
+     */
+    this.displayWeight = null;
+    this.$originalTable.addClass('sticky-table');
+    this.tableHeight = $table[0].clientHeight;
+    this.tableOffset = this.$originalTable.offset();
+
+    // React to columns change to avoid making checks in the scroll callback.
+    this.$originalTable.on(
+      'columnschange',
+      { tableHeader: this },
+      (e, display) => {
+        const tableHeader = e.data.tableHeader;
+        if (
+          tableHeader.displayWeight === null ||
+          tableHeader.displayWeight !== display
+        ) {
+          tableHeader.recalculateSticky();
+        }
+        tableHeader.displayWeight = display;
+      },
+    );
+
+    // Create and display sticky header.
+    this.createSticky();
+  }
+
+  // Helper method to loop through tables and execute a method.
+  function forTables(method, arg) {
+    const tables = TableHeader.tables;
+    const il = tables.length;
+    for (let i = 0; i &lt; il; i++) {
+      tables[i][method](arg);
+    }
+  }
+
+  // Select and initialize sticky table headers.
+  function tableHeaderInitHandler(e) {
+    const $tables = $(e.data.context)
+      .find('table.sticky-enabled')
+      .once('tableheader');
+    const il = $tables.length;
+    for (let i = 0; i &lt; il; i++) {
+      TableHeader.tables.push(new TableHeader($tables[i]));
+    }
+    forTables('onScroll');
+  }
+
+  /**
+   * Attaches sticky table headers.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the sticky table header behavior.
+   */
+  Drupal.behaviors.tableHeader = {
+    attach(context) {
+      $(window).one(
+        'scroll.TableHeaderInit',
+        { context },
+        tableHeaderInitHandler,
+      );
+    },
+  };
+
+  function scrollValue(position) {
+    return document.documentElement[position] || document.body[position];
+  }
+
+  function tableHeaderResizeHandler(e) {
+    forTables('recalculateSticky');
+  }
+
+  function tableHeaderOnScrollHandler(e) {
+    forTables('onScroll');
+  }
+
+  function tableHeaderOffsetChangeHandler(e, offsets) {
+    forTables('stickyPosition', offsets.top);
+  }
+
+  // Bind event that need to change all tables.
+  $(window).on({
+    /**
+     * When resizing table width can change, recalculate everything.
+     *
+     * @ignore
+     */
+    'resize.TableHeader': tableHeaderResizeHandler,
+
+    /**
+     * Bind only one event to take care of calling all scroll callbacks.
+     *
+     * @ignore
+     */
+    'scroll.TableHeader': tableHeaderOnScrollHandler,
+  });
+  // Bind to custom Drupal events.
+  $(document).on({
+    /**
+     * Recalculate columns width when window is resized, when show/hide weight
+     * is triggered, or when toolbar tray is toggled.
+     *
+     * @ignore
+     */
+    'columnschange.TableHeader drupalToolbarTrayChange': tableHeaderResizeHandler,
+
+    /**
+     * Recalculate TableHeader.topOffset when viewport is resized.
+     *
+     * @ignore
+     */
+    'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler,
+  });
+
+  /**
+   * Store the state of TableHeader.
+   */
+  $.extend(
+    TableHeader,
+    /** @lends Drupal.TableHeader */ {
+      /**
+       * This will store the state of all processed tables.
+       *
+       * @type {Array.&lt;Drupal.TableHeader>}
+       */
+      tables: [],
+    },
+  );
+
+  /**
+   * Extend TableHeader prototype.
+   */
+  $.extend(
+    TableHeader.prototype,
+    /** @lends Drupal.TableHeader# */ {
+      /**
+       * Minimum height in pixels for the table to have a sticky header.
+       *
+       * @type {number}
+       */
+      minHeight: 100,
+
+      /**
+       * Absolute position of the table on the page.
+       *
+       * @type {?Drupal~displaceOffset}
+       */
+      tableOffset: null,
+
+      /**
+       * Absolute position of the table on the page.
+       *
+       * @type {?number}
+       */
+      tableHeight: null,
+
+      /**
+       * Boolean storing the sticky header visibility state.
+       *
+       * @type {bool}
+       */
+      stickyVisible: false,
+
+      /**
+       * Create the duplicate header.
+       */
+      createSticky() {
+        // Clone the table header so it inherits original jQuery properties.
+        const $stickyHeader = this.$originalHeader.clone(true);
+        // Hide the table to avoid a flash of the header clone upon page load.
+        this.$stickyTable = $('&lt;table class="sticky-header">&lt;/table>')
+          .css({
+            visibility: 'hidden',
+            position: 'fixed',
+            top: '0px',
+          })
+          .append($stickyHeader)
+          .insertBefore(this.$originalTable);
+
+        this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
+
+        // Initialize all computations.
+        this.recalculateSticky();
+      },
+
+      /**
+       * Set absolute position of sticky.
+       *
+       * @param {number} offsetTop
+       *   The top offset for the sticky header.
+       * @param {number} offsetLeft
+       *   The left offset for the sticky header.
+       *
+       * @return {jQuery}
+       *   The sticky table as a jQuery collection.
+       */
+      stickyPosition(offsetTop, offsetLeft) {
+        const css = {};
+        if (typeof offsetTop === 'number') {
+          css.top = `${offsetTop}px`;
+        }
+        if (typeof offsetLeft === 'number') {
+          css.left = `${this.tableOffset.left - offsetLeft}px`;
+        }
+        return this.$stickyTable.css(css);
+      },
+
+      /**
+       * Returns true if sticky is currently visible.
+       *
+       * @return {bool}
+       *   The visibility status.
+       */
+      checkStickyVisible() {
+        const scrollTop = scrollValue('scrollTop');
+        const tableTop = this.tableOffset.top - displace.offsets.top;
+        const tableBottom = tableTop + this.tableHeight;
+        let visible = false;
+
+        if (tableTop &lt; scrollTop &amp;&amp; scrollTop &lt; tableBottom - this.minHeight) {
+          visible = true;
+        }
+
+        this.stickyVisible = visible;
+        return visible;
+      },
+
+      /**
+       * Check if sticky header should be displayed.
+       *
+       * This function is throttled to once every 250ms to avoid unnecessary
+       * calls.
+       *
+       * @param {jQuery.Event} e
+       *   The scroll event.
+       */
+      onScroll(e) {
+        this.checkStickyVisible();
+        // Track horizontal positioning relative to the viewport.
+        this.stickyPosition(null, scrollValue('scrollLeft'));
+        this.$stickyTable.css(
+          'visibility',
+          this.stickyVisible ? 'visible' : 'hidden',
+        );
+      },
+
+      /**
+       * Event handler: recalculates position of the sticky table header.
+       *
+       * @param {jQuery.Event} event
+       *   Event being triggered.
+       */
+      recalculateSticky(event) {
+        // Update table size.
+        this.tableHeight = this.$originalTable[0].clientHeight;
+
+        // Update offset top.
+        displace.offsets.top = displace.calculateOffset('top');
+        this.tableOffset = this.$originalTable.offset();
+        this.stickyPosition(displace.offsets.top, scrollValue('scrollLeft'));
+
+        // Update columns width.
+        let $that = null;
+        let $stickyCell = null;
+        let display = null;
+        // Resize header and its cell widths.
+        // Only apply width to visible table cells. This prevents the header from
+        // displaying incorrectly when the sticky header is no longer visible.
+        const il = this.$originalHeaderCells.length;
+        for (let i = 0; i &lt; il; i++) {
+          $that = $(this.$originalHeaderCells[i]);
+          $stickyCell = this.$stickyHeaderCells.eq($that.index());
+          display = $that.css('display');
+          if (display !== 'none') {
+            $stickyCell.css({ width: $that.css('width'), display });
+          } else {
+            $stickyCell.css('display', 'none');
+          }
+        }
+        this.$stickyTable.css('width', this.$originalTable.outerWidth());
+      },
+    },
+  );
+
+  // Expose constructor in the public space.
+  Drupal.TableHeader = TableHeader;
+})(jQuery, Drupal, window.Drupal.displace);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

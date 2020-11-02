@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/quickedit/js/util.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/quickedit/js/util.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Provides utility functions for Quick Edit.
+ */
+
+(function ($, Drupal) {
+  /**
+   * @namespace
+   */
+  Drupal.quickedit.util = Drupal.quickedit.util || {};
+
+  /**
+   * @namespace
+   */
+  Drupal.quickedit.util.constants = {};
+
+  /**
+   *
+   * @type {string}
+   */
+  Drupal.quickedit.util.constants.transitionEnd =
+    'transitionEnd.quickedit webkitTransitionEnd.quickedit transitionend.quickedit msTransitionEnd.quickedit oTransitionEnd.quickedit';
+
+  /**
+   * Converts a field id into a formatted url path.
+   *
+   * @example
+   * Drupal.quickedit.util.buildUrl(
+   *   'node/1/body/und/full',
+   *   '/quickedit/form/!entity_type/!id/!field_name/!langcode/!view_mode'
+   * );
+   *
+   * @param {string} id
+   *   The id of an editable field.
+   * @param {string} urlFormat
+   *   The Controller route for field processing.
+   *
+   * @return {string}
+   *   The formatted URL.
+   */
+  Drupal.quickedit.util.buildUrl = function (id, urlFormat) {
+    const parts = id.split('/');
+    return Drupal.formatString(decodeURIComponent(urlFormat), {
+      '!entity_type': parts[0],
+      '!id': parts[1],
+      '!field_name': parts[2],
+      '!langcode': parts[3],
+      '!view_mode': parts[4],
+    });
+  };
+
+  /**
+   * Shows a network error modal dialog.
+   *
+   * @param {string} title
+   *   The title to use in the modal dialog.
+   * @param {string} message
+   *   The message to use in the modal dialog.
+   */
+  Drupal.quickedit.util.networkErrorModal = function (title, message) {
+    const $message = $(`&lt;div>${message}&lt;/div>`);
+    const networkErrorModal = Drupal.dialog($message.get(0), {
+      title,
+      dialogClass: 'quickedit-network-error',
+      buttons: [
+        {
+          text: Drupal.t('OK'),
+          click() {
+            networkErrorModal.close();
+          },
+          primary: true,
+        },
+      ],
+      create() {
+        $(this).parent().find('.ui-dialog-titlebar-close').remove();
+      },
+      close(event) {
+        // Automatically destroy the DOM element that was used for the dialog.
+        $(event.target).remove();
+      },
+    });
+    networkErrorModal.showModal();
+  };
+
+  /**
+   * @namespace
+   */
+  Drupal.quickedit.util.form = {
+    /**
+     * Loads a form, calls a callback to insert.
+     *
+     * Leverages {@link Drupal.Ajax}' ability to have scoped (per-instance)
+     * command implementations to be able to call a callback.
+     *
+     * @param {object} options
+     *   An object with the following keys:
+     * @param {string} options.fieldID
+     *   The field ID that uniquely identifies the field for which this form
+     *   will be loaded.
+     * @param {bool} options.nocssjs
+     *   Boolean indicating whether no CSS and JS should be returned (necessary
+     *   when the form is invisible to the user).
+     * @param {bool} options.reset
+     *   Boolean indicating whether the data stored for this field's entity in
+     *   PrivateTempStore should be used or reset.
+     * @param {function} callback
+     *   A callback function that will receive the form to be inserted, as well
+     *   as the ajax object, necessary if the callback wants to perform other
+     *   Ajax commands.
+     */
+    load(options, callback) {
+      const fieldID = options.fieldID;
+
+      // Create a Drupal.ajax instance to load the form.
+      const formLoaderAjax = Drupal.ajax({
+        url: Drupal.quickedit.util.buildUrl(
+          fieldID,
+          Drupal.url(
+            'quickedit/form/!entity_type/!id/!field_name/!langcode/!view_mode',
+          ),
+        ),
+        submit: {
+          nocssjs: options.nocssjs,
+          reset: options.reset,
+        },
+        error(xhr, url) {
+          // Show a modal to inform the user of the network error.
+          const fieldLabel = Drupal.quickedit.metadata.get(fieldID, 'label');
+          const message = Drupal.t(
+            'Could not load the form for &lt;q>@field-label&lt;/q>, either due to a website problem or a network connection problem.&lt;br>Please try again.',
+            { '@field-label': fieldLabel },
+          );
+          Drupal.quickedit.util.networkErrorModal(
+            Drupal.t('Network problem!'),
+            message,
+          );
+
+          // Change the state back to "candidate", to allow the user to start
+          // in-place editing of the field again.
+          const fieldModel = Drupal.quickedit.app.model.get('activeField');
+          fieldModel.set('state', 'candidate');
+        },
+      });
+      // Implement a scoped quickeditFieldForm AJAX command: calls the callback.
+      formLoaderAjax.commands.quickeditFieldForm = function (
+        ajax,
+        response,
+        status,
+      ) {
+        callback(response.data, ajax);
+        Drupal.ajax.instances[this.instanceIndex] = null;
+      };
+      // This will ensure our scoped quickeditFieldForm AJAX command gets
+      // called.
+      formLoaderAjax.execute();
+    },
+
+    /**
+     * Creates a {@link Drupal.Ajax} instance that is used to save a form.
+     *
+     * @param {object} options
+     *   Submit options to the form.
+     * @param {bool} options.nocssjs
+     *   Boolean indicating whether no CSS and JS should be returned (necessary
+     *   when the form is invisible to the user).
+     * @param {Array.&lt;string>} options.other_view_modes
+     *   Array containing view mode IDs (of other instances of this field on the
+     *   page).
+     * @param {jQuery} $submit
+     *   The submit element.
+     *
+     * @return {Drupal.Ajax}
+     *   A {@link Drupal.Ajax} instance.
+     */
+    ajaxifySaving(options, $submit) {
+      // Re-wire the form to handle submit.
+      const settings = {
+        url: $submit.closest('form').attr('action'),
+        setClick: true,
+        event: 'click.quickedit',
+        progress: false,
+        submit: {
+          nocssjs: options.nocssjs,
+          other_view_modes: options.other_view_modes,
+        },
+
+        /**
+         * Reimplement the success handler.
+         *
+         * Ensure {@link Drupal.attachBehaviors} does not get called on the
+         * form.
+         *
+         * @param {Drupal.AjaxCommands~commandDefinition} response
+         *   The Drupal AJAX response.
+         * @param {number} [status]
+         *   The HTTP status code.
+         */
+        success(response, status) {
+          Object.keys(response || {}).forEach((i) => {
+            if (response[i].command &amp;&amp; this.commands[response[i].command]) {
+              this.commands[response[i].command](this, response[i], status);
+            }
+          });
+        },
+        base: $submit.attr('id'),
+        element: $submit[0],
+      };
+
+      return Drupal.ajax(settings);
+    },
+
+    /**
+     * Cleans up the {@link Drupal.Ajax} instance that is used to save the form.
+     *
+     * @param {Drupal.Ajax} ajax
+     *   A {@link Drupal.Ajax} instance that was returned by
+     *   {@link Drupal.quickedit.form.ajaxifySaving}.
+     */
+    unajaxifySaving(ajax) {
+      $(ajax.element).off('click.quickedit');
+    },
+  };
+})(jQuery, Drupal);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

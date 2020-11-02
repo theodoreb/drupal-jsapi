@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/field_ui/field_ui.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/field_ui/field_ui.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Attaches the behaviors for the Field UI module.
+ */
+
+(function ($, Drupal, drupalSettings) {
+  /**
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Adds behaviors to the field storage add form.
+   */
+  Drupal.behaviors.fieldUIFieldStorageAddForm = {
+    attach(context) {
+      const $form = $(context)
+        .find('[data-drupal-selector="field-ui-field-storage-add-form"]')
+        .once('field_ui_add');
+      if ($form.length) {
+        // Add a few 'js-form-required' and 'form-required' css classes here.
+        // We can not use the Form API '#required' property because both label
+        // elements for "add new" and "re-use existing" can never be filled and
+        // submitted at the same time. The actual validation will happen
+        // server-side.
+        $form
+          .find(
+            '.js-form-item-label label,' +
+              '.js-form-item-field-name label,' +
+              '.js-form-item-existing-storage-label label',
+          )
+          .addClass('js-form-required form-required');
+
+        const $newFieldType = $form.find('select[name="new_storage_type"]');
+        const $existingStorageName = $form.find(
+          'select[name="existing_storage_name"]',
+        );
+        const $existingStorageLabel = $form.find(
+          'input[name="existing_storage_label"]',
+        );
+
+        // When the user selects a new field type, clear the "existing field"
+        // selection.
+        $newFieldType.on('change', function () {
+          if ($(this).val() !== '') {
+            // Reset the "existing storage name" selection.
+            $existingStorageName.val('').trigger('change');
+          }
+        });
+
+        // When the user selects an existing storage name, clear the "new field
+        // type" selection and populate the 'existing_storage_label' element.
+        $existingStorageName.on('change', function () {
+          const value = $(this).val();
+          if (value !== '') {
+            // Reset the "new field type" selection.
+            $newFieldType.val('').trigger('change');
+
+            // Pre-populate the "existing storage label" element.
+            if (
+              typeof drupalSettings.existingFieldLabels[value] !== 'undefined'
+            ) {
+              $existingStorageLabel.val(
+                drupalSettings.existingFieldLabels[value],
+              );
+            }
+          }
+        });
+      }
+    },
+  };
+
+  /**
+   * Attaches the fieldUIOverview behavior.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the fieldUIOverview behavior.
+   *
+   * @see Drupal.fieldUIOverview.attach
+   */
+  Drupal.behaviors.fieldUIDisplayOverview = {
+    attach(context, settings) {
+      $(context)
+        .find('table#field-display-overview')
+        .once('field-display-overview')
+        .each(function () {
+          Drupal.fieldUIOverview.attach(
+            this,
+            settings.fieldUIRowsData,
+            Drupal.fieldUIDisplayOverview,
+          );
+        });
+    },
+  };
+
+  /**
+   * Namespace for the field UI overview.
+   *
+   * @namespace
+   */
+  Drupal.fieldUIOverview = {
+    /**
+     * Attaches the fieldUIOverview behavior.
+     *
+     * @param {HTMLTableElement} table
+     *   The table element for the overview.
+     * @param {object} rowsData
+     *   The data of the rows in the table.
+     * @param {object} rowHandlers
+     *   Handlers to be added to the rows.
+     */
+    attach(table, rowsData, rowHandlers) {
+      const tableDrag = Drupal.tableDrag[table.id];
+
+      // Add custom tabledrag callbacks.
+      tableDrag.onDrop = this.onDrop;
+      tableDrag.row.prototype.onSwap = this.onSwap;
+
+      // Create row handlers.
+      $(table)
+        .find('tr.draggable')
+        .each(function () {
+          // Extract server-side data for the row.
+          const row = this;
+          if (row.id in rowsData) {
+            const data = rowsData[row.id];
+            data.tableDrag = tableDrag;
+
+            // Create the row handler, make it accessible from the DOM row
+            // element.
+            const rowHandler = new rowHandlers[data.rowHandler](row, data);
+            $(row).data('fieldUIRowHandler', rowHandler);
+          }
+        });
+    },
+
+    /**
+     * Event handler to be attached to form inputs triggering a region change.
+     */
+    onChange() {
+      const $trigger = $(this);
+      const $row = $trigger.closest('tr');
+      const rowHandler = $row.data('fieldUIRowHandler');
+
+      const refreshRows = {};
+      refreshRows[rowHandler.name] = $trigger.get(0);
+
+      // Handle region change.
+      const region = rowHandler.getRegion();
+      if (region !== rowHandler.region) {
+        // Remove parenting.
+        $row.find('select.js-field-parent').val('');
+        // Let the row handler deal with the region change.
+        $.extend(refreshRows, rowHandler.regionChange(region));
+        // Update the row region.
+        rowHandler.region = region;
+      }
+
+      // Ajax-update the rows.
+      Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
+    },
+
+    /**
+     * Lets row handlers react when a row is dropped into a new region.
+     */
+    onDrop() {
+      const dragObject = this;
+      const row = dragObject.rowObject.element;
+      const $row = $(row);
+      const rowHandler = $row.data('fieldUIRowHandler');
+      if (typeof rowHandler !== 'undefined') {
+        const regionRow = $row.prevAll('tr.region-message').get(0);
+        const region = regionRow.className.replace(
+          /([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/,
+          '$2',
+        );
+
+        if (region !== rowHandler.region) {
+          // Let the row handler deal with the region change.
+          const refreshRows = rowHandler.regionChange(region);
+          // Update the row region.
+          rowHandler.region = region;
+          // Ajax-update the rows.
+          Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
+        }
+      }
+    },
+
+    /**
+     * Refreshes placeholder rows in empty regions while a row is being dragged.
+     *
+     * Copied from block.js.
+     *
+     * @param {HTMLElement} draggedRow
+     *   The tableDrag rowObject for the row being dragged.
+     */
+    onSwap(draggedRow) {
+      const rowObject = this;
+      $(rowObject.table)
+        .find('tr.region-message')
+        .each(function () {
+          const $this = $(this);
+          // If the dragged row is in this region, but above the message row, swap
+          // it down one space.
+          if (
+            $this.prev('tr').get(0) ===
+            rowObject.group[rowObject.group.length - 1]
+          ) {
+            // Prevent a recursion problem when using the keyboard to move rows
+            // up.
+            if (
+              rowObject.method !== 'keyboard' ||
+              rowObject.direction === 'down'
+            ) {
+              rowObject.swap('after', this);
+            }
+          }
+          // This region has become empty.
+          if (
+            $this.next('tr').is(':not(.draggable)') ||
+            $this.next('tr').length === 0
+          ) {
+            $this.removeClass('region-populated').addClass('region-empty');
+          }
+          // This region has become populated.
+          else if ($this.is('.region-empty')) {
+            $this.removeClass('region-empty').addClass('region-populated');
+          }
+        });
+    },
+
+    /**
+     * Triggers Ajax refresh of selected rows.
+     *
+     * The 'format type' selects can trigger a series of changes in child rows.
+     * The #ajax behavior is therefore not attached directly to the selects, but
+     * triggered manually through a hidden #ajax 'Refresh' button.
+     *
+     * @param {object} rows
+     *   A hash object, whose keys are the names of the rows to refresh (they
+     *   will receive the 'ajax-new-content' effect on the server side), and
+     *   whose values are the DOM element in the row that should get an Ajax
+     *   throbber.
+     */
+    AJAXRefreshRows(rows) {
+      // Separate keys and values.
+      const rowNames = [];
+      const ajaxElements = [];
+      Object.keys(rows || {}).forEach((rowName) => {
+        rowNames.push(rowName);
+        ajaxElements.push(rows[rowName]);
+      });
+
+      if (rowNames.length) {
+        // Add a throbber next each of the ajaxElements.
+        $(ajaxElements).after(Drupal.theme.ajaxProgressThrobber());
+
+        // Fire the Ajax update.
+        $('input[name=refresh_rows]').val(rowNames.join(' '));
+        $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
+
+        // Disabled elements do not appear in POST ajax data, so we mark the
+        // elements disabled only after firing the request.
+        $(ajaxElements).prop('disabled', true);
+      }
+    },
+  };
+
+  /**
+   * Row handlers for the 'Manage display' screen.
+   *
+   * @namespace
+   */
+  Drupal.fieldUIDisplayOverview = {};
+
+  /**
+   * Constructor for a 'field' row handler.
+   *
+   * This handler is used for both fields and 'extra fields' rows.
+   *
+   * @constructor
+   *
+   * @param {HTMLTableRowElement} row
+   *   The row DOM element.
+   * @param {object} data
+   *   Additional data to be populated in the constructed object.
+   *
+   * @return {Drupal.fieldUIDisplayOverview.field}
+   *   The field row handler constructed.
+   */
+  Drupal.fieldUIDisplayOverview.field = function (row, data) {
+    this.row = row;
+    this.name = data.name;
+    this.region = data.region;
+    this.tableDrag = data.tableDrag;
+    this.defaultPlugin = data.defaultPlugin;
+
+    // Attach change listener to the 'plugin type' select.
+    this.$pluginSelect = $(row).find('.field-plugin-type');
+    this.$pluginSelect.on('change', Drupal.fieldUIOverview.onChange);
+
+    // Attach change listener to the 'region' select.
+    this.$regionSelect = $(row).find('select.field-region');
+    this.$regionSelect.on('change', Drupal.fieldUIOverview.onChange);
+
+    return this;
+  };
+
+  Drupal.fieldUIDisplayOverview.field.prototype = {
+    /**
+     * Returns the region corresponding to the current form values of the row.
+     *
+     * @return {string}
+     *   Either 'hidden' or 'content'.
+     */
+    getRegion() {
+      return this.$regionSelect.val();
+    },
+
+    /**
+     * Reacts to a row being changed regions.
+     *
+     * This function is called when the row is moved to a different region, as
+     * a
+     * result of either :
+     * - a drag-and-drop action (the row's form elements then probably need to
+     * be updated accordingly)
+     * - user input in one of the form elements watched by the
+     *   {@link Drupal.fieldUIOverview.onChange} change listener.
+     *
+     * @param {string} region
+     *   The name of the new region for the row.
+     *
+     * @return {object}
+     *   A hash object indicating which rows should be Ajax-updated as a result
+     *   of the change, in the format expected by
+     *   {@link Drupal.fieldUIOverview.AJAXRefreshRows}.
+     */
+    regionChange(region) {
+      // Replace dashes with underscores.
+      region = region.replace(/-/g, '_');
+
+      // Set the region of the select list.
+      this.$regionSelect.val(region);
+
+      // Restore the formatter back to the default formatter only if it was
+      // disabled previously. Pseudo-fields do not have default formatters,
+      // we just return to 'visible' for those.
+      if (this.region === 'hidden') {
+        const value =
+          typeof this.defaultPlugin !== 'undefined'
+            ? this.defaultPlugin
+            : this.$pluginSelect.find('option').val();
+
+        if (typeof value !== 'undefined') {
+          this.$pluginSelect.val(value);
+        }
+      }
+
+      const refreshRows = {};
+      refreshRows[this.name] = this.$pluginSelect.get(0);
+
+      return refreshRows;
+    },
+  };
+})(jQuery, Drupal, drupalSettings);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

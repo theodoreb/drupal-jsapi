@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/user/user.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/user/user.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * User behaviors.
+ */
+
+(($, Drupal) => {
+  /**
+   * An object containing CSS classes used for password widget.
+   *
+   * @type {object}
+   * @prop {string} passwordParent - A CSS class for the parent element.
+   * @prop {string} passwordsMatch - A CSS class indicating password match.
+   * @prop {string} passwordsNotMatch - A CSS class indicating passwords
+   *   doesn't match.
+   * @prop {string} passwordWeak - A CSS class indicating weak password
+   *   strength.
+   * @prop {string} passwordFair - A CSS class indicating fair password
+   *   strength.
+   * @prop {string} passwordGood - A CSS class indicating good password
+   *   strength.
+   * @prop {string} passwordStrong - A CSS class indicating strong password
+   *   strength.
+   * @prop {string} widgetInitial - Initial CSS class that should be removed
+   *   on a state change.
+   * @prop {string} passwordEmpty - A CSS class indicating password has not
+   *   been filled.
+   * @prop {string} passwordFilled - A CSS class indicating password has
+   *   been filled.
+   * @prop {string} confirmEmpty - A CSS class indicating password
+   *   confirmation has not been filled.
+   * @prop {string} confirmFilled - A CSS class indicating password
+   *   confirmation has been filled.
+   */
+  Drupal.user = {
+    password: {
+      css: {
+        passwordParent: 'password-parent',
+        passwordsMatch: 'ok',
+        passwordsNotMatch: 'error',
+        passwordWeak: 'is-weak',
+        passwordFair: 'is-fair',
+        passwordGood: 'is-good',
+        passwordStrong: 'is-strong',
+        widgetInitial: '',
+        passwordEmpty: '',
+        passwordFilled: '',
+        confirmEmpty: '',
+        confirmFilled: '',
+      },
+    },
+  };
+
+  /**
+   * Attach handlers to evaluate the strength of any password fields and to
+   * check that its confirmation is correct.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches password strength indicator and other relevant validation to
+   *   password fields.
+   */
+  Drupal.behaviors.password = {
+    attach(context, settings) {
+      const cssClasses = Drupal.user.password.css;
+      $(context)
+        .find('input.js-password-field')
+        .once('password')
+        .each((index, value) => {
+          const $mainInput = $(value);
+          const $mainInputParent = $mainInput
+            .parent()
+            .addClass(cssClasses.passwordParent);
+          const $passwordWidget = $mainInput.closest(
+            '.js-form-type-password-confirm',
+          );
+          const $confirmInput = $passwordWidget.find(
+            'input.js-password-confirm',
+          );
+          const $passwordConfirmMessage = $(
+            Drupal.theme('passwordConfirmMessage', settings.password),
+          );
+
+          let $passwordMatchStatus = $passwordConfirmMessage
+            .find('[data-drupal-selector="password-match-status-text"]')
+            .first();
+          if ($passwordMatchStatus.length === 0) {
+            $passwordMatchStatus = $passwordConfirmMessage.find('span').first();
+            Drupal.deprecationError({
+              message:
+                'Returning &lt;span> without data-drupal-selector="password-match-status-text" attribute is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3152101',
+            });
+          }
+
+          const $confirmInputParent = $confirmInput
+            .parent()
+            .addClass('confirm-parent')
+            .append($passwordConfirmMessage);
+
+          // List of classes to be removed from the strength bar on a state
+          // change.
+          const passwordStrengthBarClassesToRemove = [
+            cssClasses.passwordWeak || '',
+            cssClasses.passwordFair || '',
+            cssClasses.passwordGood || '',
+            cssClasses.passwordStrong || '',
+          ]
+            .join(' ')
+            .trim();
+
+          // List of classes to be removed from the text wrapper on a state
+          // change.
+          const confirmTextWrapperClassesToRemove = [
+            cssClasses.passwordsMatch || '',
+            cssClasses.passwordsNotMatch || '',
+          ]
+            .join(' ')
+            .trim();
+
+          // List of classes to be removed from the widget on a state change.
+          const widgetClassesToRemove = [
+            cssClasses.widgetInitial || '',
+            cssClasses.passwordEmpty || '',
+            cssClasses.passwordFilled || '',
+            cssClasses.confirmEmpty || '',
+            cssClasses.confirmFilled || '',
+          ]
+            .join(' ')
+            .trim();
+
+          const password = {};
+
+          // If the password strength indicator is enabled, add its markup.
+          if (settings.password.showStrengthIndicator) {
+            const $passwordStrength = $(
+              Drupal.theme('passwordStrength', settings.password),
+            );
+            password.$strengthBar = $passwordStrength
+              .find('[data-drupal-selector="password-strength-indicator"]')
+              .first();
+            if (password.$strengthBar.length === 0) {
+              password.$strengthBar = $passwordStrength
+                .find('.js-password-strength__indicator')
+                .first();
+              Drupal.deprecationError({
+                message:
+                  'The js-password-strength__indicator class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__indicator with a data-drupal-selector="password-strength-indicator" attribute. See https://www.drupal.org/node/3152101',
+              });
+            }
+            password.$strengthTextWrapper = $passwordStrength
+              .find('[data-drupal-selector="password-strength-text"]')
+              .first();
+            if (password.$strengthTextWrapper.length === 0) {
+              password.$strengthTextWrapper = $passwordStrength
+                .find('.js-password-strength__text')
+                .first();
+              Drupal.deprecationError({
+                message:
+                  'The js-password-strength__text class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__text with a data-drupal-selector="password-strength-text" attribute. See https://www.drupal.org/node/3152101',
+              });
+            }
+            password.$suggestions = $(
+              Drupal.theme('passwordSuggestions', settings.password, []),
+            );
+
+            password.$suggestions.hide();
+            $mainInputParent.append($passwordStrength);
+            $confirmInputParent.after(password.$suggestions);
+          }
+
+          /**
+           * Adds classes to the widget indicating if the elements are filled.
+           */
+          const addWidgetClasses = () => {
+            $passwordWidget
+              .addClass(
+                $mainInput.val()
+                  ? cssClasses.passwordFilled
+                  : cssClasses.passwordEmpty,
+              )
+              .addClass(
+                $confirmInput.val()
+                  ? cssClasses.confirmFilled
+                  : cssClasses.confirmEmpty,
+              );
+          };
+
+          /**
+           * Check that password and confirmation inputs match.
+           *
+           * @param {string} confirmInputVal
+           *   The value of the confirm input.
+           */
+          const passwordCheckMatch = (confirmInputVal) => {
+            const passwordsAreMatching = $mainInput.val() === confirmInputVal;
+            const confirmClass = passwordsAreMatching
+              ? cssClasses.passwordsMatch
+              : cssClasses.passwordsNotMatch;
+            const confirmMessage = passwordsAreMatching
+              ? settings.password.confirmSuccess
+              : settings.password.confirmFailure;
+
+            // Update the success message and set the class if needed.
+            if (
+              !$passwordMatchStatus.hasClass(confirmClass) ||
+              !$passwordMatchStatus.html() === confirmMessage
+            ) {
+              if (confirmTextWrapperClassesToRemove) {
+                $passwordMatchStatus.removeClass(
+                  confirmTextWrapperClassesToRemove,
+                );
+              }
+              $passwordMatchStatus.html(confirmMessage).addClass(confirmClass);
+            }
+          };
+
+          /**
+           * Checks the password strength.
+           */
+          const passwordCheck = () => {
+            if (settings.password.showStrengthIndicator) {
+              // Evaluate the password strength.
+              const result = Drupal.evaluatePasswordStrength(
+                $mainInput.val(),
+                settings.password,
+              );
+              const $currentPasswordSuggestions = $(
+                Drupal.theme(
+                  'passwordSuggestions',
+                  settings.password,
+                  result.messageTips,
+                ),
+              );
+
+              // Update the suggestions for how to improve the password if needed.
+              if (
+                password.$suggestions.html() !==
+                $currentPasswordSuggestions.html()
+              ) {
+                password.$suggestions.replaceWith($currentPasswordSuggestions);
+                password.$suggestions = $currentPasswordSuggestions.toggle(
+                  // Only show the description box if a weakness exists in the
+                  // password.
+                  result.strength !== 100,
+                );
+              }
+
+              if (passwordStrengthBarClassesToRemove) {
+                password.$strengthBar.removeClass(
+                  passwordStrengthBarClassesToRemove,
+                );
+              }
+              // Adjust the length of the strength indicator.
+              password.$strengthBar
+                .css('width', `${result.strength}%`)
+                .addClass(result.indicatorClass);
+
+              // Update the strength indication text.
+              password.$strengthTextWrapper.html(result.indicatorText);
+            }
+
+            // Check the value in the confirm input and show results.
+            if ($confirmInput.val()) {
+              passwordCheckMatch($confirmInput.val());
+              $passwordConfirmMessage.css({ visibility: 'visible' });
+            } else {
+              $passwordConfirmMessage.css({ visibility: 'hidden' });
+            }
+
+            if (widgetClassesToRemove) {
+              $passwordWidget.removeClass(widgetClassesToRemove);
+              addWidgetClasses();
+            }
+          };
+
+          if (widgetClassesToRemove) {
+            addWidgetClasses();
+          }
+
+          // Monitor input events.
+          $mainInput.on('input', passwordCheck);
+          $confirmInput.on('input', passwordCheck);
+        });
+    },
+  };
+
+  /**
+   * Evaluate the strength of a user's password.
+   *
+   * Returns the estimated strength and the relevant output message.
+   *
+   * @param {string} password
+   *   The password to evaluate.
+   * @param {object} passwordSettings
+   *   A password settings object containing the text to display and the CSS
+   *   classes for each strength level.
+   *
+   * @return {object}
+   *   An object containing strength, message, indicatorText and indicatorClass.
+   */
+  Drupal.evaluatePasswordStrength = (password, passwordSettings) => {
+    password = password.trim();
+    let indicatorText;
+    let indicatorClass;
+    let weaknesses = 0;
+    let strength = 100;
+    let msg = [];
+
+    const hasLowercase = /[a-z]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasNumbers = /[0-9]/.test(password);
+    const hasPunctuation = /[^a-zA-Z0-9]/.test(password);
+
+    // If there is a username edit box on the page, compare password to that,
+    // otherwise use value from the database.
+    const $usernameBox = $('input.username');
+    const username =
+      $usernameBox.length > 0 ? $usernameBox.val() : passwordSettings.username;
+
+    // Lose 5 points for every character less than 12, plus a 30 point penalty.
+    if (password.length &lt; 12) {
+      msg.push(passwordSettings.tooShort);
+      strength -= (12 - password.length) * 5 + 30;
+    }
+
+    // Count weaknesses.
+    if (!hasLowercase) {
+      msg.push(passwordSettings.addLowerCase);
+      weaknesses += 1;
+    }
+    if (!hasUppercase) {
+      msg.push(passwordSettings.addUpperCase);
+      weaknesses += 1;
+    }
+    if (!hasNumbers) {
+      msg.push(passwordSettings.addNumbers);
+      weaknesses += 1;
+    }
+    if (!hasPunctuation) {
+      msg.push(passwordSettings.addPunctuation);
+      weaknesses += 1;
+    }
+
+    // Apply penalty for each weakness (balanced against length penalty).
+    switch (weaknesses) {
+      case 1:
+        strength -= 12.5;
+        break;
+
+      case 2:
+        strength -= 25;
+        break;
+
+      case 3:
+        strength -= 40;
+        break;
+
+      case 4:
+        strength -= 40;
+        break;
+    }
+
+    // Check if password is the same as the username.
+    if (password !== '' &amp;&amp; password.toLowerCase() === username.toLowerCase()) {
+      msg.push(passwordSettings.sameAsUsername);
+      // Passwords the same as username are always very weak.
+      strength = 5;
+    }
+
+    const cssClasses = Drupal.user.password.css;
+
+    // Based on the strength, work out what text should be shown by the
+    // password strength meter.
+    if (strength &lt; 60) {
+      indicatorText = passwordSettings.weak;
+      indicatorClass = cssClasses.passwordWeak;
+    } else if (strength &lt; 70) {
+      indicatorText = passwordSettings.fair;
+      indicatorClass = cssClasses.passwordFair;
+    } else if (strength &lt; 80) {
+      indicatorText = passwordSettings.good;
+      indicatorClass = cssClasses.passwordGood;
+    } else if (strength &lt;= 100) {
+      indicatorText = passwordSettings.strong;
+      indicatorClass = cssClasses.passwordStrong;
+    }
+
+    // Assemble the final message while keeping the original message array.
+    const messageTips = msg;
+    msg = `${passwordSettings.hasWeaknesses}&lt;ul>&lt;li>${msg.join(
+      '&lt;/li>&lt;li>',
+    )}&lt;/li>&lt;/ul>`;
+
+    return Drupal.deprecatedProperty({
+      target: {
+        strength,
+        message: msg,
+        indicatorText,
+        indicatorClass,
+        messageTips,
+      },
+      deprecatedProperty: 'message',
+      message:
+        'The message property is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The markup should be constructed using messageTips property and Drupal.theme.passwordSuggestions. See https://www.drupal.org/node/3130352',
+    });
+  };
+})(jQuery, Drupal);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

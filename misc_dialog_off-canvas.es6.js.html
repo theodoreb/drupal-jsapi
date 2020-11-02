@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: misc/dialog/off-canvas.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: misc/dialog/off-canvas.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Drupal's off-canvas library.
+ */
+
+(($, Drupal, debounce, displace) => {
+  /**
+   * Off-canvas dialog implementation using jQuery Dialog.
+   *
+   * Transforms the regular dialogs created using Drupal.dialog when the dialog
+   * element equals '#drupal-off-canvas' into an side-loading dialog.
+   *
+   * @namespace
+   */
+  Drupal.offCanvas = {
+    /**
+     * Storage for position information about the tray.
+     *
+     * @type {?String}
+     */
+    position: null,
+
+    /**
+     * The minimum height of the tray when opened at the top of the page.
+     *
+     * @type {Number}
+     */
+    minimumHeight: 30,
+
+    /**
+     * The minimum width to use body displace needs to match the width at which
+     * the tray will be 100% width. @see core/misc/dialog/off-canvas.css
+     *
+     * @type {Number}
+     */
+    minDisplaceWidth: 768,
+
+    /**
+     * Wrapper used to position off-canvas dialog.
+     *
+     * @type {jQuery}
+     */
+    $mainCanvasWrapper: $('[data-off-canvas-main-canvas]'),
+
+    /**
+     * Determines if an element is an off-canvas dialog.
+     *
+     * @param {jQuery} $element
+     *   The dialog element.
+     *
+     * @return {bool}
+     *   True this is currently an off-canvas dialog.
+     */
+    isOffCanvas($element) {
+      return $element.is('#drupal-off-canvas');
+    },
+
+    /**
+     * Remove off-canvas dialog events.
+     *
+     * @param {jQuery} $element
+     *   The target element.
+     */
+    removeOffCanvasEvents($element) {
+      $element.off('.off-canvas');
+      $(document).off('.off-canvas');
+      $(window).off('.off-canvas');
+    },
+
+    /**
+     * Handler fired before an off-canvas dialog has been opened.
+     *
+     * @param {Object} settings
+     *   Settings related to the composition of the dialog.
+     *
+     * @return {undefined}
+     */
+    beforeCreate({ settings, $element }) {
+      // Clean up previous dialog event handlers.
+      Drupal.offCanvas.removeOffCanvasEvents($element);
+
+      $('body').addClass('js-off-canvas-dialog-open');
+      // @see http://api.jqueryui.com/position/
+      settings.position = {
+        my: 'left top',
+        at: `${Drupal.offCanvas.getEdge()} top`,
+        of: window,
+      };
+
+      /**
+       * Applies initial height and with to dialog based depending on position.
+       * @see http://api.jqueryui.com/dialog for all dialog options.
+       */
+      const position = settings.drupalOffCanvasPosition;
+      const height = position === 'side' ? $(window).height() : settings.height;
+      const width = position === 'side' ? settings.width : '100%';
+      settings.height = height;
+      settings.width = width;
+    },
+
+    /**
+     * Handler fired after an off-canvas dialog has been closed.
+     *
+     * @return {undefined}
+     */
+    beforeClose({ $element }) {
+      $('body').removeClass('js-off-canvas-dialog-open');
+      // Remove all *.off-canvas events
+      Drupal.offCanvas.removeOffCanvasEvents($element);
+      Drupal.offCanvas.resetPadding();
+    },
+
+    /**
+     * Handler fired when an off-canvas dialog has been opened.
+     *
+     * @param {jQuery} $element
+     *   The off-canvas dialog element.
+     * @param {Object} settings
+     *   Settings related to the composition of the dialog.
+     *
+     * @return {undefined}
+     */
+    afterCreate({ $element, settings }) {
+      const eventData = { settings, $element, offCanvasDialog: this };
+
+      $element
+        .on(
+          'dialogContentResize.off-canvas',
+          eventData,
+          Drupal.offCanvas.handleDialogResize,
+        )
+        .on(
+          'dialogContentResize.off-canvas',
+          eventData,
+          Drupal.offCanvas.bodyPadding,
+        );
+
+      Drupal.offCanvas
+        .getContainer($element)
+        .attr(`data-offset-${Drupal.offCanvas.getEdge()}`, '');
+
+      $(window)
+        .on(
+          'resize.off-canvas',
+          eventData,
+          debounce(Drupal.offCanvas.resetSize, 100),
+        )
+        .trigger('resize.off-canvas');
+    },
+
+    /**
+     * Toggle classes based on title existence.
+     * Called with Drupal.offCanvas.afterCreate.
+     *
+     * @param {Object} settings
+     *   Settings related to the composition of the dialog.
+     *
+     * @return {undefined}
+     */
+    render({ settings }) {
+      $(
+        '.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar',
+      ).toggleClass('ui-dialog-empty-title', !settings.title);
+    },
+
+    /**
+     * Adjusts the dialog on resize.
+     *
+     * @param {jQuery.Event} event
+     *   The event triggered.
+     * @param {object} event.data
+     *   Data attached to the event.
+     */
+    handleDialogResize(event) {
+      const $element = event.data.$element;
+      const $container = Drupal.offCanvas.getContainer($element);
+
+      const $offsets = $container.find(
+        '> :not(#drupal-off-canvas, .ui-resizable-handle)',
+      );
+      let offset = 0;
+
+      // Let scroll element take all the height available.
+      $element.css({ height: 'auto' });
+      const modalHeight = $container.height();
+
+      $offsets.each((i, e) => {
+        offset += $(e).outerHeight();
+      });
+
+      // Take internal padding into account.
+      const scrollOffset = $element.outerHeight() - $element.height();
+      $element.height(modalHeight - offset - scrollOffset);
+    },
+
+    /**
+     * Resets the size of the dialog.
+     *
+     * @param {jQuery.Event} event
+     *   The event triggered.
+     * @param {object} event.data
+     *   Data attached to the event.
+     */
+    resetSize(event) {
+      const $element = event.data.$element;
+      const container = Drupal.offCanvas.getContainer($element);
+      const position = event.data.settings.drupalOffCanvasPosition;
+
+      // Only remove the `data-offset-*` attribute if the value previously
+      // exists and the orientation is changing.
+      if (Drupal.offCanvas.position &amp;&amp; Drupal.offCanvas.position !== position) {
+        container.removeAttr(`data-offset-${Drupal.offCanvas.position}`);
+      }
+      // Set a minimum height on $element
+      if (position === 'top') {
+        $element.css('min-height', `${Drupal.offCanvas.minimumHeight}px`);
+      }
+
+      displace();
+
+      const offsets = displace.offsets;
+
+      const topPosition =
+        position === 'side' &amp;&amp; offsets.top !== 0 ? `+${offsets.top}` : '';
+      const adjustedOptions = {
+        // @see http://api.jqueryui.com/position/
+        position: {
+          my: `${Drupal.offCanvas.getEdge()} top`,
+          at: `${Drupal.offCanvas.getEdge()} top${topPosition}`,
+          of: window,
+        },
+      };
+
+      const height =
+        position === 'side'
+          ? `${$(window).height() - (offsets.top + offsets.bottom)}px`
+          : event.data.settings.height;
+      container.css({
+        position: 'fixed',
+        height,
+      });
+
+      $element
+        .dialog('option', adjustedOptions)
+        .trigger('dialogContentResize.off-canvas');
+
+      Drupal.offCanvas.position = position;
+    },
+
+    /**
+     * Adjusts the body padding when the dialog is resized.
+     *
+     * @param {jQuery.Event} event
+     *   The event triggered.
+     * @param {object} event.data
+     *   Data attached to the event.
+     */
+    bodyPadding(event) {
+      const position = event.data.settings.drupalOffCanvasPosition;
+      if (
+        position === 'side' &amp;&amp;
+        $('body').outerWidth() &lt; Drupal.offCanvas.minDisplaceWidth
+      ) {
+        return;
+      }
+      Drupal.offCanvas.resetPadding();
+      const $element = event.data.$element;
+      const $container = Drupal.offCanvas.getContainer($element);
+      const $mainCanvasWrapper = Drupal.offCanvas.$mainCanvasWrapper;
+
+      const width = $container.outerWidth();
+      const mainCanvasPadding = $mainCanvasWrapper.css(
+        `padding-${Drupal.offCanvas.getEdge()}`,
+      );
+      if (position === 'side' &amp;&amp; width !== mainCanvasPadding) {
+        $mainCanvasWrapper.css(
+          `padding-${Drupal.offCanvas.getEdge()}`,
+          `${width}px`,
+        );
+        $container.attr(`data-offset-${Drupal.offCanvas.getEdge()}`, width);
+        displace();
+      }
+
+      const height = $container.outerHeight();
+      if (position === 'top') {
+        $mainCanvasWrapper.css('padding-top', `${height}px`);
+        $container.attr('data-offset-top', height);
+        displace();
+      }
+    },
+
+    /**
+     * The HTML element that surrounds the dialog.
+     * @param {HTMLElement} $element
+     *   The dialog element.
+     *
+     * @return {HTMLElement}
+     *   The containing element.
+     */
+    getContainer($element) {
+      return $element.dialog('widget');
+    },
+
+    /**
+     * The edge of the screen that the dialog should appear on.
+     *
+     * @return {string}
+     *   The edge the tray will be shown on, left or right.
+     */
+    getEdge() {
+      return document.documentElement.dir === 'rtl' ? 'left' : 'right';
+    },
+
+    /**
+     * Resets main canvas wrapper and toolbar padding / margin.
+     */
+    resetPadding() {
+      Drupal.offCanvas.$mainCanvasWrapper.css(
+        `padding-${Drupal.offCanvas.getEdge()}`,
+        0,
+      );
+      Drupal.offCanvas.$mainCanvasWrapper.css('padding-top', 0);
+      displace();
+    },
+  };
+
+  /**
+   * Attaches off-canvas dialog behaviors.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches event listeners for off-canvas dialogs.
+   */
+  Drupal.behaviors.offCanvasEvents = {
+    attach: () => {
+      $(window)
+        .once('off-canvas')
+        .on({
+          'dialog:beforecreate': (event, dialog, $element, settings) => {
+            if (Drupal.offCanvas.isOffCanvas($element)) {
+              Drupal.offCanvas.beforeCreate({ dialog, $element, settings });
+            }
+          },
+          'dialog:aftercreate': (event, dialog, $element, settings) => {
+            if (Drupal.offCanvas.isOffCanvas($element)) {
+              Drupal.offCanvas.render({ dialog, $element, settings });
+              Drupal.offCanvas.afterCreate({ $element, settings });
+            }
+          },
+          'dialog:beforeclose': (event, dialog, $element) => {
+            if (Drupal.offCanvas.isOffCanvas($element)) {
+              Drupal.offCanvas.beforeClose({ dialog, $element });
+            }
+          },
+        });
+    },
+  };
+})(jQuery, Drupal, Drupal.debounce, Drupal.displace);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

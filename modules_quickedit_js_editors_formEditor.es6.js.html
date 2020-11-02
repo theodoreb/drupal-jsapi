@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/quickedit/js/editors/formEditor.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/quickedit/js/editors/formEditor.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Form-based in-place editor. Works for any field type.
+ */
+
+(function ($, Drupal, _) {
+  /**
+   * @constructor
+   *
+   * @augments Drupal.quickedit.EditorView
+   */
+  Drupal.quickedit.editors.form = Drupal.quickedit.EditorView.extend(
+    /** @lends Drupal.quickedit.editors.form# */ {
+      /**
+       * Tracks form container DOM element that is used while in-place editing.
+       *
+       * @type {jQuery}
+       */
+      $formContainer: null,
+
+      /**
+       * Holds the {@link Drupal.Ajax} object.
+       *
+       * @type {Drupal.Ajax}
+       */
+      formSaveAjax: null,
+
+      /**
+       * {@inheritdoc}
+       *
+       * @param {object} fieldModel
+       *   The field model that holds the state.
+       * @param {string} state
+       *   The state to change to.
+       */
+      stateChange(fieldModel, state) {
+        const from = fieldModel.previous('state');
+        const to = state;
+        switch (to) {
+          case 'inactive':
+            break;
+
+          case 'candidate':
+            if (from !== 'inactive') {
+              this.removeForm();
+            }
+            break;
+
+          case 'highlighted':
+            break;
+
+          case 'activating':
+            // If coming from an invalid state, then the form is already loaded.
+            if (from !== 'invalid') {
+              this.loadForm();
+            }
+            break;
+
+          case 'active':
+            break;
+
+          case 'changed':
+            break;
+
+          case 'saving':
+            this.save();
+            break;
+
+          case 'saved':
+            break;
+
+          case 'invalid':
+            this.showValidationErrors();
+            break;
+        }
+      },
+
+      /**
+       * {@inheritdoc}
+       *
+       * @return {object}
+       *   A settings object for the quick edit UI.
+       */
+      getQuickEditUISettings() {
+        return {
+          padding: true,
+          unifiedToolbar: true,
+          fullWidthToolbar: true,
+          popup: true,
+        };
+      },
+
+      /**
+       * Loads the form for this field, displays it on top of the actual field.
+       */
+      loadForm() {
+        const fieldModel = this.fieldModel;
+
+        // Generate a DOM-compatible ID for the form container DOM element.
+        const id = `quickedit-form-for-${fieldModel.id.replace(
+          /[/[\]]/g,
+          '_',
+        )}`;
+
+        // Render form container.
+        const $formContainer = $(
+          Drupal.theme('quickeditFormContainer', {
+            id,
+            loadingMsg: Drupal.t('Loading…'),
+          }),
+        );
+        this.$formContainer = $formContainer;
+        $formContainer
+          .find('.quickedit-form')
+          .addClass(
+            'quickedit-editable quickedit-highlighted quickedit-editing',
+          )
+          .attr('role', 'dialog');
+
+        // Insert form container in DOM.
+        if (this.$el.css('display') === 'inline') {
+          $formContainer.prependTo(this.$el.offsetParent());
+          // Position the form container to render on top of the field's element.
+          const pos = this.$el.position();
+          $formContainer.css('left', pos.left).css('top', pos.top);
+        } else {
+          $formContainer.insertBefore(this.$el);
+        }
+
+        // Load form, insert it into the form container and attach event handlers.
+        const formOptions = {
+          fieldID: fieldModel.get('fieldID'),
+          $el: this.$el,
+          nocssjs: false,
+          // Reset an existing entry for this entity in the PrivateTempStore (if
+          // any) when loading the field. Logically speaking, this should happen
+          // in a separate request because this is an entity-level operation, not
+          // a field-level operation. But that would require an additional
+          // request, that might not even be necessary: it is only when a user
+          // loads a first changed field for an entity that this needs to happen:
+          // precisely now!
+          reset: !fieldModel.get('entity').get('inTempStore'),
+        };
+        Drupal.quickedit.util.form.load(formOptions, (form, ajax) => {
+          Drupal.AjaxCommands.prototype.insert(ajax, {
+            data: form,
+            selector: `#${id} .placeholder`,
+          });
+
+          $formContainer
+            .on('formUpdated.quickedit', ':input', (event) => {
+              const state = fieldModel.get('state');
+              // If the form is in an invalid state, it will persist on the page.
+              // Set the field to activating so that the user can correct the
+              // invalid value.
+              if (state === 'invalid') {
+                fieldModel.set('state', 'activating');
+              }
+              // Otherwise assume that the fieldModel is in a candidate state and
+              // set it to changed on formUpdate.
+              else {
+                fieldModel.set('state', 'changed');
+              }
+            })
+            .on('keypress.quickedit', 'input', (event) => {
+              if (event.keyCode === 13) {
+                return false;
+              }
+            });
+
+          // The in-place editor has loaded; change state to 'active'.
+          fieldModel.set('state', 'active');
+        });
+      },
+
+      /**
+       * Removes the form for this field, detaches behaviors and event handlers.
+       */
+      removeForm() {
+        if (this.$formContainer === null) {
+          return;
+        }
+
+        delete this.formSaveAjax;
+        // Allow form widgets to detach properly.
+        Drupal.detachBehaviors(this.$formContainer.get(0), null, 'unload');
+        this.$formContainer
+          .off('change.quickedit', ':input')
+          .off('keypress.quickedit', 'input')
+          .remove();
+        this.$formContainer = null;
+      },
+
+      /**
+       * {@inheritdoc}
+       */
+      save() {
+        const $formContainer = this.$formContainer;
+        const $submit = $formContainer.find('.quickedit-form-submit');
+        const editorModel = this.model;
+        const fieldModel = this.fieldModel;
+
+        // Create an AJAX object for the form associated with the field.
+        let formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving(
+          {
+            nocssjs: false,
+            other_view_modes: fieldModel.findOtherViewModes(),
+          },
+          $submit,
+        );
+
+        function cleanUpAjax() {
+          Drupal.quickedit.util.form.unajaxifySaving(formSaveAjax);
+          formSaveAjax = null;
+        }
+
+        // Successfully saved.
+        formSaveAjax.commands.quickeditFieldFormSaved = function (
+          ajax,
+          response,
+          status,
+        ) {
+          cleanUpAjax();
+          // First, transition the state to 'saved'.
+          fieldModel.set('state', 'saved');
+          // Second, set the 'htmlForOtherViewModes' attribute, so that when this
+          // field is rerendered, the change can be propagated to other instances
+          // of this field, which may be displayed in different view modes.
+          fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
+          // Finally, set the 'html' attribute on the field model. This will cause
+          // the field to be rerendered.
+          _.defer(() => {
+            fieldModel.set('html', response.data);
+          });
+        };
+
+        // Unsuccessfully saved; validation errors.
+        formSaveAjax.commands.quickeditFieldFormValidationErrors = function (
+          ajax,
+          response,
+          status,
+        ) {
+          editorModel.set('validationErrors', response.data);
+          fieldModel.set('state', 'invalid');
+        };
+
+        // The quickeditFieldForm AJAX command is called upon attempting to save
+        // the form; Form API will mark which form items have errors, if any. This
+        // command is invoked only if validation errors exist and then it runs
+        // before editFieldFormValidationErrors().
+        formSaveAjax.commands.quickeditFieldForm = function (
+          ajax,
+          response,
+          status,
+        ) {
+          Drupal.AjaxCommands.prototype.insert(ajax, {
+            data: response.data,
+            selector: `#${$formContainer.attr('id')} form`,
+          });
+        };
+
+        // Click the form's submit button; the scoped AJAX commands above will
+        // handle the server's response.
+        $submit.trigger('click.quickedit');
+      },
+
+      /**
+       * {@inheritdoc}
+       */
+      showValidationErrors() {
+        this.$formContainer
+          .find('.quickedit-form')
+          .addClass('quickedit-validation-error')
+          .find('form')
+          .prepend(this.model.get('validationErrors'));
+      },
+    },
+  );
+})(jQuery, Drupal, _);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

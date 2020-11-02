@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/ckeditor/js/ckeditor.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/ckeditor/js/ckeditor.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * CKEditor implementation of {@link Drupal.editors} API.
+ */
+
+(function (Drupal, debounce, CKEDITOR, $, displace, AjaxCommands) {
+  /**
+   * @namespace
+   */
+  Drupal.editors.ckeditor = {
+    /**
+     * Editor attach callback.
+     *
+     * @param {HTMLElement} element
+     *   The element to attach the editor to.
+     * @param {string} format
+     *   The text format for the editor.
+     *
+     * @return {bool}
+     *   Whether the call to `CKEDITOR.replace()` created an editor or not.
+     */
+    attach(element, format) {
+      this._loadExternalPlugins(format);
+      // Also pass settings that are Drupal-specific.
+      format.editorSettings.drupal = {
+        format: format.format,
+      };
+
+      // Set a title on the CKEditor instance that includes the text field's
+      // label so that screen readers say something that is understandable
+      // for end users.
+      const label = $(`label[for=${element.getAttribute('id')}]`).html();
+      format.editorSettings.title = Drupal.t('Rich Text Editor, !label field', {
+        '!label': label,
+      });
+
+      return !!CKEDITOR.replace(element, format.editorSettings);
+    },
+
+    /**
+     * Editor detach callback.
+     *
+     * @param {HTMLElement} element
+     *   The element to detach the editor from.
+     * @param {string} format
+     *   The text format used for the editor.
+     * @param {string} trigger
+     *   The event trigger for the detach.
+     *
+     * @return {bool}
+     *   Whether the call to `CKEDITOR.dom.element.get(element).getEditor()`
+     *   found an editor or not.
+     */
+    detach(element, format, trigger) {
+      const editor = CKEDITOR.dom.element.get(element).getEditor();
+      if (editor) {
+        if (trigger === 'serialize') {
+          editor.updateElement();
+        } else {
+          editor.destroy();
+          element.removeAttribute('contentEditable');
+        }
+      }
+      return !!editor;
+    },
+
+    /**
+     * Reacts on a change in the editor element.
+     *
+     * @param {HTMLElement} element
+     *   The element where the change occurred.
+     * @param {function} callback
+     *   Callback called with the value of the editor.
+     *
+     * @return {bool}
+     *   Whether the call to `CKEDITOR.dom.element.get(element).getEditor()`
+     *   found an editor or not.
+     */
+    onChange(element, callback) {
+      const editor = CKEDITOR.dom.element.get(element).getEditor();
+      if (editor) {
+        editor.on(
+          'change',
+          debounce(() => {
+            callback(editor.getData());
+          }, 400),
+        );
+
+        // A temporary workaround to control scrollbar appearance when using
+        // autoGrow event to control editor's height.
+        // @todo Remove when http://dev.ckeditor.com/ticket/12120 is fixed.
+        editor.on('mode', () => {
+          const editable = editor.editable();
+          if (!editable.isInline()) {
+            editor.on(
+              'autoGrow',
+              (evt) => {
+                const doc = evt.editor.document;
+                const scrollable = CKEDITOR.env.quirks
+                  ? doc.getBody()
+                  : doc.getDocumentElement();
+
+                if (scrollable.$.scrollHeight &lt; scrollable.$.clientHeight) {
+                  scrollable.setStyle('overflow-y', 'hidden');
+                } else {
+                  scrollable.removeStyle('overflow-y');
+                }
+              },
+              null,
+              null,
+              10000,
+            );
+          }
+        });
+      }
+      return !!editor;
+    },
+
+    /**
+     * Attaches an inline editor to a DOM element.
+     *
+     * @param {HTMLElement} element
+     *   The element to attach the editor to.
+     * @param {object} format
+     *   The text format used in the editor.
+     * @param {string} [mainToolbarId]
+     *   The id attribute for the main editor toolbar, if any.
+     * @param {string} [floatedToolbarId]
+     *   The id attribute for the floated editor toolbar, if any.
+     *
+     * @return {bool}
+     *   Whether the call to `CKEDITOR.replace()` created an editor or not.
+     */
+    attachInlineEditor(element, format, mainToolbarId, floatedToolbarId) {
+      this._loadExternalPlugins(format);
+      // Also pass settings that are Drupal-specific.
+      format.editorSettings.drupal = {
+        format: format.format,
+      };
+
+      const settings = $.extend(true, {}, format.editorSettings);
+
+      // If a toolbar is already provided for "true WYSIWYG" (in-place editing),
+      // then use that toolbar instead: override the default settings to render
+      // CKEditor UI's top toolbar into mainToolbar, and don't render the bottom
+      // toolbar at all. (CKEditor doesn't need a floated toolbar.)
+      if (mainToolbarId) {
+        const settingsOverride = {
+          extraPlugins: 'sharedspace',
+          removePlugins: 'floatingspace,elementspath',
+          sharedSpaces: {
+            top: mainToolbarId,
+          },
+        };
+
+        // Find the "Source" button, if any, and replace it with "Sourcedialog".
+        // (The 'sourcearea' plugin only works in CKEditor's iframe mode.)
+        let sourceButtonFound = false;
+        for (
+          let i = 0;
+          !sourceButtonFound &amp;&amp; i &lt; settings.toolbar.length;
+          i++
+        ) {
+          if (settings.toolbar[i] !== '/') {
+            for (
+              let j = 0;
+              !sourceButtonFound &amp;&amp; j &lt; settings.toolbar[i].items.length;
+              j++
+            ) {
+              if (settings.toolbar[i].items[j] === 'Source') {
+                sourceButtonFound = true;
+                // Swap sourcearea's "Source" button for sourcedialog's.
+                settings.toolbar[i].items[j] = 'Sourcedialog';
+                settingsOverride.extraPlugins += ',sourcedialog';
+                settingsOverride.removePlugins += ',sourcearea';
+              }
+            }
+          }
+        }
+
+        settings.extraPlugins += `,${settingsOverride.extraPlugins}`;
+        settings.removePlugins += `,${settingsOverride.removePlugins}`;
+        settings.sharedSpaces = settingsOverride.sharedSpaces;
+      }
+
+      // CKEditor requires an element to already have the contentEditable
+      // attribute set to "true", otherwise it won't attach an inline editor.
+      element.setAttribute('contentEditable', 'true');
+
+      return !!CKEDITOR.inline(element, settings);
+    },
+
+    /**
+     * Loads the required external plugins for the editor.
+     *
+     * @param {object} format
+     *   The text format used in the editor.
+     */
+    _loadExternalPlugins(format) {
+      const externalPlugins = format.editorSettings.drupalExternalPlugins;
+      // Register and load additional CKEditor plugins as necessary.
+      if (externalPlugins) {
+        Object.keys(externalPlugins || {}).forEach((pluginName) => {
+          CKEDITOR.plugins.addExternal(
+            pluginName,
+            externalPlugins[pluginName],
+            '',
+          );
+        });
+        delete format.editorSettings.drupalExternalPlugins;
+      }
+    },
+  };
+
+  Drupal.ckeditor = {
+    /**
+     * Variable storing the current dialog's save callback.
+     *
+     * @type {?function}
+     */
+    saveCallback: null,
+
+    /**
+     * Open a dialog for a Drupal-based plugin.
+     *
+     * This dynamically loads jQuery UI (if necessary) using the Drupal AJAX
+     * framework, then opens a dialog at the specified Drupal path.
+     *
+     * @param {CKEditor} editor
+     *   The CKEditor instance that is opening the dialog.
+     * @param {string} url
+     *   The URL that contains the contents of the dialog.
+     * @param {object} existingValues
+     *   Existing values that will be sent via POST to the url for the dialog
+     *   contents.
+     * @param {function} saveCallback
+     *   A function to be called upon saving the dialog.
+     * @param {object} dialogSettings
+     *   An object containing settings to be passed to the jQuery UI.
+     */
+    openDialog(editor, url, existingValues, saveCallback, dialogSettings) {
+      // Locate a suitable place to display our loading indicator.
+      let $target = $(editor.container.$);
+      if (editor.elementMode === CKEDITOR.ELEMENT_MODE_REPLACE) {
+        $target = $target.find('.cke_contents');
+      }
+
+      // Remove any previous loading indicator.
+      $target
+        .css('position', 'relative')
+        .find('.ckeditor-dialog-loading')
+        .remove();
+
+      // Add a consistent dialog class.
+      const classes = dialogSettings.dialogClass
+        ? dialogSettings.dialogClass.split(' ')
+        : [];
+      classes.push('ui-dialog--narrow');
+      dialogSettings.dialogClass = classes.join(' ');
+      dialogSettings.autoResize = window.matchMedia(
+        '(min-width: 600px)',
+      ).matches;
+      dialogSettings.width = 'auto';
+
+      // Add a "Loading…" message, hide it underneath the CKEditor toolbar,
+      // create a Drupal.Ajax instance to load the dialog and trigger it.
+      const $content = $(
+        `&lt;div class="ckeditor-dialog-loading">&lt;span style="top: -40px;" class="ckeditor-dialog-loading-link">${Drupal.t(
+          'Loading...',
+        )}&lt;/span>&lt;/div>`,
+      );
+      $content.appendTo($target);
+
+      const ckeditorAjaxDialog = Drupal.ajax({
+        dialog: dialogSettings,
+        dialogType: 'modal',
+        selector: '.ckeditor-dialog-loading-link',
+        url,
+        progress: { type: 'throbber' },
+        submit: {
+          editor_object: existingValues,
+        },
+      });
+      ckeditorAjaxDialog.execute();
+
+      // After a short delay, show "Loading…" message.
+      window.setTimeout(() => {
+        $content.find('span').animate({ top: '0px' });
+      }, 1000);
+
+      // Store the save callback to be executed when this dialog is closed.
+      Drupal.ckeditor.saveCallback = saveCallback;
+    },
+  };
+
+  // Moves the dialog to the top of the CKEDITOR stack.
+  $(window).on('dialogcreate', (e, dialog, $element, settings) => {
+    $('.ui-dialog--narrow').css('zIndex', CKEDITOR.config.baseFloatZIndex + 1);
+  });
+
+  // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
+  $(window).on('dialog:beforecreate', (e, dialog, $element, settings) => {
+    $('.ckeditor-dialog-loading').animate({ top: '-40px' }, function () {
+      $(this).remove();
+    });
+  });
+
+  // Respond to dialogs that are saved, sending data back to CKEditor.
+  $(window).on('editor:dialogsave', (e, values) => {
+    if (Drupal.ckeditor.saveCallback) {
+      Drupal.ckeditor.saveCallback(values);
+    }
+  });
+
+  // Respond to dialogs that are closed, removing the current save handler.
+  $(window).on('dialog:afterclose', (e, dialog, $element) => {
+    if (Drupal.ckeditor.saveCallback) {
+      Drupal.ckeditor.saveCallback = null;
+    }
+  });
+
+  // Formulate a default formula for the maximum autoGrow height.
+  $(document).on('drupalViewportOffsetChange', () => {
+    CKEDITOR.config.autoGrow_maxHeight =
+      0.7 *
+      (window.innerHeight - displace.offsets.top - displace.offsets.bottom);
+  });
+
+  // Redirect on hash change when the original hash has an associated CKEditor.
+  function redirectTextareaFragmentToCKEditorInstance() {
+    const hash = window.location.hash.substr(1);
+    const element = document.getElementById(hash);
+    if (element) {
+      const editor = CKEDITOR.dom.element.get(element).getEditor();
+      if (editor) {
+        const id = editor.container.getAttribute('id');
+        window.location.replace(`#${id}`);
+      }
+    }
+  }
+  $(window).on(
+    'hashchange.ckeditor',
+    redirectTextareaFragmentToCKEditorInstance,
+  );
+
+  // Set autoGrow to make the editor grow the moment it is created.
+  CKEDITOR.config.autoGrow_onStartup = true;
+
+  // Default max height. Will be updated as the viewport changes.
+  CKEDITOR.config.autoGrow_maxHeight = 0.7 * window.innerHeight;
+
+  // Set the CKEditor cache-busting string to the same value as Drupal.
+  CKEDITOR.timestamp = drupalSettings.ckeditor.timestamp;
+
+  if (AjaxCommands) {
+    /**
+     * Command to add style sheets to a CKEditor instance.
+     *
+     * Works for both iframe and inline CKEditor instances.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The response from the Ajax request.
+     * @param {string} response.editor_id
+     *   The CKEditor instance ID.
+     * @param {number} [status]
+     *   The XMLHttpRequest status.
+     *
+     * @see http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document
+     */
+    AjaxCommands.prototype.ckeditor_add_stylesheet = function (
+      ajax,
+      response,
+      status,
+    ) {
+      const editor = CKEDITOR.instances[response.editor_id];
+
+      if (editor) {
+        response.stylesheets.forEach((url) => {
+          editor.document.appendStyleSheet(url);
+        });
+      }
+    };
+  }
+})(
+  Drupal,
+  Drupal.debounce,
+  CKEDITOR,
+  jQuery,
+  Drupal.displace,
+  Drupal.AjaxCommands,
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

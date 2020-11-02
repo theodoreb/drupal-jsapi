@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: misc/tabbingmanager.es6.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: misc/tabbingmanager.es6.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file
+ * Manages page tabbing modifications made by modules.
+ */
+
+/**
+ * Allow modules to respond to the constrain event.
+ *
+ * @event drupalTabbingConstrained
+ */
+
+/**
+ * Allow modules to respond to the tabbingContext release event.
+ *
+ * @event drupalTabbingContextReleased
+ */
+
+/**
+ * Allow modules to respond to the constrain event.
+ *
+ * @event drupalTabbingContextActivated
+ */
+
+/**
+ * Allow modules to respond to the constrain event.
+ *
+ * @event drupalTabbingContextDeactivated
+ */
+
+(function ($, Drupal) {
+  /**
+   * Provides an API for managing page tabbing order modifications.
+   *
+   * @constructor Drupal~TabbingManager
+   */
+  function TabbingManager() {
+    /**
+     * Tabbing sets are stored as a stack. The active set is at the top of the
+     * stack. We use a JavaScript array as if it were a stack; we consider the
+     * first element to be the bottom and the last element to be the top. This
+     * allows us to use JavaScript's built-in Array.push() and Array.pop()
+     * methods.
+     *
+     * @type {Array.&lt;Drupal~TabbingContext>}
+     */
+    this.stack = [];
+  }
+
+  /**
+   * Stores a set of tabbable elements.
+   *
+   * This constraint can be removed with the release() method.
+   *
+   * @constructor Drupal~TabbingContext
+   *
+   * @param {object} options
+   *   A set of initiating values
+   * @param {number} options.level
+   *   The level in the TabbingManager's stack of this tabbingContext.
+   * @param {jQuery} options.$tabbableElements
+   *   The DOM elements that should be reachable via the tab key when this
+   *   tabbingContext is active.
+   * @param {jQuery} options.$disabledElements
+   *   The DOM elements that should not be reachable via the tab key when this
+   *   tabbingContext is active.
+   * @param {bool} options.released
+   *   A released tabbingContext can never be activated again. It will be
+   *   cleaned up when the TabbingManager unwinds its stack.
+   * @param {bool} options.active
+   *   When true, the tabbable elements of this tabbingContext will be reachable
+   *   via the tab key and the disabled elements will not. Only one
+   *   tabbingContext can be active at a time.
+   */
+  function TabbingContext(options) {
+    $.extend(
+      this,
+      /** @lends Drupal~TabbingContext# */ {
+        /**
+         * @type {?number}
+         */
+        level: null,
+
+        /**
+         * @type {jQuery}
+         */
+        $tabbableElements: $(),
+
+        /**
+         * @type {jQuery}
+         */
+        $disabledElements: $(),
+
+        /**
+         * @type {bool}
+         */
+        released: false,
+
+        /**
+         * @type {bool}
+         */
+        active: false,
+      },
+      options,
+    );
+  }
+
+  /**
+   * Add public methods to the TabbingManager class.
+   */
+  $.extend(
+    TabbingManager.prototype,
+    /** @lends Drupal~TabbingManager# */ {
+      /**
+       * Constrain tabbing to the specified set of elements only.
+       *
+       * Makes elements outside of the specified set of elements unreachable via
+       * the tab key.
+       *
+       * @param {jQuery} elements
+       *   The set of elements to which tabbing should be constrained. Can also
+       *   be a jQuery-compatible selector string.
+       *
+       * @return {Drupal~TabbingContext}
+       *   The TabbingContext instance.
+       *
+       * @fires event:drupalTabbingConstrained
+       */
+      constrain(elements) {
+        // Deactivate all tabbingContexts to prepare for the new constraint. A
+        // tabbingContext instance will only be reactivated if the stack is
+        // unwound to it in the _unwindStack() method.
+        const il = this.stack.length;
+        for (let i = 0; i &lt; il; i++) {
+          this.stack[i].deactivate();
+        }
+
+        // The "active tabbing set" are the elements tabbing should be constrained
+        // to.
+        const $elements = $(elements).find(':tabbable').addBack(':tabbable');
+
+        const tabbingContext = new TabbingContext({
+          // The level is the current height of the stack before this new
+          // tabbingContext is pushed on top of the stack.
+          level: this.stack.length,
+          $tabbableElements: $elements,
+        });
+
+        this.stack.push(tabbingContext);
+
+        // Activates the tabbingContext; this will manipulate the DOM to constrain
+        // tabbing.
+        tabbingContext.activate();
+
+        // Allow modules to respond to the constrain event.
+        $(document).trigger('drupalTabbingConstrained', tabbingContext);
+
+        return tabbingContext;
+      },
+
+      /**
+       * Restores a former tabbingContext when an active one is released.
+       *
+       * The TabbingManager stack of tabbingContext instances will be unwound
+       * from the top-most released tabbingContext down to the first non-released
+       * tabbingContext instance. This non-released instance is then activated.
+       */
+      release() {
+        // Unwind as far as possible: find the topmost non-released
+        // tabbingContext.
+        let toActivate = this.stack.length - 1;
+        while (toActivate >= 0 &amp;&amp; this.stack[toActivate].released) {
+          toActivate--;
+        }
+
+        // Delete all tabbingContexts after the to be activated one. They have
+        // already been deactivated, so their effect on the DOM has been reversed.
+        this.stack.splice(toActivate + 1);
+
+        // Get topmost tabbingContext, if one exists, and activate it.
+        if (toActivate >= 0) {
+          this.stack[toActivate].activate();
+        }
+      },
+
+      /**
+       * Makes all elements outside of the tabbingContext's set untabbable.
+       *
+       * Elements made untabbable have their original tabindex and autofocus
+       * values stored so that they might be restored later when this
+       * tabbingContext is deactivated.
+       *
+       * @param {Drupal~TabbingContext} tabbingContext
+       *   The TabbingContext instance that has been activated.
+       */
+      activate(tabbingContext) {
+        const $set = tabbingContext.$tabbableElements;
+        const level = tabbingContext.level;
+        // Determine which elements are reachable via tabbing by default.
+        const $disabledSet = $(':tabbable')
+          // Exclude elements of the active tabbing set.
+          .not($set);
+        // Set the disabled set on the tabbingContext.
+        tabbingContext.$disabledElements = $disabledSet;
+        // Record the tabindex for each element, so we can restore it later.
+        const il = $disabledSet.length;
+        for (let i = 0; i &lt; il; i++) {
+          this.recordTabindex($disabledSet.eq(i), level);
+        }
+        // Make all tabbable elements outside of the active tabbing set
+        // unreachable.
+        $disabledSet.prop('tabindex', -1).prop('autofocus', false);
+
+        // Set focus on an element in the tabbingContext's set of tabbable
+        // elements. First, check if there is an element with an autofocus
+        // attribute. Select the last one from the DOM order.
+        let $hasFocus = $set.filter('[autofocus]').eq(-1);
+        // If no element in the tabbable set has an autofocus attribute, select
+        // the first element in the set.
+        if ($hasFocus.length === 0) {
+          $hasFocus = $set.eq(0);
+        }
+        $hasFocus.trigger('focus');
+      },
+
+      /**
+       * Restores that tabbable state of a tabbingContext's disabled elements.
+       *
+       * Elements that were made untabbable have their original tabindex and
+       * autofocus values restored.
+       *
+       * @param {Drupal~TabbingContext} tabbingContext
+       *   The TabbingContext instance that has been deactivated.
+       */
+      deactivate(tabbingContext) {
+        const $set = tabbingContext.$disabledElements;
+        const level = tabbingContext.level;
+        const il = $set.length;
+        for (let i = 0; i &lt; il; i++) {
+          this.restoreTabindex($set.eq(i), level);
+        }
+      },
+
+      /**
+       * Records the tabindex and autofocus values of an untabbable element.
+       *
+       * @param {jQuery} $el
+       *   The set of elements that have been disabled.
+       * @param {number} level
+       *   The stack level for which the tabindex attribute should be recorded.
+       */
+      recordTabindex($el, level) {
+        const tabInfo = $el.data('drupalOriginalTabIndices') || {};
+        tabInfo[level] = {
+          tabindex: $el[0].getAttribute('tabindex'),
+          autofocus: $el[0].hasAttribute('autofocus'),
+        };
+        $el.data('drupalOriginalTabIndices', tabInfo);
+      },
+
+      /**
+       * Restores the tabindex and autofocus values of a reactivated element.
+       *
+       * @param {jQuery} $el
+       *   The element that is being reactivated.
+       * @param {number} level
+       *   The stack level for which the tabindex attribute should be restored.
+       */
+      restoreTabindex($el, level) {
+        const tabInfo = $el.data('drupalOriginalTabIndices');
+        if (tabInfo &amp;&amp; tabInfo[level]) {
+          const data = tabInfo[level];
+          if (data.tabindex) {
+            $el[0].setAttribute('tabindex', data.tabindex);
+          }
+          // If the element did not have a tabindex at this stack level then
+          // remove it.
+          else {
+            $el[0].removeAttribute('tabindex');
+          }
+          if (data.autofocus) {
+            $el[0].setAttribute('autofocus', 'autofocus');
+          }
+
+          // Clean up $.data.
+          if (level === 0) {
+            // Remove all data.
+            $el.removeData('drupalOriginalTabIndices');
+          } else {
+            // Remove the data for this stack level and higher.
+            let levelToDelete = level;
+            while (tabInfo.hasOwnProperty(levelToDelete)) {
+              delete tabInfo[levelToDelete];
+              levelToDelete++;
+            }
+            $el.data('drupalOriginalTabIndices', tabInfo);
+          }
+        }
+      },
+    },
+  );
+
+  /**
+   * Add public methods to the TabbingContext class.
+   */
+  $.extend(
+    TabbingContext.prototype,
+    /** @lends Drupal~TabbingContext# */ {
+      /**
+       * Releases this TabbingContext.
+       *
+       * Once a TabbingContext object is released, it can never be activated
+       * again.
+       *
+       * @fires event:drupalTabbingContextReleased
+       */
+      release() {
+        if (!this.released) {
+          this.deactivate();
+          this.released = true;
+          Drupal.tabbingManager.release(this);
+          // Allow modules to respond to the tabbingContext release event.
+          $(document).trigger('drupalTabbingContextReleased', this);
+        }
+      },
+
+      /**
+       * Activates this TabbingContext.
+       *
+       * @fires event:drupalTabbingContextActivated
+       */
+      activate() {
+        // A released TabbingContext object can never be activated again.
+        if (!this.active &amp;&amp; !this.released) {
+          this.active = true;
+          Drupal.tabbingManager.activate(this);
+          // Allow modules to respond to the constrain event.
+          $(document).trigger('drupalTabbingContextActivated', this);
+        }
+      },
+
+      /**
+       * Deactivates this TabbingContext.
+       *
+       * @fires event:drupalTabbingContextDeactivated
+       */
+      deactivate() {
+        if (this.active) {
+          this.active = false;
+          Drupal.tabbingManager.deactivate(this);
+          // Allow modules to respond to the constrain event.
+          $(document).trigger('drupalTabbingContextDeactivated', this);
+        }
+      },
+    },
+  );
+
+  // Mark this behavior as processed on the first pass and return if it is
+  // already processed.
+  if (Drupal.tabbingManager) {
+    return;
+  }
+
+  /**
+   * @type {Drupal~TabbingManager}
+   */
+  Drupal.tabbingManager = new TabbingManager();
+})(jQuery, Drupal);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Drupal.html">Drupal</a></li><li><a href="Drupal.autocomplete.html">autocomplete</a></li><li><a href="Drupal.behaviors.html">behaviors</a></li><li><a href="Drupal.ckeditor.html">ckeditor</a></li><li><a href="Drupal.color.html">color</a></li><li><a href="Drupal.contextual.html">contextual</a></li><li><a href="Drupal.contextualToolbar.html">contextualToolbar</a></li><li><a href="Drupal.editorConfiguration.html">editorConfiguration</a></li><li><a href="Drupal.editors.html">editors</a></li><li><a href="Drupal.editors.ckeditor.html">ckeditor</a></li><li><a href="Drupal.fieldUIDisplayOverview.html">fieldUIDisplayOverview</a></li><li><a href="Drupal.fieldUIOverview.html">fieldUIOverview</a></li><li><a href="Drupal.file.html">file</a></li><li><a href="Drupal.filterConfiguration.html">filterConfiguration</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.html">liveSettingParsers</a></li><li><a href="Drupal.filterConfiguration.liveSettingParsers.filter_html.html">filter_html</a></li><li><a href="Drupal.history.html">history</a></li><li><a href="Drupal.offCanvas.html">offCanvas</a></li><li><a href="Drupal.olivero.html">olivero</a></li><li><a href="Drupal.quickedit.html">quickedit</a></li><li><a href="Drupal.quickedit.editors.html">editors</a></li><li><a href="Drupal.quickedit.metadata.html">metadata</a></li><li><a href="Drupal.quickedit.util.html">util</a></li><li><a href="Drupal.quickedit.util.constants.html">constants</a></li><li><a href="Drupal.quickedit.util.form.html">form</a></li><li><a href="Drupal.states.html">states</a></li><li><a href="Drupal.theme.html">theme</a></li><li><a href="Drupal.toolbar.html">toolbar</a></li><li><a href="Drupal.tour.html">tour</a></li><li><a href="Drupal.tour.models.html">models</a></li><li><a href="Drupal.tour.views.html">views</a></li><li><a href="Drupal.views.html">views</a></li><li><a href="Drupal.Views_.html">Views</a></li><li><a href="Drupal.viewsUi.html">viewsUi</a></li></ul><h3>Classes</h3><ul><li><a href="Drupal.Ajax.html">Ajax</a></li><li><a href="Drupal.AjaxCommands.html">AjaxCommands</a></li><li><a href="Drupal.AjaxError.html">AjaxError</a></li><li><a href="Drupal.ckeditor.AuralView.html">AuralView</a></li><li><a href="Drupal.ckeditor.ControllerView.html">ControllerView</a></li><li><a href="Drupal.ckeditor.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.ckeditor.Model.html">Model</a></li><li><a href="Drupal.ckeditor.VisualView.html">VisualView</a></li><li><a href="Drupal.CollapsibleDetails.html">CollapsibleDetails</a></li><li><a href="Drupal.contextual.AuralView.html">AuralView</a></li><li><a href="Drupal.contextual.KeyboardView.html">KeyboardView</a></li><li><a href="Drupal.contextual.RegionView.html">RegionView</a></li><li><a href="Drupal.contextual.StateModel.html">StateModel</a></li><li><a href="Drupal.contextual.VisualView.html">VisualView</a></li><li><a href="Drupal.contextualToolbar.AuralView.html">AuralView</a></li><li><a href="Drupal.contextualToolbar.StateModel.html">StateModel</a></li><li><a href="Drupal.contextualToolbar.VisualView.html">VisualView</a></li><li><a href="Drupal.DatepickerPolyfill.html">DatepickerPolyfill</a></li><li><a href="Drupal.DetailsSummarizedContent.html">DetailsSummarizedContent</a></li><li><a href="Drupal.DropButton.html">DropButton</a></li><li><a href="Drupal.EditorFeature.html">EditorFeature</a></li><li><a href="Drupal.EditorFeatureHTMLRule.html">EditorFeatureHTMLRule</a></li><li><a href="Drupal.fieldUIDisplayOverview.field.html">field</a></li><li><a href="Drupal.FilterStatus.html">FilterStatus</a></li><li><a href="Drupal.Message.html">Message</a></li><li><a href="Drupal.ProgressBar.html">ProgressBar</a></li><li><a href="Drupal.quickedit.AppModel.html">AppModel</a></li><li><a href="Drupal.quickedit.AppView.html">AppView</a></li><li><a href="Drupal.quickedit.BaseModel.html">BaseModel</a></li><li><a href="Drupal.quickedit.ContextualLinkView.html">ContextualLinkView</a></li><li><a href="Drupal.quickedit.EditorModel.html">EditorModel</a></li><li><a href="Drupal.quickedit.editors.editor.html">editor</a></li><li><a href="Drupal.quickedit.editors.form.html">form</a></li><li><a href="Drupal.quickedit.editors.image.html">image</a></li><li><a href="Drupal.quickedit.editors.plain_text.html">plain_text</a></li><li><a href="Drupal.quickedit.EditorView.html">EditorView</a></li><li><a href="Drupal.quickedit.EntityCollection.html">EntityCollection</a></li><li><a href="Drupal.quickedit.EntityDecorationView.html">EntityDecorationView</a></li><li><a href="Drupal.quickedit.EntityModel.html">EntityModel</a></li><li><a href="Drupal.quickedit.EntityToolbarView.html">EntityToolbarView</a></li><li><a href="Drupal.quickedit.FieldCollection.html">FieldCollection</a></li><li><a href="Drupal.quickedit.FieldDecorationView.html">FieldDecorationView</a></li><li><a href="Drupal.quickedit.FieldModel.html">FieldModel</a></li><li><a href="Drupal.quickedit.FieldToolbarView.html">FieldToolbarView</a></li><li><a href="Drupal.states.Dependent.html">Dependent</a></li><li><a href="Drupal.states.State.html">State</a></li><li><a href="Drupal.states.Trigger.html">Trigger</a></li><li><a href="Drupal.tableDrag.html">tableDrag</a></li><li><a href="Drupal.TableHeader.html">TableHeader</a></li><li><a href="Drupal.TableResponsive.html">TableResponsive</a></li><li><a href="Drupal.toolbar.BodyVisualView.html">BodyVisualView</a></li><li><a href="Drupal.toolbar.MenuModel.html">MenuModel</a></li><li><a href="Drupal.toolbar.MenuVisualView.html">MenuVisualView</a></li><li><a href="Drupal.toolbar.ToolbarAuralView.html">ToolbarAuralView</a></li><li><a href="Drupal.toolbar.ToolbarModel.html">ToolbarModel</a></li><li><a href="Drupal.toolbar.ToolbarVisualView.html">ToolbarVisualView</a></li><li><a href="Drupal.tour.models.StateModel.html">StateModel</a></li><li><a href="Drupal.tour.views.ToggleTourView.html">ToggleTourView</a></li><li><a href="Drupal.verticalTab.html">verticalTab</a></li><li><a href="Drupal.views.ajaxView.html">ajaxView</a></li><li><a href="Drupal.viewsUi.AddItemForm.html">AddItemForm</a></li><li><a href="Drupal.viewsUi.Checkboxifier.html">Checkboxifier</a></li><li><a href="Drupal.viewsUi.FormFieldFiller.html">FormFieldFiller</a></li><li><a href="Drupal.viewsUi.OptionsSearch.html">OptionsSearch</a></li><li><a href="Drupal.viewsUi.RearrangeFilterHandler.html">RearrangeFilterHandler</a></li><li><a href="Drupal-TabbingContext.html">TabbingContext</a></li><li><a href="Drupal-TabbingManager.html">TabbingManager</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:columnschange">columnschange</a></li><li><a href="global.html#event:dialogContentResize">dialogContentResize</a></li><li><a href="global.html#event:drupalTabbingConstrained">drupalTabbingConstrained</a></li><li><a href="global.html#event:drupalTabbingContextActivated">drupalTabbingContextActivated</a></li><li><a href="global.html#event:drupalTabbingContextDeactivated">drupalTabbingContextDeactivated</a></li><li><a href="global.html#event:drupalTabbingContextReleased">drupalTabbingContextReleased</a></li><li><a href="global.html#event:drupalViewportOffsetChange">drupalViewportOffsetChange</a></li><li><a href="global.html#event:formFragmentLinkClickOrHashChange">formFragmentLinkClickOrHashChange</a></li><li><a href="global.html#event:formUpdated">formUpdated</a></li><li><a href="global.html#event:summaryUpdated">summaryUpdated</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_hashData">_hashData</a></li><li><a href="global.html#_loadPreview">_loadPreview</a></li><li><a href="global.html#_previewNeedsServerSideUpdate">_previewNeedsServerSideUpdate</a></li><li><a href="global.html#_setUpEditButton">_setUpEditButton</a></li><li><a href="global.html#addColspanClass">addColspanClass</a></li><li><a href="global.html#checkScroll">checkScroll</a></li><li><a href="global.html#Cookies">Cookies</a></li><li><a href="global.html#copyDragClasses">copyDragClasses</a></li><li><a href="global.html#displayColumns">displayColumns</a></li><li><a href="global.html#dragRow">dragRow</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropRow">dropRow</a></li><li><a href="global.html#drupalSettings">drupalSettings</a></li><li><a href="global.html#drupalTranslations">drupalTranslations</a></li><li><a href="global.html#findChildren">findChildren</a></li><li><a href="global.html#findDropTargetRow">findDropTargetRow</a></li><li><a href="global.html#findSiblings">findSiblings</a></li><li><a href="global.html#getPointerOffset">getPointerOffset</a></li><li><a href="global.html#hideColumns">hideColumns</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#initColumns">initColumns</a></li><li><a href="global.html#isValidSwap">isValidSwap</a></li><li><a href="global.html#makeDraggable">makeDraggable</a></li><li><a href="global.html#markChanged">markChanged</a></li><li><a href="global.html#onDrag">onDrag</a></li><li><a href="global.html#onDrop">onDrop</a></li><li><a href="global.html#onIndent">onIndent</a></li><li><a href="global.html#onSwap">onSwap</a></li><li><a href="global.html#pointerCoords">pointerCoords</a></li><li><a href="global.html#removeIndentClasses">removeIndentClasses</a></li><li><a href="global.html#restripeTable">restripeTable</a></li><li><a href="global.html#row">row</a></li><li><a href="global.html#rowSettings">rowSettings</a></li><li><a href="global.html#setScroll">setScroll</a></li><li><a href="global.html#showColumns">showColumns</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#toggleColumns">toggleColumns</a></li><li><a href="global.html#updateField">updateField</a></li><li><a href="global.html#updateFields">updateFields</a></li><li><a href="global.html#validIndentInterval">validIndentInterval</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Nov 02 2020 10:17:00 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
